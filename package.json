@@ -100,6 +100,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "latest",
     "tailwindcss-animate": "^1.0.7",
+    "undici": "^7.2.3",
     "vaul": "^0.9.9",
     "yet-another-react-lightbox": "latest",
     "zod": "latest",

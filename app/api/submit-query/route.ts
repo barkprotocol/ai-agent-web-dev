@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     console.log('Received query:', query);
 
     // For demonstration, simulate some asynchronous action
-    const response = await fetch('https://barkprotocol.net/api/submit', {
+    const response = await fetch('https://ai.barkprotocol.net/api/submit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
