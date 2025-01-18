@@ -1,0 +1,10 @@
+const CHUNK_PUBLIC_PATH = "server/app/_not-found/page.js";
+const runtime = require("../../chunks/ssr/[turbopack]_runtime.js");
+runtime.loadChunk("server/chunks/ssr/0a9d0_next_dist_fddbed._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__550d4a._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__52b73d._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__83f601._.css");
+runtime.loadChunk("server/chunks/ssr/node_modules__pnpm_8c50a6._.js");
+runtime.loadChunk("server/chunks/ssr/_5e3ad4._.js");
+runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/_not-found/page/actions.js [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
+module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/.pnpm/next@15.1.5_@babel+core@7.26.0_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/esm/build/templates/app-page.js?page=/_not-found/page { MODULE_0 => \"[project]/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_1 => \"[project]/app/not-found.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_2 => \"[project]/app/not-found.tsx [app-rsc] (ecmascript, Next.js server component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;

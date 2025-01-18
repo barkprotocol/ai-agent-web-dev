@@ -1,67 +1,58 @@
+/**
+ * Copyright (c) 2024 Bark Protocol
+ * All rights reserved.
+ */
+
 import type { Metadata } from 'next';
-import { Toaster } from 'sonner';
+import { Inter, Poppins, Syne } from 'next/font/google';
+import { WalletContextProvider } from '@/components/wallet-context-provider';
 
-import { ThemeProvider } from '@/components/theme-provider';
+import './styles/globals.css';
 
-import './globals.css';
+const inter = Inter({ 
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const poppins = Poppins({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-poppins',
+  display: 'swap',
+});
+
+const syne = Syne({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-syne',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chat.vercel.ai'),
-  title: 'Next.js Chatbot Template',
-  description: 'Next.js chatbot template using the AI SDK.',
+  title: 'BARK | AI Agent',
+  description: 'AI-powered copilot for Solana blockchain interactions',
 };
 
-export const viewport = {
-  maximumScale: 1, // Disable auto-zoom on mobile Safari
-};
-
-const LIGHT_THEME_COLOR = 'hsl(0 0% 100%)';
-const DARK_THEME_COLOR = 'hsl(240deg 10% 3.92%)';
-const THEME_COLOR_SCRIPT = `\
-(function() {
-  var html = document.documentElement;
-  var meta = document.querySelector('meta[name="theme-color"]');
-  if (!meta) {
-    meta = document.createElement('meta');
-    meta.setAttribute('name', 'theme-color');
-    document.head.appendChild(meta);
-  }
-  function updateThemeColor() {
-    var isDark = html.classList.contains('dark');
-    meta.setAttribute('content', isDark ? '${DARK_THEME_COLOR}' : '${LIGHT_THEME_COLOR}');
-  }
-  var observer = new MutationObserver(updateThemeColor);
-  observer.observe(html, { attributes: true, attributeFilter: ['class'] });
-  updateThemeColor();
-})();`;
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-    >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: THEME_COLOR_SCRIPT,
-          }}
-        />
-      </head>
-      <body className="antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Toaster position="top-center" />
-          {children}
-        </ThemeProvider>
+    <html lang="en" className={`${inter.variable} ${poppins.variable} ${syne.variable}`}>
+      <body className={`${poppins.className} bg-gray-100 dark:bg-black text-gray-900 dark:text-white transition-colors duration-300`}>
+        <WalletContextProvider children={undefined}>
+          <div className="flex flex-col min-h-screen">
+            {/* Main content */}
+            <main className="flex-grow">{children}</main>
+
+            {/* Footer */}
+            <footer className="bg-black text-white py-4 text-center text-sm">
+              <p>© 2025 BARK Protocol. All rights reserved.</p>
+            </footer>
+          </div>
+        </WalletContextProvider>
       </body>
     </html>
   );
