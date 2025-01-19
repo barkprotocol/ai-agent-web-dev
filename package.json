@@ -2,6 +2,7 @@
   "name": "bark-ai",
   "description": "The Bark AI Agent is a cutting-edge platform that merges AI and blockchain technology to provide users with intelligent, automated trading strategies and real-time market insights on the **Solana blockchain**.",
   "version": "0.1.0-beta",
+  "author": "BARK Protocol",
   "private": true,
   "scripts": {
     "vercel-build": "pnpm npx prisma generate && next build",
@@ -146,3 +147,4 @@
     }
   }
 }
+

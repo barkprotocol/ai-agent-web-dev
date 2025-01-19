@@ -1,7 +1,6 @@
 'use server';
 
 import { cookies } from 'next/headers';
-
 import { PrivyClient } from '@privy-io/server-auth';
 import { z } from 'zod';
 
@@ -14,60 +13,72 @@ const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET;
 
 if (!PRIVY_APP_ID || !PRIVY_APP_SECRET) {
-  throw new Error('Lack of necessary environment variables');
+  throw new Error('Missing required environment variables: PRIVY_APP_ID or PRIVY_APP_SECRET');
 }
 
 const PRIVY_SERVER_CLIENT = new PrivyClient(PRIVY_APP_ID, PRIVY_APP_SECRET);
 
 const getOrCreateUser = actionClient
-  .schema(z.object({ userId: z.string() }))
+  .schema(z.object({ userId: z.string().min(1, 'User ID is required') }))
   .action<ActionResponse<PrismaUser>>(async ({ parsedInput: { userId } }) => {
-    const prismaUser = await prisma.user.findUnique({
-      where: { privyId: userId },
-      include: {
-        wallets: {
-          select: {
-            id: true,
-            ownerId: true,
-            name: true,
-            publicKey: true,
+    try {
+      const prismaUser = await prisma.user.findUnique({
+        where: { privyId: userId },
+        include: {
+          wallets: {
+            select: {
+              id: true,
+              ownerId: true,
+              name: true,
+              publicKey: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (prismaUser) {
+      if (prismaUser) {
+        return {
+          success: true,
+          data: prismaUser,
+        };
+      }
+
+      // Create new user with initial wallet
+      const createdUser = await prisma.user.create({ 
+        data: { privyId: userId }
+      });
+
+      const { publicKey, encryptedPrivateKey } = await generateEncryptedKeyPair();
+      const initialWallet = await prisma.wallet.create({
+        data: {
+          ownerId: createdUser.id,
+          name: 'Default',
+          publicKey,
+          encryptedPrivateKey,
+        },
+      });
+
       return {
         success: true,
-        data: prismaUser,
+        data: {
+          ...createdUser,
+          wallets: [
+            {
+              id: initialWallet.id,
+              ownerId: initialWallet.ownerId,
+              name: initialWallet.name,
+              publicKey: initialWallet.publicKey,
+            },
+          ],
+        },
+      };
+    } catch (error) {
+      console.error('Error in getOrCreateUser:', error);
+      return {
+        success: false,
+        error: 'Failed to create or retrieve user',
       };
     }
-
-    const createdUser = await prisma.user.create({ data: { privyId: userId } });
-    const { publicKey, encryptedPrivateKey } = await generateEncryptedKeyPair();
-    const initalWallet = await prisma.wallet.create({
-      data: {
-        ownerId: createdUser.id,
-        name: 'Default',
-        publicKey,
-        encryptedPrivateKey,
-      },
-    });
-
-    return {
-      success: true,
-      data: {
-        ...createdUser,
-        wallets: [
-          {
-            id: initalWallet.id,
-            ownerId: initalWallet.ownerId,
-            name: initalWallet.name,
-            publicKey: initalWallet.publicKey,
-          },
-        ],
-      },
-    };
   });
 
 export const verifyUser = actionClient.action<
@@ -78,7 +89,7 @@ export const verifyUser = actionClient.action<
   if (!token) {
     return {
       success: false,
-      error: 'No privy token found',
+      error: 'Authentication token not found',
     };
   }
 
@@ -100,7 +111,7 @@ export const verifyUser = actionClient.action<
     if (!user) {
       return {
         success: false,
-        error: 'User not found',
+        error: 'User not found in database',
       };
     }
 
@@ -111,10 +122,11 @@ export const verifyUser = actionClient.action<
         publicKey: user.wallets[0]?.publicKey,
       },
     };
-  } catch (_) {
+  } catch (error) {
+    console.error('Error in verifyUser:', error);
     return {
       success: false,
-      error: 'Authentication failed',
+      error: 'Authentication verification failed',
     };
   }
 });
@@ -126,33 +138,32 @@ export const getUserData = actionClient.action<ActionResponse<PrismaUser>>(
     if (!token) {
       return {
         success: false,
-        error: 'No privy token found',
+        error: 'Authentication token not found',
       };
     }
 
     try {
       const claims = await PRIVY_SERVER_CLIENT.verifyAuthToken(token);
       const response = await getOrCreateUser({ userId: claims.userId });
-      const success = response?.data?.success;
-      const user = response?.data?.data;
-      const error = response?.data?.error;
 
-      if (!success) {
+      if (!response.success || !response.data) {
         return {
           success: false,
-          error: error,
+          error: response.error || 'Failed to retrieve user data',
         };
       }
 
       return {
         success: true,
-        data: user,
+        data: response.data,
       };
-    } catch (_) {
+    } catch (error) {
+      console.error('Error in getUserData:', error);
       return {
         success: false,
-        error: 'Authentication failed',
+        error: 'Failed to authenticate and retrieve user data',
       };
     }
   },
 );
+
