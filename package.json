@@ -24,6 +24,7 @@
     "@ai-sdk/openai": "^1.1.0",
     "@bonfida/spl-name-service": "latest",
     "@dialectlabs/blinks": "^0.20.1",
+    "@dialectlabs/sdk": "^1.9.4",
     "@hookform/resolvers": "latest",
     "@jup-ag/api": "^6.0.36",
     "@jup-ag/core": "4.0.0-beta.21",
@@ -63,8 +64,10 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "@raydium-io/raydium-sdk": "1.3.1-beta.58",
     "@remixicon/react": "latest",
+    "@solana/actions": "^1.6.6",
     "@solana/spl-token": "latest",
     "@solana/spl-token-metadata": "0.1.6",
+    "@solana/spl-token-registry": "^0.2.4574",
     "@solana/wallet-adapter-base": "latest",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
@@ -87,8 +90,8 @@
     "framer-motion": "^11.18.1",
     "fs": "0.0.1-security",
     "helius-sdk": "latest",
-    "keyv": "5.2.3",
     "input-otp": "1.4.1",
+    "keyv": "5.2.3",
     "lodash": "^4.17.21",
     "lucide-react": "^0.473.0",
     "mem0ai": "^1.0.31",
@@ -126,8 +129,8 @@
     "zustand": "latest"
   },
   "devDependencies": {
-    "@types/node": "^22.10.7",
     "@trivago/prettier-plugin-sort-imports": "^5.2.1",
+    "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "eslint": "^9.18.0",
@@ -147,4 +150,3 @@
     }
   }
 }
-

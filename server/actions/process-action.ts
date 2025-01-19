@@ -9,7 +9,7 @@ import {
   defaultModel,
   defaultSystemPrompt,
   defaultTools,
-} from '@/ai/providers';
+} from '@/app/ai/providers';
 import { RPC_URL } from '@/lib/utils/constants';
 import prisma from '@/lib/prisma';
 import { decryptPrivateKey } from '@/lib/solana/wallet-generator';

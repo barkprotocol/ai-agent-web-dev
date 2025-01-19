@@ -13,7 +13,7 @@ import {
 import { RPC_URL } from '@/lib/utils/constants';
 import prisma from '@/lib/prisma';
 import { decryptPrivateKey } from '@/lib/solana/wallet-generator';
-import { sanitizeResponseMessages } from './ai';
+import { sanitizeResponseMessages } from '@/lib/utils/ai';
 import { ActionWithUser } from '@/types/db';
 
 import { dbCreateMessages, dbGetConversation } from '../db/queries';
