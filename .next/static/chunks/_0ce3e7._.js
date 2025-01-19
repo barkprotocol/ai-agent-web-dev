@@ -291,9 +291,9 @@ const navItems = [
         label: "Products"
     },
     {
-        href: "/bot",
+        href: "/message",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$lucide$2d$react$40$0$2e$473$2e$0_react$40$19$2e$0$2e$0$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageCircle$3e$__["MessageCircle"],
-        label: "Bot",
+        label: "Messages",
         external: true
     }
 ];
@@ -963,7 +963,7 @@ function Hero() {
                                         href: "https://docs.barkprotocol.com/ai",
                                         target: "_blank",
                                         rel: "noopener noreferrer",
-                                        children: "Documentation"
+                                        children: "Whitepaper"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/layout/hero.tsx",
                                         lineNumber: 98,
@@ -2194,8 +2194,8 @@ function Footer() {
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$1$2e$5_$40$babel$2b$core$40$7$2e$26$2e$0_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_react$2d$dom$40$19$2e$0$2e$0_react$40$19$2e$0$2e$0_$5f$react$40$19$2e$0$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "text-xl sm:text-2xl font-bold text-white group-hover:text-gray-100 transition-colors duration-200",
-                                                children: "BARK AI Agent"
+                                                className: "text-xl sm:text-2xl font-semibold text-white group-hover:text-gray-100 transition-colors duration-200",
+                                                children: "AI Agent"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ui/layout/footer.tsx",
                                                 lineNumber: 143,

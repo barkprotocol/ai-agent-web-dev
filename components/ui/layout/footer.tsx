@@ -140,7 +140,7 @@ export function Footer() {
                 height={48}
                 className="h-10 w-10 sm:h-12 sm:w-12 group-hover:scale-105 transition-transform duration-200"
               />
-              <span className="text-xl sm:text-2xl font-bold text-white group-hover:text-gray-100 transition-colors duration-200">BARK AI Agent</span>
+              <span className="text-xl sm:text-2xl font-semibold text-white group-hover:text-gray-100 transition-colors duration-200">AI Agent</span>
             </Link>
             <p className="text-gray-400 text-base max-w-xs">
               {description}

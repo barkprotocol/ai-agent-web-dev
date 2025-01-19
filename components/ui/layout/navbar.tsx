@@ -12,7 +12,7 @@ const navItems = [
   { href: "/", icon: Home, label: "Home" },
   { href: "/ai-agents", icon: Cpu, label: "AI Agents" },
   { href: "/products", icon: Cog, label: "Products" },
-  { href: "/bot", icon: MessageCircle, label: "Bot", external: true },
+  { href: "/message", icon: MessageCircle, label: "Messages", external: true },
 ];
 
 export default function Navbar({ isScrolled }: { isScrolled: boolean }) {

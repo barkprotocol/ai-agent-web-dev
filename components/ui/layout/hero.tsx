@@ -96,7 +96,7 @@ export default function Hero() {
               </Button>
               <Button asChild variant="outline" size="lg" className="shadow-md hover:shadow-lg transition-all duration-300 bg-white/10 hover:bg-white/20">
                 <Link href="https://docs.barkprotocol.com/ai" target="_blank" rel="noopener noreferrer">
-                  Documentation
+                  Whitepaper
                 </Link>
               </Button>
             </motion.div>

@@ -7,7 +7,7 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config: { module: { rules: { test: RegExp; type: string; }[]; }; stats: string; ignoreWarnings: RegExp[]; resolve: { fallback: { fs: boolean; module: boolean; }; }; }, { isServer }: any) => {
     // Add rule for handling JSON files
     config.module.rules.push({
       test: /\.json$/,
