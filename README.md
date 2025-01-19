@@ -3,7 +3,7 @@ Beta version
 
 ![Bark AI Agent WebUI](/public/assets/bark-ai-agent-web-ui.png)
 
-The **Bark AI Agent Frontend and Dashboard** is a cutting-edge platform that merges **artificial intelligence** and **blockchain technology** to provide users with intelligent, automated trading strategies and real-time market insights on the **Solana blockchain**.
+The **Bark AI Agent WebApp** is a cutting-edge platform that merges **artificial intelligence** and **blockchain technology** to provide users with intelligent, automated trading strategies and real-time market insights on the **Solana blockchain**.
 
 ## ✨ Features
 
