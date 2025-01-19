@@ -3700,7 +3700,7 @@ const _routercontextsharedruntime = __turbopack_require__("[project]/node_module
 const _imageloader = /*#__PURE__*/ _interop_require_default._(__turbopack_require__("[project]/node_modules/.pnpm/next@15.1.5_@babel+core@7.26.0_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/shared/lib/image-loader.js [app-client] (ecmascript)"));
 const _usemergedref = __turbopack_require__("[project]/node_modules/.pnpm/next@15.1.5_@babel+core@7.26.0_@opentelemetry+api@1.9.0_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/client/use-merged-ref.js [app-client] (ecmascript)");
 // This is replaced by webpack define plugin
-const configEnv = ("TURBOPACK compile-time value", JSON.parse('{"deviceSizes":[640,750,828,1080,1200,1920,2048,3840],"imageSizes":[16,32,48,64,96,128,256,384],"path":"/_next/image","loader":"default","dangerouslyAllowSVG":false,"unoptimized":false,"domains":[],"remotePatterns":[{"protocol":"https","hostname":"ucarecdn.com"}]}'));
+const configEnv = ("TURBOPACK compile-time value", JSON.parse('{"deviceSizes":[640,750,828,1080,1200,1920,2048,3840],"imageSizes":[16,32,48,64,96,128,256,384],"path":"/_next/image","loader":"default","dangerouslyAllowSVG":false,"unoptimized":false,"domains":[],"remotePatterns":[{"protocol":"https","hostname":"ucarecdn.com"},{"protocol":"https","hostname":"cdn.discordapp.com"},{"protocol":"https","hostname":"api.telegram.org"},{"protocol":"https","hostname":"openai.com"}]}'));
 if (typeof window === 'undefined') {
     ;
     globalThis.__NEXT_IMAGE_IMPORTED = true;
@@ -4020,7 +4020,7 @@ function getImageProps(imgProps) {
     const { props } = (0, _getimgprops.getImgProps)(imgProps, {
         defaultLoader: _imageloader.default,
         // This is replaced by webpack define plugin
-        imgConf: ("TURBOPACK compile-time value", JSON.parse('{"deviceSizes":[640,750,828,1080,1200,1920,2048,3840],"imageSizes":[16,32,48,64,96,128,256,384],"path":"/_next/image","loader":"default","dangerouslyAllowSVG":false,"unoptimized":false,"domains":[],"remotePatterns":[{"protocol":"https","hostname":"ucarecdn.com"}]}'))
+        imgConf: ("TURBOPACK compile-time value", JSON.parse('{"deviceSizes":[640,750,828,1080,1200,1920,2048,3840],"imageSizes":[16,32,48,64,96,128,256,384],"path":"/_next/image","loader":"default","dangerouslyAllowSVG":false,"unoptimized":false,"domains":[],"remotePatterns":[{"protocol":"https","hostname":"ucarecdn.com"},{"protocol":"https","hostname":"cdn.discordapp.com"},{"protocol":"https","hostname":"api.telegram.org"},{"protocol":"https","hostname":"openai.com"}]}'))
     });
     // Normally we don't care about undefined props because we pass to JSX,
     // but this exported function could be used by the end user for anything

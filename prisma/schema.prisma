@@ -78,9 +78,9 @@ model Rule {
   id        String   @id @default(cuid())
   userId    String
   name      String   @db.VarChar(255)
-  field     String   @db.VarChar(255) // Field to evaluate (e.g., "transaction.amount", "transaction.sender")
+  field     String   @db.VarChar(255)
   operator  Operator
-  value     String   @db.VarChar(255) // Value to compare against (e.g., "100", "0x1234")
+  value     String   @db.VarChar(255)
   triggered Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -94,19 +94,19 @@ model Action {
   id             String    @id @default(cuid())
   userId         String
   conversationId String
-  triggeredBy    Int[] // Array of rule IDs required to trigger this action
-  stoppedBy      Int[] // Array of rule IDs required to stop this action
-  frequency      Int? // Frequency in seconds (e.g., 3600 for 1 hour, 86400 for 1 day)
-  maxExecutions  Int? // Times to execute before stopping
-  description    String    @db.VarChar(255) // Human readable description of the action, or message to send to AI
-  actionType     String    @db.VarChar(255) // Type of action (e.g., "call_function", "invoke_api")
-  params         Json? // JSON object for action parameters (e.g., inputs for the function)
+  triggeredBy    Int[]
+  stoppedBy      Int[]
+  frequency      Int?
+  maxExecutions  Int?
+  description    String    @db.VarChar(255)
+  actionType     String    @db.VarChar(255)
+  params         Json?
   timesExecuted  Int       @default(0)
   lastExecutedAt DateTime?
-  triggered      Boolean   @default(false) // Whether the action has been triggered. True if triggeredBy is empty
+  triggered      Boolean   @default(false)
   paused         Boolean   @default(false)
   completed      Boolean   @default(false)
-  priority       Int       @default(0) // Priority level for execution, higher numbers execute first
+  priority       Int       @default(0)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -149,3 +149,4 @@ model TelegramChat {
 
   @@map("telegram_chats")
 }
+
