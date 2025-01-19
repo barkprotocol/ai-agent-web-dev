@@ -3668,7 +3668,7 @@ var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_
 {
 /**
  * NIST secp256r1 aka p256.
- * https://www.secg.org/sec2-v2.pdf, https://neuromancer.sk/std/nist/P-256
+ * https://www.secg.org/sec2-v2.pdf, https://barkomancer.sk/std/nist/P-256
  * @module
  */ /*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) */ __turbopack_esm__({
     "encodeToCurve": (()=>encodeToCurve),

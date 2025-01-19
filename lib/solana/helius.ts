@@ -3,7 +3,7 @@ import { chunkArray } from '@/lib/utils';
 import rawKnownAddresses from '@/lib/utils/known-addresses.json';
 import { FungibleToken } from '@/types/helius/fungibleToken';
 import { NonFungibleToken } from '@/types/helius/nonFungibleToken';
-import { RPC_URL } from '../constants';
+import { RPC_URL } from '../utils/constants';
 
 // Types
 export interface Holder {

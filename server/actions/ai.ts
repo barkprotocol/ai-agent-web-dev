@@ -5,9 +5,9 @@ import { SolanaAgentKit } from 'solana-agent-kit';
 import { z } from 'zod';
 
 import { defaultModel } from '@/ai/providers';
-import { RPC_URL } from '@/lib/constants';
+import { RPC_URL } from '@/lib/utils/constants';
 import prisma from '@/lib/prisma';
-import { ActionEmptyResponse, actionClient } from '@/lib/safe-action';
+import { ActionEmptyResponse, actionClient } from '@/lib/utils/safe-action';
 import { decryptPrivateKey } from '@/lib/solana/wallet-generator';
 
 import { verifyUser } from './user';

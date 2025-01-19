@@ -1,5 +1,5 @@
 import React from 'react';
-import { chartTools } from '@/components/actions/chart-tools';
+import { chartTools } from '@/app/ai/solana/chart';
 
 const ChartExample: React.FC = () => {
   const [chartData, setChartData] = React.useState<any>(null);

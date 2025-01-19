@@ -48,7 +48,7 @@ export async function createCollectionAndMintNFTs(
     const treeKeypair = generateSigner(umi);
 
     console.log('Creating merkle tree...');
-    const createTreeBuilder = await createTree(umi, {
+    const createTreeBuilder = createTree(umi, {
       merkleTree: treeKeypair,
       maxDepth: 14,
       maxBufferSize: 64,

@@ -43,7 +43,7 @@ export const AppSidebarUser = () => {
   }, [logout]);
 
   const handleOpenTwitter = useCallback(() => {
-    window.open('https://x.com/neur_sh', '_blank', 'noopener,noreferrer');
+    window.open('https://x.com/bark_sh', '_blank', 'noopener,noreferrer');
   }, []);
 
   const handleOpenDocs = useCallback(() => {

@@ -80,3 +80,19 @@ export function formatChartPrice(value: number): string {
   }
 }
 
+export function formatUserCreationDate(dateString: string | undefined): string {
+  if (!dateString) return 'Unknown';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+export function formatWalletAddress(address: string): string {
+  if (address.length < 10) return address;
+  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+}
+
+export function formatPrivyId(id: string): string {
+  if (id.length < 10) return id;
+  return `${id.slice(0, 4)}...${id.slice(-4)}`;
+}
+

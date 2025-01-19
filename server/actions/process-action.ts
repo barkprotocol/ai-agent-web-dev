@@ -10,7 +10,7 @@ import {
   defaultSystemPrompt,
   defaultTools,
 } from '@/ai/providers';
-import { RPC_URL } from '@/lib/constants';
+import { RPC_URL } from '@/lib/utils/constants';
 import prisma from '@/lib/prisma';
 import { decryptPrivateKey } from '@/lib/solana/wallet-generator';
 import { sanitizeResponseMessages } from '@/lib/utils/ai';

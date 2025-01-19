@@ -3,7 +3,7 @@
 import { ExternalLink, TrendingUp, Wallet } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatNumber } from '@/lib/format';
+import { formatNumber } from '@/lib/utils/format';
 import { cn } from '@/lib/utils';
 import { WalletPortfolio as Portfolio } from '@/types/helius/portfolio';
 

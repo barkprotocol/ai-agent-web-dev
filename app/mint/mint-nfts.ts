@@ -5,12 +5,9 @@ import {
   signerIdentity,
   PublicKey as UmiPublicKey,
   KeypairSigner,
-  Signer,
   percentAmount,
-  lamports,
   some,
-  none,
-  Option,
+  Amount,
 } from '@metaplex-foundation/umi';
 import {
   createTree,
@@ -18,31 +15,13 @@ import {
   mplBubblegum,
 } from '@metaplex-foundation/mpl-bubblegum';
 import {
-  TokenStandard,
   createNft,
   mplTokenMetadata,
-  updateV1,
   verifyCollectionV1,
 } from '@metaplex-foundation/mpl-token-metadata';
-import { PublicKey } from '@solana/web3.js';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-
-// Initialize UMI
-const umi = createUmi(process.env.SOLANA_RPC_URL || 'https://api.devnet.solana.com')
-  .use(mplBubblegum())
-  .use(mplTokenMetadata());
-
-// Set up the signer using the private key from the environment variable
-const privateKey = process.env.WALLET_PRIVATE_KEY;
-if (!privateKey) {
-  throw new Error('WALLET_PRIVATE_KEY is not set in the environment variables');
-}
-const secretKey = new Uint8Array(JSON.parse(privateKey));
-const keypair = umi.eddsa.createKeypairFromSecretKey(secretKey);
-const signer = createSignerFromKeypair(umi, keypair) as KeypairSigner;
-umi.use(signerIdentity(signer));
 
 interface NFTMetadata {
   name: string;
@@ -53,13 +32,26 @@ interface CollectionConfig {
   name: string;
   symbol: string;
   uri: string;
-  sellerFeeBasisPoints: number;
+  sellerFeeBasisPoints: Amount<"%", number>;
 }
 
-export async function createCollectionAndMintNFTs(
+async function createCollectionAndMintNFTs(
   collectionConfig: CollectionConfig,
   nfts: NFTMetadata[]
 ): Promise<{ treeAddress: UmiPublicKey; collectionAddress: UmiPublicKey }> {
+  const umi = createUmi(process.env.SOLANA_RPC_URL || 'https://api.devnet.solana.com')
+    .use(mplBubblegum())
+    .use(mplTokenMetadata());
+
+  const privateKey = process.env.WALLET_PRIVATE_KEY;
+  if (!privateKey) {
+    throw new Error('WALLET_PRIVATE_KEY is not set in the environment variables');
+  }
+  const secretKey = new Uint8Array(JSON.parse(privateKey));
+  const keypair = umi.eddsa.createKeypairFromSecretKey(secretKey);
+  const signer = createSignerFromKeypair(umi, keypair) as KeypairSigner;
+  umi.use(signerIdentity(signer));
+
   try {
     // Generate a new keypair for the tree
     const treeKeypair = generateSigner(umi);
@@ -101,13 +93,24 @@ export async function createCollectionAndMintNFTs(
           uri: nft.uri,
           sellerFeeBasisPoints: percentAmount(collectionConfig.sellerFeeBasisPoints),
           collection: { key: collectionMint.publicKey, verified: false },
-          creators: []
+          creators: some([]),
         },
       });
       const mintSignature = await mintBuilder.sendAndConfirm(umi);
 
       console.log(`Minted NFT "${nft.name}" with signature:`, mintSignature);
     }
+
+    // Verify the collection
+    console.log('Verifying collection...');
+    const verifyBuilder = verifyCollectionV1(umi, {
+      collectionMint: collectionMint.publicKey,
+      metadata: treeKeypair.publicKey,
+      authority: umi.identity,
+    });
+    const verifySignature = await verifyBuilder.sendAndConfirm(umi);
+
+    console.log('Collection verified with signature:', verifySignature);
 
     return {
       treeAddress: treeKeypair.publicKey,
@@ -119,12 +122,24 @@ export async function createCollectionAndMintNFTs(
   }
 }
 
-export async function mintAdditionalNFTs(
+async function mintAdditionalNFTs(
   treeAddress: UmiPublicKey,
   collectionAddress: UmiPublicKey,
-  nfts: NFTMetadata[],
-  sellerFeeBasisPoints: number
+  nfts: NFTMetadata[]
 ): Promise<void> {
+  const umi = createUmi(process.env.SOLANA_RPC_URL || 'https://api.devnet.solana.com')
+    .use(mplBubblegum())
+    .use(mplTokenMetadata());
+
+  const privateKey = process.env.WALLET_PRIVATE_KEY;
+  if (!privateKey) {
+    throw new Error('WALLET_PRIVATE_KEY is not set in the environment variables');
+  }
+  const secretKey = new Uint8Array(JSON.parse(privateKey));
+  const keypair = umi.eddsa.createKeypairFromSecretKey(secretKey);
+  const signer = createSignerFromKeypair(umi, keypair) as KeypairSigner;
+  umi.use(signerIdentity(signer));
+
   try {
     for (const nft of nfts) {
       console.log(`Minting additional NFT "${nft.name}"...`);
@@ -135,9 +150,9 @@ export async function mintAdditionalNFTs(
         metadata: {
           name: nft.name,
           uri: nft.uri,
-          sellerFeeBasisPoints: percentAmount(sellerFeeBasisPoints),
+          sellerFeeBasisPoints: percentAmount(5), // 5% fee
           collection: { key: collectionAddress, verified: false },
-          creators: []
+          creators: some([]),
         },
       });
       const mintSignature = await mintBuilder.sendAndConfirm(umi);
@@ -150,51 +165,39 @@ export async function mintAdditionalNFTs(
   }
 }
 
-export async function verifyCollection(
-  treeAddress: UmiPublicKey,
-  collectionAddress: UmiPublicKey
-): Promise<void> {
-  try {
-    console.log('Verifying collection...');
-    const verifyBuilder = verifyCollectionV1(umi, {
-      metadata: treeAddress,
-      collectionMint: collectionAddress,
-      authority: umi.identity,
-    });
-    const verifySignature = await verifyBuilder.sendAndConfirm(umi);
+async function main() {
+  const collectionConfig: CollectionConfig = {
+    name: 'Bark Awesome Collection',
+    symbol: 'BAC',
+    uri: 'https://marketplace.barkprotocol.net/nft/collection.json',
+    sellerFeeBasisPoints: percentAmount(5), // 5%
+  };
 
-    console.log('Collection verified with signature:', verifySignature);
+  const initialNFTs: NFTMetadata[] = [
+    { name: 'Bark NFT #1', uri: 'https://marketplace.barkprotocol.net/nft/nft1.json' },
+    { name: 'Bark NFT #2', uri: 'https://marketplace.barkprotocol.net/nft/nft2.json' },
+  ];
+
+  try {
+    console.log('Creating collection and minting initial NFTs...');
+    const { treeAddress, collectionAddress } = await createCollectionAndMintNFTs(collectionConfig, initialNFTs);
+    console.log('Collection created successfully:');
+    console.log('Tree address:', treeAddress.toString());
+    console.log('Collection address:', collectionAddress.toString());
+
+    const additionalNFTs: NFTMetadata[] = [
+      { name: 'Bark NFT #3', uri: 'https://marketplace.barkprotocol.net/nft/nft3.json' },
+      { name: 'Bark NFT #4', uri: 'https://marketplace.barkprotocol.net/nft/nft4.json' },
+    ];
+
+    console.log('Minting additional NFTs...');
+    await mintAdditionalNFTs(treeAddress, collectionAddress, additionalNFTs);
+    console.log('Additional NFTs minted successfully');
+
   } catch (error) {
-    console.error('Error in verifyCollection:', error);
-    throw error;
+    console.error('Failed to create collection and mint NFTs:', error);
   }
 }
 
-export async function updateNFTMetadata(
-  mintAddress: UmiPublicKey,
-  newMetadata: NFTMetadata
-): Promise<void> {
-  try {
-    console.log(`Updating NFT metadata for mint ${mintAddress.toString()}...`);
-    const updateBuilder = updateV1(umi, {
-      mint: mintAddress,
-      authority: umi.identity,
-      data: {
-        name: some(newMetadata.name),
-        symbol: none(),
-        uri: some(newMetadata.uri),
-        sellerFeeBasisPoints: none(),
-        creators: none(),
-        collection: none(),
-        uses: none(),
-      },
-    });
-    const updateSignature = await updateBuilder.sendAndConfirm(umi);
-
-    console.log(`NFT metadata updated with signature:`, updateSignature);
-  } catch (error) {
-    console.error('Error in updateNFTMetadata:', error);
-    throw error;
-  }
-}
+main();
 

@@ -4,7 +4,7 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { z } from 'zod';
 
 import prisma from '@/lib/prisma';
-import { ActionResponse, actionClient } from '@/lib/safe-action';
+import { ActionResponse, actionClient } from '@/lib/utils/safe-action';
 import { TransferWithMemoParams, createConnection } from '@/lib/solana';
 
 import { verifyUser } from './user';

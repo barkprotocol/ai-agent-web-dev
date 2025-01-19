@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import prisma from '@/lib/prisma';
 import { NewAction } from '@/types/db';
-import { debugLog } from '@/lib/debug';
+import { debugLog } from '@/lib/utils/debug';
 
 const logger = debugLog.createDebugLogger('DBQueries');
 

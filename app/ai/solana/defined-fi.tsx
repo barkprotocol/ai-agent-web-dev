@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 import { TokenGrid } from '@/components/message/token-grid';
-import { filterSolanaTokens } from '@/lib/solana/integrations/defined_fi';
-import { TokenData } from '@/lib/solana/integrations/defined_fi';
+import { filterSolanaTokens } from '@/lib/solana/integrations/defined-fi';
+import { TokenData } from '@/lib/solana/integrations/defined-fi';
 
 type FilterTokensParams = {
   maxVolume24h: number;

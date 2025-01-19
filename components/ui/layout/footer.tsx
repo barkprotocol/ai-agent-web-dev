@@ -5,16 +5,12 @@ import Image from 'next/image'
 import { useState, useCallback } from 'react'
 import React from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
 
 // Define types for the social link icons
 type SvgProps = React.SVGProps<SVGSVGElement>
 
 export function Footer() {
   const [expandedSection, setExpandedSection] = useState<string | null>(null)
-  const [email, setEmail] = useState('')
 
   const description = "Empower your financial journey with BARK Protocol, the groundbreaking fusion of Solana blockchain and AI technologies."
 
@@ -115,16 +111,6 @@ export function Footer() {
   const toggleSection = useCallback((title: string) => {
     setExpandedSection(prev => prev === title ? null : title)
   }, [])
-
-  const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!email) {
-      toast.error('Please enter a valid email address.');
-      return;
-    }
-    toast.success('Thank you for subscribing!');
-    setEmail('');
-  };
 
   return (
     <footer className="bg-black text-gray-200" aria-labelledby="footer-heading">
@@ -241,29 +227,6 @@ export function Footer() {
               ))}
             </div>
           </div>
-        </div>
-        <div className="mt-8 pt-8 border-t border-gray-700">
-          <form onSubmit={handleSubscribe} className="sm:flex">
-            <label htmlFor="email-address" className="sr-only">
-              Email address
-            </label>
-            <Input
-              id="email-address"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="w-full sm:max-w-xs"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-              <Button type="submit" className="w-full bg-sand text-black hover:bg-sand/90">
-                Subscribe
-              </Button>
-            </div>
-          </form>
         </div>
       </div>
     </footer>

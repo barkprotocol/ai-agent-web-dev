@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { z } from 'zod';
-import { formatNumber } from '@/lib/format';
-import { Placeholder } from '@/lib/placeholder';
+import { formatNumber } from '@/lib/utils/format';
+import { Placeholder } from '@/lib/utils/placeholder';
 import {
   type TokenPrice,
   getJupiterTokenPrice,

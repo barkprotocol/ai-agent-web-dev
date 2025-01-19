@@ -17,7 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { APP_VERSION, IS_BETA } from '@/lib/constants';
+import { APP_VERSION, IS_BETA } from '@/lib/utils/constants';
 import { AppSidebarConversations } from './app-sidebar-conversations';
 import { AppSidebarUser } from './app-sidebar-user';
 
@@ -26,7 +26,7 @@ const AppSidebarHeader = () => {
     <SidebarHeader>
       <div className="flex items-center justify-between px-1">
         <span className="pl-2 text-lg font-medium tracking-tight group-data-[collapsible=icon]:hidden">
-          neur.sh
+          bark.sh
         </span>
         <div className="flex items-center gap-1.5">
           <ThemeToggle />

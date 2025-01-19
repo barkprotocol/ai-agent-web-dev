@@ -1,4 +1,4 @@
-import { debugLog } from '@/lib/debug';
+import { debugLog } from '@/lib/utils/debug';
 import { 
   DISCORD_API_BASE_URL, 
   DISCORD_ERROR_MESSAGES 

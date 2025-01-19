@@ -4,18 +4,18 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PrivyInterface, usePrivy } from '@privy-io/react-auth';
 import useSWR from 'swr';
-import { debugLog } from '@/lib/debug';
+import { debugLog } from '@/lib/utils/debug';
 import { getUserData } from '@/server/actions/user';
-import { NeurUser, PrismaUser, PrivyUser } from '@/types/db';
+import { BarkUser, PrismaUser, PrivyUser } from '@/types/db';
 
-type NeurUserInterface = Omit<PrivyInterface, 'user' | 'ready'> & {
+type BarkUserInterface = Omit<PrivyInterface, 'user' | 'ready'> & {
   isLoading: boolean;
-  user: NeurUser | null;
+  user: BarkUser | null;
 };
 
-function loadFromCache(): NeurUser | null {
+function loadFromCache(): BarkUser | null {
   try {
-    const cached = localStorage.getItem('neur-user-data');
+    const cached = localStorage.getItem('bark-user-data');
     if (cached) {
       debugLog('Loading user data from cache', cached, {
         module: 'useUser',
@@ -37,16 +37,16 @@ function loadFromCache(): NeurUser | null {
   }
 }
 
-function saveToCache(data: NeurUser | null) {
+function saveToCache(data: BarkUser | null) {
   try {
     if (data) {
-      localStorage.setItem('neur-user-data', JSON.stringify(data));
+      localStorage.setItem('bark-user-data', JSON.stringify(data));
       debugLog('User data saved to cache', data, {
         module: 'useUser',
         level: 'info',
       });
     } else {
-      localStorage.removeItem('neur-user-data');
+      localStorage.removeItem('bark-user-data');
       debugLog('User data removed from cache', null, {
         module: 'useUser',
         level: 'info',
@@ -60,9 +60,9 @@ function saveToCache(data: NeurUser | null) {
   }
 }
 
-async function fetchNeurUserData(
+async function fetchBarkUserData(
   privyUser: PrivyUser,
-): Promise<NeurUser | null> {
+): Promise<BarkUser | null> {
   try {
     const response = await getUserData();
     if (response?.data?.success && response?.data?.data) {
@@ -74,7 +74,7 @@ async function fetchNeurUserData(
       return {
         ...prismaUser,
         privyUser: privyUser as PrivyUser,
-      } as NeurUser;
+      } as BarkUser;
     }
     debugLog(
       'Server returned unsuccessful user data response',
@@ -94,9 +94,9 @@ async function fetchNeurUserData(
   }
 }
 
-export function useUser(): NeurUserInterface {
+export function useUser(): BarkUserInterface {
   const { ready, user: privyUser, ...privyRest } = usePrivy();
-  const [initialCachedUser, setInitialCachedUser] = useState<NeurUser | null>(
+  const [initialCachedUser, setInitialCachedUser] = useState<BarkUser | null>(
     null,
   );
   const router = useRouter();
@@ -109,7 +109,7 @@ export function useUser(): NeurUserInterface {
   const swrKey = ready && privyUser?.id ? `user-${privyUser.id}` : null;
   debugLog('SWR Key', swrKey, { module: 'useUser' });
 
-  const fetcher = useCallback(async (): Promise<NeurUser | null> => {
+  const fetcher = useCallback(async (): Promise<BarkUser | null> => {
     if (!ready || !privyUser) {
       debugLog('Privy not ready or user not logged in', null, {
         module: 'useUser',
@@ -119,25 +119,25 @@ export function useUser(): NeurUserInterface {
     }
 
     if (privyUser) {
-      debugLog('Fetching NeurUser data from server', null, {
+      debugLog('Fetching BarkUser data from server', null, {
         module: 'useUser',
         level: 'info',
       });
-      const neurUser = await fetchNeurUserData(privyUser as PrivyUser);
-      debugLog('Merged NeurUser data', neurUser, {
+      const barkUser = await fetchBarkUserData(privyUser as PrivyUser);
+      debugLog('Merged BarkUser data', barkUser, {
         module: 'useUser',
         level: 'info',
       });
-      return neurUser;
+      return barkUser;
     }
-    debugLog('No valid NeurUser data retrieved', null, {
+    debugLog('No valid BarkUser data retrieved', null, {
       module: 'useUser',
       level: 'warn',
     });
     return null;
   }, [ready, privyUser]);
 
-  const { data: neurUser, isValidating: swrLoading } = useSWR<NeurUser | null>(
+  const { data: barkUser, isValidating: swrLoading } = useSWR<BarkUser | null>(
     swrKey,
     fetcher,
     {
@@ -147,14 +147,14 @@ export function useUser(): NeurUserInterface {
     },
   );
 
-  debugLog('Current NeurUser data', neurUser, { module: 'useUser' });
+  debugLog('Current BarkUser data', barkUser, { module: 'useUser' });
   debugLog('SWR validation status', swrLoading, { module: 'useUser' });
 
   useEffect(() => {
-    if (neurUser) {
-      saveToCache(neurUser);
+    if (barkUser) {
+      saveToCache(barkUser);
     }
-  }, [neurUser]);
+  }, [barkUser]);
 
   const isLoading = swrLoading && !initialCachedUser;
   debugLog('Loading state', { isLoading }, { module: 'useUser' });
@@ -186,8 +186,8 @@ export function useUser(): NeurUserInterface {
 
   return {
     ...privyRest,
-    isLoading: isLoading || neurUser == null,
-    user: neurUser || null,
+    isLoading: isLoading || barkUser == null,
+    user: barkUser || null,
     logout: extendedLogout,
   };
 }

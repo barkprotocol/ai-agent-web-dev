@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Placeholder } from '@/lib/placeholder';
+import { Placeholder } from '@/lib/utils/placeholder';
 
 // Types
 interface MagicEdenStats {

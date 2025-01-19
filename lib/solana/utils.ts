@@ -8,7 +8,7 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js';
 
-import { RPC_URL } from '../constants';
+import { RPC_URL } from '../utils/constants';
 
 export const MEMO_PROGRAM_ID = new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
 

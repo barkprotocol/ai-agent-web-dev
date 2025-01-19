@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+  bark-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+      target: dev
+    container_name: "bark-ai-app"
+    depends_on:
+      bark-db:
+        condition: service_healthy
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    working_dir: /usr/app
+    command: "/bin/bash ./local_entrypoint.sh"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@bark-db:5432/barkdb
+      - DIRECT_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@bark-db:5432/barkdb
+    volumes:
+      - .:/usr/app
+      - root_node_modules:/usr/app/node_modules
+      - webapp_next:/usr/app/.next
+
+  bark-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+      target: dev
+    container_name: "bark-studio"
+    depends_on:
+      bark-db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@bark-db:5432/barkdb
+    expose:
+      - "5555"
+    ports:
+      - "5555:5555"
+    working_dir: /usr/app
+    command: "pnpm npx prisma studio"
+    volumes:
+      - .:/usr/src/app
+      - root_node_modules:/usr/app/node_modules
+      - webapp_next:/usr/app/.next
+
+  bark-db:
+    image: "postgres:15"
+    container_name: "bark-db"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - "bark-db-data:/var/lib/postgresql/data"
+
+volumes:
+  bark-db-data:
+  root_node_modules:
+  webapp_next:

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Discord, OAuthTokens, Twitter, User, useOAuthTokens } from '@privy-io/react-auth';
 import { useMemo, useCallback } from 'react';
 
-import { WalletCard } from '@/components/dashboard/wallet-card';
+import { WalletCard } from '@/components/wallet/wallet-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,7 +21,7 @@ import {
 import { getUserID, grantDiscordRole } from '@/lib/utils/grant-discord-role';
 import { EmbeddedWallet } from '@/types/db';
 
-import { LoadingStateSkeleton } from './loading-skeleton';
+import { LoadingStateSkeleton } from '@/components/account/loading-skeleton';
 
 export function AccountContent() {
   const router = useRouter();
@@ -62,9 +62,6 @@ export function AccountContent() {
   }, [user]);
 
   const wallets = user?.wallets || [];
-  const avatarLabel = userData?.walletAddress
-    ? userData.walletAddress.substring(0, 2).toUpperCase()
-    : '?';
 
   if (isLoading || !userData) {
     return <LoadingStateSkeleton />;
@@ -75,7 +72,15 @@ export function AccountContent() {
       <div className="w-full px-8">
         <div className="max-w-3xl space-y-6">
           <ProfileInformationSection userData={userData} user={user} router={router} />
-          <ConnectedAccountsSection userData={userData} linkTwitter={linkTwitter} unlinkTwitter={unlinkTwitter} linkEmail={linkEmail} unlinkEmail={unlinkEmail} linkDiscord={linkDiscord} unlinkDiscord={unlinkDiscord} />
+          <ConnectedAccountsSection
+            userData={userData}
+            linkTwitter={linkTwitter}
+            unlinkTwitter={unlinkTwitter}
+            linkEmail={linkEmail}
+            unlinkEmail={unlinkEmail}
+            linkDiscord={linkDiscord}
+            unlinkDiscord={unlinkDiscord}
+          />
           <WalletsSection wallets={wallets} />
         </div>
       </div>

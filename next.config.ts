@@ -5,6 +5,18 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'ucarecdn.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.discordapp.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.telegram.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'openai.com', // For OpenAI / ChatGPT assets if needed
+      },
     ],
   },
   webpack: (config: { module: { rules: { test: RegExp; type: string; }[]; }; stats: string; ignoreWarnings: RegExp[]; resolve: { fallback: { fs: boolean; module: boolean; }; }; }, { isServer }: any) => {
@@ -38,6 +50,11 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true, // Ignores eslint errors during the build
+  },
+  env: {
+    DISCORD_API_URL: process.env.DISCORD_API_URL, // Your Discord API or Bot URL
+    TELEGRAM_API_URL: process.env.TELEGRAM_API_URL, // Your Telegram API URL
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY, // API key for ChatGPT
   },
 };
 

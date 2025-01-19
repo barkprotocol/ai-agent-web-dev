@@ -518,7 +518,7 @@ var _s = __turbopack_refresh__.signature();
 ;
 function loadFromCache() {
     try {
-        const cached = localStorage.getItem('neur-user-data');
+        const cached = localStorage.getItem('bark-user-data');
         if (cached) {
             (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('Loading user data from cache', cached, {
                 module: 'useUser',
@@ -542,13 +542,13 @@ function loadFromCache() {
 function saveToCache(data) {
     try {
         if (data) {
-            localStorage.setItem('neur-user-data', JSON.stringify(data));
+            localStorage.setItem('bark-user-data', JSON.stringify(data));
             (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('User data saved to cache', data, {
                 module: 'useUser',
                 level: 'info'
             });
         } else {
-            localStorage.removeItem('neur-user-data');
+            localStorage.removeItem('bark-user-data');
             (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('User data removed from cache', null, {
                 module: 'useUser',
                 level: 'info'
@@ -561,7 +561,7 @@ function saveToCache(data) {
         });
     }
 }
-async function fetchNeurUserData(privyUser) {
+async function fetchBarkUserData(privyUser) {
     try {
         const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$server$2f$actions$2f$user$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getUserData"])();
         if (response?.data?.success && response?.data?.data) {
@@ -613,18 +613,18 @@ function useUser() {
                 return null;
             }
             if (privyUser) {
-                (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('Fetching NeurUser data from server', null, {
+                (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('Fetching BarkUser data from server', null, {
                     module: 'useUser',
                     level: 'info'
                 });
-                const neurUser = await fetchNeurUserData(privyUser);
-                (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('Merged NeurUser data', neurUser, {
+                const barkUser = await fetchBarkUserData(privyUser);
+                (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('Merged BarkUser data', barkUser, {
                     module: 'useUser',
                     level: 'info'
                 });
-                return neurUser;
+                return barkUser;
             }
-            (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('No valid NeurUser data retrieved', null, {
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('No valid BarkUser data retrieved', null, {
                 module: 'useUser',
                 level: 'warn'
             });
@@ -634,12 +634,12 @@ function useUser() {
         ready,
         privyUser
     ]);
-    const { data: neurUser, isValidating: swrLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$swr$40$2$2e$3$2e$0_react$40$19$2e$0$2e$0$2f$node_modules$2f$swr$2f$dist$2f$index$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"])(swrKey, fetcher, {
+    const { data: barkUser, isValidating: swrLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$swr$40$2$2e$3$2e$0_react$40$19$2e$0$2e$0$2f$node_modules$2f$swr$2f$dist$2f$index$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"])(swrKey, fetcher, {
         fallbackData: initialCachedUser,
         revalidateOnFocus: false,
         shouldRetryOnError: false
     });
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('Current NeurUser data', neurUser, {
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('Current BarkUser data', barkUser, {
         module: 'useUser'
     });
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('SWR validation status', swrLoading, {
@@ -647,12 +647,12 @@ function useUser() {
     });
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$15$2e$1$2e$5_$40$babel$2b$core$40$7$2e$26$2e$0_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_react$2d$dom$40$19$2e$0$2e$0_react$40$19$2e$0$2e$0_$5f$react$40$19$2e$0$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useUser.useEffect": ()=>{
-            if (neurUser) {
-                saveToCache(neurUser);
+            if (barkUser) {
+                saveToCache(barkUser);
             }
         }
     }["useUser.useEffect"], [
-        neurUser
+        barkUser
     ]);
     const isLoading = swrLoading && !initialCachedUser;
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$debug$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["debugLog"])('Loading state', {
@@ -689,8 +689,8 @@ function useUser() {
     ]);
     return {
         ...privyRest,
-        isLoading: isLoading || neurUser == null,
-        user: neurUser || null,
+        isLoading: isLoading || barkUser == null,
+        user: barkUser || null,
         logout: extendedLogout
     };
 }
