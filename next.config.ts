@@ -1,7 +1,4 @@
 const nextConfig = {
-  experimental: {
-    turbopack: false,
-  },
   images: {
     remotePatterns: [
       {
@@ -19,7 +16,7 @@ const nextConfig = {
 
     // Allow build to continue even with errors or warnings
     config.stats = 'errors-only'; // Shows only errors (suppresses warnings)
-    
+
     // Ignore specific warnings that are non-blocking
     config.ignoreWarnings = [
       /Failed to parse source map/,
