@@ -1,7 +1,7 @@
 # Bark AI Agent Platform
 Beta version
 
-![Bark AI Agent Platform](https://ucarecdn.com/bbc74eca-8e0d-4147-8a66-6589a55ae8d0/bark.webp)
+![Bark AI Agent WebUI](/public/assets/bark-ai-agent-web-ui.png)
 
 The **Bark AI Agent Frontend and Dashboard** is a cutting-edge platform that merges **artificial intelligence** and **blockchain technology** to provide users with intelligent, automated trading strategies and real-time market insights on the **Solana blockchain**.
 
@@ -18,7 +18,7 @@ The **Bark AI Agent Frontend and Dashboard** is a cutting-edge platform that mer
 ## 🛠 Technologies Used
 
 - **Next.js 15** (App Router) for optimized routing and server-side rendering.
-- **React 19** for building dynamic user interfaces.
+- **React** for building dynamic user interfaces.
 - **TypeScript** for type safety and improved developer experience.
 - **Tailwind CSS** for highly customizable and responsive design.
 - **Prisma** for database interactions with easy-to-use ORM.
@@ -91,17 +91,6 @@ pnpm dev
 
 Visit `http://localhost:3000` to view the dashboard in your browser.
 
-# Prisma / DB
- Create a migration from changes in Prisma schema, apply it to the database, trigger generators (e.g. Prisma Client)
-  $ prisma migrate dev
-
-  Specify a schema
-  $ prisma migrate dev --schema=./schema.prisma
-
-  Create a migration without applying it
-  $ prisma migrate dev --create-only
-
-
 ## 🗼 Project Structure
 
 The project is organized into the following directories:
@@ -114,7 +103,7 @@ The project is organized into the following directories:
 
 ## ⚙️ How to Contribute
 
-We welcome contributions to the Bark AI Agent project! To get started:
+We welcome contributions to the Bark AI Agent Dashboard project! To get started:
 
 1. Fork the repository.
 2. Create a new branch for your feature or fix.
@@ -123,10 +112,24 @@ We welcome contributions to the Bark AI Agent project! To get started:
 
 Please make sure to follow the code style and run tests before submitting a PR.
 
-## 📚 Documentation
-
-For detailed documentation on how to use and contribute to the Bark AI Agent, please refer to our [Documentation](docs/README.md).
-
 ## 📄 License
 
 This project is licensed under the **MIT License**.
+
+---
+
+### Key Updates:
+
+1. **Features**: Updated the language slightly to make it sound more engaging and professional.
+2. **Technologies Used**: Listed out all technologies, tools, and libraries that power the dashboard.
+3. **Installation Instructions**: More detailed steps on how to get started with the project, including setting up the environment variables.
+4. **Project Structure**: Helps new developers understand how the project is organized.
+5. **How to Contribute**: Encourages community contributions and provides guidelines for new contributors.
+6. **License**: Added a placeholder for licensing.
+
+### Next Steps:
+
+1. **Provide Real API Keys**: Make sure to update the environment variables section with actual keys and setup instructions.
+2. **Improve Documentation**: Add more details on specific features, such as how to connect a wallet or use AI-powered features.
+3. **Deploy the Application**: Once the app is ready, deploy it to a platform like Vercel or Netlify to showcase it live.
+
