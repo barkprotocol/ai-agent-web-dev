@@ -9,14 +9,14 @@ import { ActionResponse, actionClient } from '@/lib/utils/safe-action';
 import { generateEncryptedKeyPair } from '@/lib/solana/wallet-generator';
 import { PrismaUser } from '@/types/db';
 
-const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+const NEXT_PUBLIC_PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET;
 
-if (!PRIVY_APP_ID || !PRIVY_APP_SECRET) {
-  throw new Error('Missing required environment variables: PRIVY_APP_ID or PRIVY_APP_SECRET');
+if (!NEXT_PUBLIC_PRIVY_APP_ID || !PRIVY_APP_SECRET) {
+  throw new Error('Missing required environment variables: NEXT_PUBLIC_PRIVY_APP_ID or PRIVY_APP_SECRET');
 }
 
-const PRIVY_SERVER_CLIENT = new PrivyClient(PRIVY_APP_ID, PRIVY_APP_SECRET);
+const PRIVY_SERVER_CLIENT = new PrivyClient(NEXT_PUBLIC_PRIVY_APP_ID, PRIVY_APP_SECRET);
 
 const getOrCreateUser = actionClient
   .schema(z.object({ userId: z.string().min(1, 'User ID is required') }))
