@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { searchWalletAssets } from '@/lib/solana/helius';
-import { transformToPortfolio } from '@/types/helius/portfolio';
+import { transformToPortfolio } from '@/app/types/helius/portfolio';
 
 export async function GET(
   request: NextRequest,
