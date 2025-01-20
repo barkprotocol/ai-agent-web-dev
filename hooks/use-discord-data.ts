@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
-import type { DiscordData, DiscordFetchStatus } from '@/types/discord';
+import type { DiscordData, DiscordFetchStatus } from '@/app/types/discord';
 import { fetchDiscordData } from '@/lib/api/discord';
 
 export function useDiscordData(endpoint: string) {

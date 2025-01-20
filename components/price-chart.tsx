@@ -16,8 +16,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { formatChartPrice } from '@/lib/utils/format';
-import { TIMEFRAME } from '@/types/chart';
+import { formatChartPrice } from '@/lib/format';
+import { TIMEFRAME } from '@/app/types/chart';
 import { Button } from '@/components/ui/button';
 
 interface PriceChartProps {

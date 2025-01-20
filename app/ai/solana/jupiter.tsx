@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { z } from 'zod';
-import { formatNumber } from '@/lib/utils/format';
+import { formatNumber } from '@/lib/format';
 import { Placeholder } from '@/lib/utils/placeholder';
 import {
   type TokenPrice,

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { TIMEFRAME } from '@/types/chart';
+import { TIMEFRAME } from '@/app/types/chart';
 
 const API_KEY = process.env.CG_API_KEY;
 const BASE_URL =

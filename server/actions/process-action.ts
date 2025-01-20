@@ -10,11 +10,11 @@ import {
   defaultSystemPrompt,
   defaultTools,
 } from '@/app/ai/providers';
-import { RPC_URL } from '@/lib/utils/constants';
+import { RPC_URL } from '@/lib/constants';
 import prisma from '@/lib/prisma';
 import { decryptPrivateKey } from '@/lib/solana/wallet-generator';
 import { sanitizeResponseMessages } from '@/lib/utils/ai';
-import { ActionWithUser } from '@/types/db';
+import { ActionWithUser } from '@/app/types/db';
 
 import { dbCreateMessages, dbGetConversation } from '../db/queries';
 

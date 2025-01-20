@@ -22,7 +22,7 @@ import { Label } from '@/components/ui/label';
 import { SolanaUtils } from '@/lib/solana';
 import { cn } from '@/lib/utils';
 import { embeddedWalletSendSOL } from '@/server/actions/wallet';
-import { EmbeddedWallet } from '@/types/db';
+import { EmbeddedWallet } from '@/app/types/db';
 import { Button } from '../ui/button';
 
 const PERCENTAGE_OPTIONS = [

@@ -1,21 +1,25 @@
 'use server';
 
-import { type CoreUserMessage, generateText } from 'ai';
-import { SolanaAgentKit } from 'solana-agent-kit';
+import { PublicKey } from '@solana/web3.js';
+import { type CoreMessage, type CoreUserMessage, generateText } from 'ai';
+import { BaseWallet, SolanaAgentKit, WalletAdapter } from 'solana-agent-kit';
 import { z } from 'zod';
 
 import { defaultModel } from '@/ai/providers';
-import { RPC_URL } from '@/lib/utils/constants';
+import { RPC_URL } from '@/lib/constants';
 import prisma from '@/lib/prisma';
-import { ActionEmptyResponse, actionClient } from '@/lib/utils/safe-action';
+import { ActionEmptyResponse, actionClient } from '@/lib/safe-action';
+import { PrivyEmbeddedWallet } from '@/lib/solana/privy-embedded-wallet';
 import { decryptPrivateKey } from '@/lib/solana/wallet-generator';
+import { SOL_MINT } from '@/app/types/helius/portfolio';
+import { publicKeySchema } from '@/types/util';
 
-import { verifyUser } from './user';
+import { getPrivyClient, verifyUser } from './user';
 
 export async function generateTitleFromUserMessage({
   message,
 }: {
-  message: CoreUserMessage;
+  message: string;
 }) {
   const { text: title } = await generateText({
     model: defaultModel,
@@ -28,6 +32,19 @@ export async function generateTitleFromUserMessage({
   });
 
   return title;
+}
+
+export async function convertUserResponseToBoolean(message: string) {
+  const { text: rawBool } = await generateText({
+    model: defaultModel,
+    system: `\n
+      - you will generate a boolean response based on a user's message content
+      - only return true or false
+      - if an explicit affirmative response cannot be determined, return false`,
+    prompt: message,
+  });
+
+  return rawBool === 'true';
 }
 
 const renameSchema = z.object({
@@ -51,30 +68,88 @@ export const renameConversation = actionClient
     },
   );
 
-export const retrieveAgentKit = actionClient.action(async () => {
-  const authResult = await verifyUser();
-  const userId = authResult?.data?.data?.id;
+export const retrieveAgentKit = actionClient
+  .schema(
+    z
+      .object({
+        walletId: z.string(),
+      })
+      .optional(),
+  )
+  .action(async ({ parsedInput }) => {
+    const authResult = await verifyUser();
+    const userId = authResult?.data?.data?.id;
 
-  if (!userId) {
-    return { success: false, error: 'UNAUTHORIZED' };
-  }
+    if (!userId) {
+      return { success: false, error: 'UNAUTHORIZED' };
+    }
 
-  const wallet = await prisma.wallet.findFirst({
-    where: {
-      ownerId: userId,
-    },
+    const whereClause = parsedInput?.walletId
+      ? { ownerId: userId, id: parsedInput.walletId }
+      : { ownerId: userId, active: true };
+
+    const wallet = await prisma.wallet.findFirst({
+      where: whereClause,
+    });
+
+    if (!wallet) {
+      return { success: false, error: 'WALLET_NOT_FOUND' };
+    }
+
+    console.log('[retrieveAgentKit] wallet', wallet.publicKey);
+
+    let walletAdapter: WalletAdapter;
+    if (wallet.encryptedPrivateKey) {
+      walletAdapter = new BaseWallet(
+        await decryptPrivateKey(wallet?.encryptedPrivateKey),
+      );
+    } else {
+      const privyClientResponse = await getPrivyClient();
+      const privyClient = privyClientResponse?.data;
+      if (!privyClient) {
+        return { success: false, error: 'PRIVY_CLIENT_NOT_FOUND' };
+      }
+      walletAdapter = new PrivyEmbeddedWallet(
+        privyClient,
+        new PublicKey(wallet.publicKey),
+      );
+    }
+
+    const openaiKey = process.env.OPENAI_API_KEY!;
+    const agent = new SolanaAgentKit(walletAdapter, RPC_URL, {
+      OPENAI_API_KEY: openaiKey,
+      HELIUS_API_KEY: process.env.HELIUS_API_KEY!,
+    });
+
+    return { success: true, data: { agent } };
   });
 
-  if (!wallet) {
-    return { success: false, error: 'WALLET_NOT_FOUND' };
-  }
+export const transferToken = actionClient
+  .schema(
+    z.object({
+      walletId: z.string(),
+      receiverAddress: publicKeySchema,
+      tokenAddress: publicKeySchema,
+      amount: z.number(),
+      tokenSymbol: z.string().describe('Symbol of the token to send'),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    const { walletId, receiverAddress, tokenAddress, amount, tokenSymbol } =
+      parsedInput;
 
-  console.log('[retrieveAgentKit] wallet', wallet.publicKey);
+    const agentResposne = await retrieveAgentKit({ walletId });
+    if (!agentResposne?.data?.success || !agentResposne?.data?.data) {
+      return { success: false, error: 'AGENT_NOT_FOUND' };
+    }
 
-  const privateKey = await decryptPrivateKey(wallet?.encryptedPrivateKey);
-  const openaiKey = process.env.OPENAI_API_KEY!;
-  const agent = new SolanaAgentKit(privateKey, RPC_URL, openaiKey);
+    const agent = agentResposne.data.data.agent;
 
-  return { success: true, data: { agent } };
-});
+    const signature = await agent.transfer(
+      new PublicKey(receiverAddress),
+      amount,
+      tokenAddress !== SOL_MINT ? new PublicKey(tokenAddress) : undefined,
+    );
 
+    return { success: true, data: { signature } };
+  });

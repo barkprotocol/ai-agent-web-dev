@@ -2,7 +2,7 @@ import { Action, Prisma, Message as PrismaMessage } from '@prisma/client';
 import _ from 'lodash';
 
 import prisma from '@/lib/prisma';
-import { NewAction } from '@/types/db';
+import { NewAction } from '@/app/types/db';
 import { debugLog } from '@/lib/utils/debug';
 
 const logger = debugLog.createDebugLogger('DBQueries');

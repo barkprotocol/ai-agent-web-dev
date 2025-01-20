@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { ActionResponse, actionClient } from '@/lib/utils/safe-action';
+import { ActionResponse, actionClient } from '@/lib/safe-action';
 import {
   dbGetUserTelegramChat,
   dbUpdateUserTelegramChat,

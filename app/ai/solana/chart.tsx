@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TIMEFRAME } from '@/types/chart';
+import { TIMEFRAME } from '@/app/types/chart';
 import { getDexPriceHistory, getPriceHistory } from '@/server/actions/chart';
 import PriceChart from '@/components/price-chart';
 

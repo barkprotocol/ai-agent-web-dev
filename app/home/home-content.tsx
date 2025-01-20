@@ -1,119 +1,393 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { ConversationInput } from '@/components/conversation-input';
-import { SuggestionCard } from '@/components/suggestion-card';
-import { getRandomSuggestions } from '@/data/suggestions';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import { RiTwitterXFill } from '@remixicon/react';
+import { JSONValue } from 'ai';
+import { useChat } from 'ai/react';
+import { CheckCircle2, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { v4 as uuidv4 } from 'uuid';
+
+import ChatInterface from '@/app/(user)/chat/[id]/chat-interface';
+import { Badge } from '@/components/ui/badge';
+import BlurFade from '@/components/ui/blur-fade';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import TypingAnimation from '@/components/ui/typing-animation';
+import { useConversations } from '@/hooks/use-conversations';
 import { useUser } from '@/hooks/use-user';
+import { SolanaUtils } from '@/lib/solana';
+import { cn } from '@/lib/utils';
+import { checkEAPTransaction } from '@/server/actions/eap';
+
+import { IntegrationsGrid } from '@/components/integrations-grid';
+import { ConversationInput } from '@/conversation-input';
+import { getRandomSuggestions } from './data/suggestions';
+import { SuggestionCard } from '@/components/suggestion-card';
+
+const EAP_PRICE = 1.0;
+const RECEIVE_WALLET_ADDRESS =
+  process.env.NEXT_PUBLIC_EAP_RECEIVE_WALLET_ADDRESS!;
+
+const EAP_BENEFITS = [
+  'Support platform growth',
+  'Early access to features',
+  'Unlimited AI interactions',
+  'Join early governance and decisions',
+];
+
+interface SectionTitleProps {
+  children: React.ReactNode;
+}
+
+function SectionTitle({ children }: SectionTitleProps) {
+  return (
+    <h2 className="mb-2 px-1 text-sm font-medium text-muted-foreground/80">
+      {children}
+    </h2>
+  );
+}
 
 export function HomeContent() {
-  const { user } = useUser();
-  const [inputValue, setInputValue] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+  const pathname = usePathname();
   const suggestions = useMemo(() => getRandomSuggestions(4), []);
+  const [showChat, setShowChat] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [chatId, setChatId] = useState(() => uuidv4());
+  const { user, isLoading } = useUser();
+  const [verifyingTx, setVerifyingTx] = useState<string | null>(null);
+  const [verificationAttempts, setVerificationAttempts] = useState(0);
+  const MAX_VERIFICATION_ATTEMPTS = 20;
 
-  const handleInputChange = useCallback((value: string) => {
-    setInputValue(value);
+  const { conversations, refreshConversations } = useConversations(user?.id);
+
+  const resetChat = useCallback(() => {
+    setShowChat(false);
+    setChatId(uuidv4());
   }, []);
 
-  const handleSubmit = useCallback(async (value: string) => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    setError(null);
+  const { messages, input, handleSubmit, setInput } = useChat({
+    id: chatId,
+    initialMessages: [],
+    body: { id: chatId },
+    onFinish: () => {
+      // Only refresh if we have a new conversation that's not in the list
+      if (chatId && !conversations?.find((conv) => conv.id === chatId)) {
+        refreshConversations();
+      }
+    },
+    experimental_prepareRequestBody: ({ messages }) => {
+      return {
+        message: messages[messages.length - 1],
+        id: chatId,
+      } as unknown as JSONValue;
+    },
+  });
+
+  // Verification effect
+  useEffect(() => {
+    if (!verifyingTx) return;
+
+    const verify = async () => {
+      try {
+        const response = await checkEAPTransaction({ txHash: verifyingTx });
+        if (response?.data?.success) {
+          toast.success('EAP Purchase Successful', {
+            description:
+              'Your Early Access Program purchase has been verified. Please refresh the page.',
+          });
+          setVerifyingTx(null);
+          return;
+        }
+
+        // Continue verification if not reached max attempts
+        if (verificationAttempts < MAX_VERIFICATION_ATTEMPTS) {
+          setVerificationAttempts((prev) => prev + 1);
+        } else {
+          // Max attempts reached, show manual verification message
+          toast.error('Verification Timeout', {
+            description:
+              'Please visit the FAQ page to manually verify your transaction.',
+          });
+          setVerifyingTx(null);
+        }
+      } catch (error) {
+        console.error('Verification error:', error);
+        // Continue verification if not reached max attempts
+        if (verificationAttempts < MAX_VERIFICATION_ATTEMPTS) {
+          setVerificationAttempts((prev) => prev + 1);
+        }
+      }
+    };
+
+    const timer = setTimeout(verify, 3000);
+    return () => clearTimeout(timer);
+  }, [verifyingTx, verificationAttempts]);
+
+  const handleSend = async (value: string) => {
+    if (!value.trim()) return;
+
+    if (!user?.earlyAccess) {
+      return;
+    }
+
+    const fakeEvent = new Event('submit') as any;
+    fakeEvent.preventDefault = () => {};
+
+    await handleSubmit(fakeEvent, { data: { content: value } });
+    setShowChat(true);
+    window.history.replaceState(null, '', `/chat/${chatId}`);
+  };
+
+  const handlePurchase = async () => {
+    if (!user) return;
+    setIsProcessing(true);
+    setVerificationAttempts(0);
 
     try {
-      // Replace this URL with the actual API endpoint or handling logic
-      const response = await fetch('/api/submit-query', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query: value }), // Send the input value to the server
+      const tx = await SolanaUtils.sendTransferWithMemo({
+        to: RECEIVE_WALLET_ADDRESS,
+        amount: EAP_PRICE,
+        memo: `{
+                    "type": "EAP_PURCHASE",
+                    "user_id": "${user.id}"
+                }`,
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit query');
+      if (tx) {
+        setVerifyingTx(tx);
+        toast.success('Transaction Sent', {
+          description: 'Transaction has been sent. Verifying your purchase...',
+        });
+      } else {
+        toast.error('Transaction Failed', {
+          description: 'Failed to send the transaction. Please try again.',
+        });
+      }
+    } catch (error) {
+      console.error('Transaction error:', error);
+
+      let errorMessage = 'Failed to send the transaction. Please try again.';
+
+      if (error instanceof Error) {
+        const errorString = error.toString();
+        if (
+          errorString.includes('TransactionExpiredBlockheightExceededError')
+        ) {
+          toast.error('Transaction Timeout', {
+            description: (
+              <>
+                <span className="font-semibold">
+                  Transaction might have been sent successfully.
+                </span>
+                <br />
+                If SOL was deducted from your wallet, please visit the FAQ page
+                and input your transaction hash for manual verification.
+              </>
+            ),
+          });
+          return;
+        }
+        errorMessage = error.message;
       }
 
-      const result = await response.json();
-      console.log('Submission success:', result);
-
-      // Reset input field after successful submission
-      setInputValue('');
-    } catch (err) {
-      console.error('Error during submission:', err);
-      setError('An error occurred while submitting your query. Please try again.');
+      toast.error('Transaction Failed', {
+        description: errorMessage,
+      });
     } finally {
-      setIsSubmitting(false); // Reset the submitting state
+      setIsProcessing(false);
     }
-  }, [isSubmitting]);
+  };
 
-  const handleSuggestionSelect = useCallback((text: string) => {
-    setInputValue(text);
-  }, []);
+  // Reset chat when pathname changes to /home
+  useEffect(() => {
+    if (pathname === '/home') {
+      resetChat();
+    }
+  }, [pathname, resetChat]);
+
+  // 监听浏览器的前进后退
+  useEffect(() => {
+    const handlePopState = () => {
+      if (location.pathname === '/home') {
+        resetChat();
+      } else if (location.pathname === `/chat/${chatId}`) {
+        setShowChat(true);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [chatId, resetChat]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  const hasEAP = user?.earlyAccess === true;
+
+  const mainContent = (
+    <div
+      className={cn(
+        'mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-6',
+        !hasEAP ? 'h-screen py-0' : 'py-12',
+      )}
+    >
+      <BlurFade delay={0.2}>
+        <TypingAnimation
+          className="mb-12 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-center text-4xl font-semibold tracking-tight text-transparent md:text-4xl lg:text-5xl"
+          duration={50}
+          text="How can I assist you?"
+        />
+      </BlurFade>
+
+      <div className="mx-auto w-full max-w-3xl space-y-8">
+        <BlurFade delay={0.1}>
+          <ConversationInput
+            value={input}
+            onChange={setInput}
+            onSubmit={handleSend}
+          />
+        </BlurFade>
+
+        {hasEAP && (
+          <div className="space-y-8">
+            <BlurFade delay={0.2}>
+              <div className="space-y-2">
+                <SectionTitle>Suggestions</SectionTitle>
+                <div className="grid grid-cols-2 gap-4">
+                  {suggestions.map((suggestion, index) => (
+                    <SuggestionCard
+                      key={suggestion.title}
+                      {...suggestion}
+                      delay={0.3 + index * 0.1}
+                      onSelect={setInput}
+                    />
+                  ))}
+                </div>
+              </div>
+            </BlurFade>
+
+            <BlurFade delay={0.4}>
+              <div className="space-y-2">
+                <SectionTitle>Integrations</SectionTitle>
+                <IntegrationsGrid />
+              </div>
+            </BlurFade>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  if (!hasEAP) {
+    return (
+      <div className="relative h-screen w-full overflow-hidden">
+        <div className="absolute inset-0 z-10 bg-background/30 backdrop-blur-md" />
+        {mainContent}
+        <div className="absolute inset-0 z-20 flex items-center justify-center">
+          <div className="mx-auto w-full max-w-xl px-6">
+            <Card className="relative overflow-hidden border-white/[0.1] bg-white/[0.02] p-8 backdrop-blur-sm backdrop-saturate-150 dark:bg-black/[0.02]">
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/5 to-white/[0.02] dark:from-white/[0.02] dark:to-white/[0.01]" />
+              <div className="relative space-y-6">
+                <div className="space-y-2 text-center">
+                  <h2 className="text-2xl font-semibold">
+                    Early Access Program
+                  </h2>
+                  <div className="text-muted-foreground">
+                    We&apos;re currently limiting <Badge>BETA</Badge> access to
+                    a limited amount of users to ensure stable service while
+                    continuing to refine features.
+                  </div>
+                </div>
+
+                <Card className="border-teal-500/10 bg-white/[0.01] p-6 backdrop-blur-sm dark:bg-black/[0.01]">
+                  <h3 className="mb-4 font-semibold">EAP Benefits</h3>
+                  <div className="space-y-3">
+                    {EAP_BENEFITS.map((benefit, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <CheckCircle2 className="mt-1 h-4 w-4 text-teal-500" />
+                        <span className="text-sm">{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+
+                <div className="rounded-lg bg-white/[0.01] p-4 backdrop-blur-sm dark:bg-black/[0.01]">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm font-medium">Payment</span>
+                    <span className="text-lg font-semibold">
+                      {EAP_PRICE} SOL
+                    </span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Funds will be allocated to cover expenses such as LLM
+                    integration, RPC data services, infrastructure maintenance,
+                    and other operational costs, all aimed at ensuring the
+                    platform&apos;s stability and reliability.
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <Link
+                    href="https://x.com/neur_sh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <RiTwitterXFill className="mr-2 h-4 w-4" />
+                    Follow Updates
+                  </Link>
+                  <Button
+                    onClick={handlePurchase}
+                    disabled={isProcessing}
+                    className="bg-teal-500/70 ring-offset-0 hover:bg-teal-500/90 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-teal-500/60 dark:hover:bg-teal-500/80"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing
+                      </>
+                    ) : (
+                      `Join EAP (${EAP_PRICE} SOL)`
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto max-w-4xl py-8">
-      <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-6 text-3xl font-bold"
-        aria-live="polite"
-      >
-        Welcome back, {user?.privyUser?.twitter?.username || 'Agent'}!
-      </motion.h1>
-      <motion.p
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="mb-8 text-lg text-muted-foreground"
-      >
-        How can I assist you with Solana today?
-      </motion.p>
-      <ConversationInput
-        value={inputValue}
-        onChange={handleInputChange}
-        onSubmit={handleSubmit}
-        aria-label="Enter your query"
-      />
-      
-      {/* Display error message if any */}
-      {error && <div className="text-red-500 mt-4">{error}</div>}
-
-      <AnimatePresence>
-        {!inputValue && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-            className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
-            role="list"
-          >
-            {suggestions.map((suggestion, index) => (
-              <SuggestionCard
-                key={suggestion.id}
-                {...suggestion}
-                delay={index * 0.1}
-                onSelect={handleSuggestionSelect}
-                aria-label={`Select suggestion: ${suggestion.text}`}
-              />
-            ))}
-          </motion.div>
+    <div className="relative h-screen">
+      <div
+        className={cn(
+          'absolute inset-0 transition-opacity duration-300',
+          showChat ? 'pointer-events-none opacity-0' : 'opacity-100',
         )}
-      </AnimatePresence>
+      >
+        {mainContent}
+      </div>
 
-      {/* Display loading spinner if submitting */}
-      {isSubmitting && (
-        <div className="mt-4 text-center">
-          <LoadingSpinner />
-        </div>
-      )}
+      <div
+        className={cn(
+          'absolute inset-0 transition-opacity duration-300',
+          showChat ? 'opacity-100' : 'pointer-events-none opacity-0',
+        )}
+      >
+        <ChatInterface id={chatId} initialMessages={messages} />
+      </div>
     </div>
   );
 }

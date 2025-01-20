@@ -1,22 +1,100 @@
-import { Message as PrismaMessage } from '@prisma/client';
 import {
-  Attachment,
   CoreAssistantMessage,
   CoreMessage,
   CoreToolMessage,
   Message,
-  ToolInvocation,
 } from 'ai';
 
-import { sendTelegramNotification } from '@/server/actions/telegram';
+import { convertUserResponseToBoolean } from '@/server/actions/ai';
+import { dbUpdateMessageToolInvocations } from '@/server/db/queries';
+import { ToolUpdate } from '@/types/util';
+
+export function getUnconfirmedConfirmationMessage(
+  messages: Array<Message>,
+): Message | undefined {
+  const unconfirmedConfirmationMessage = messages.find(
+    (msg) =>
+      msg.role === 'assistant' &&
+      msg.toolInvocations?.find(
+        (tool) =>
+          tool.toolName === 'askForConfirmation' &&
+          tool.state === 'call' &&
+          !(tool as any).result,
+      ),
+  );
+
+  return unconfirmedConfirmationMessage;
+}
+
+type ToolMessageResult = {
+  result?: string;
+  message: string;
+};
+
+/**
+ * Updates the content result of a confirmation tool message based on isConfirmed
+ * @param confirmationMessage - Confirmation message to update
+ * @param isConfirmed
+ * @returns  The original message if an update cannot be made, otherwise the updated message
+ */
+export function updateConfirmationMessageResult(
+  confirmationMessage: CoreToolMessage,
+  isConfirmed: boolean,
+) {
+  const messageResult = getToolMessageResult(confirmationMessage);
+  if (!messageResult) {
+    return confirmationMessage;
+  }
+
+  messageResult.result = isConfirmed ? 'confirm' : 'deny';
+
+  return confirmationMessage;
+}
+
+/**
+ * Retrieves the result from the content of a tool message
+ * @param message - Core tool message to parse
+ * @returns  The result from the content of the tool message
+ */
+export function getToolMessageResult(
+  message: CoreToolMessage,
+): ToolMessageResult | undefined {
+  const content = message.content?.at(0);
+
+  return content && content.result
+    ? (content.result as ToolMessageResult)
+    : undefined;
+}
 
 /**
  * Retrieves the most recent user message from an array of messages.
  * @param messages - Array of core messages to search through
  * @returns The last user message in the array, or undefined if none exists
  */
-export function getMostRecentUserMessage(messages: Array<CoreMessage>): CoreMessage | undefined {
-  return messages.filter((message) => message.role === 'user').at(-1);
+export function getMostRecentUserMessage(messages: Array<CoreMessage>) {
+  const userMessages = messages.filter((message) => message.role === 'user');
+  return userMessages.at(-1);
+}
+
+/**
+ *
+ * @param messages
+ * @returns  Most recent tool result message or undefined if none found
+ */
+export function getMostRecentToolResultMessage(
+  messages: Array<CoreMessage>,
+): CoreToolMessage | undefined {
+  const mostRecentMessage = messages.at(-1);
+  if (
+    mostRecentMessage &&
+    mostRecentMessage.role === 'tool' &&
+    mostRecentMessage.content &&
+    mostRecentMessage.content.length > 0 &&
+    mostRecentMessage.content[0].result
+  ) {
+    return mostRecentMessage;
+  }
+  return undefined;
 }
 
 /**
@@ -29,28 +107,30 @@ export function getMostRecentUserMessage(messages: Array<CoreMessage>): CoreMess
  */
 export function sanitizeResponseMessages(
   messages: Array<CoreToolMessage | CoreAssistantMessage>,
-): Array<CoreToolMessage | CoreAssistantMessage> {
-  const toolResultIds: Set<string> = new Set();
+) {
+  // Track all tool results for validation
+  const toolResultIds: Array<string> = [];
 
   // Collect all tool result IDs
-  messages.forEach((message) => {
+  for (const message of messages) {
     if (message.role === 'tool') {
-      message.content.forEach((content) => {
+      for (const content of message.content) {
         if (content.type === 'tool-result') {
-          toolResultIds.add(content.toolCallId);
+          toolResultIds.push(content.toolCallId);
         }
-      });
+      }
     }
-  });
+  }
 
   // Sanitize message content
-  const sanitizedMessages = messages.map((message) => {
+  const messagesBySanitizedContent = messages.map((message) => {
     if (message.role !== 'assistant') return message;
     if (typeof message.content === 'string') return message;
 
+    // Filter out invalid content
     const sanitizedContent = message.content.filter((content) =>
       content.type === 'tool-call'
-        ? toolResultIds.has(content.toolCallId)
+        ? toolResultIds.includes(content.toolCallId)
         : content.type === 'text'
           ? content.text.length > 0
           : true,
@@ -63,127 +143,78 @@ export function sanitizeResponseMessages(
   });
 
   // Remove messages with empty content
-  return sanitizedMessages.filter((message) => message.content.length > 0);
+  return messagesBySanitizedContent.filter(
+    (message) => message.content.length > 0,
+  );
 }
 
-/**
- * Adds tool message results to existing chat messages by updating their tool invocations.
- *
- * @param params - Object containing toolMessage and messages
- * @param params.toolMessage - The tool message containing results
- * @param params.messages - Array of existing chat messages
- * @returns Updated array of messages with tool results incorporated
- */
-function addToolMessageToChat({
-  toolMessage,
-  messages,
+export function getConfirmationResult(message: Message) {
+  const invocation = message.toolInvocations?.[0];
+  const result = (invocation as any)?.result?.result;
+
+  return (
+    (message.role === 'assistant' &&
+      invocation?.toolName === 'askForConfirmation' &&
+      invocation?.state === 'result' &&
+      result) ||
+    undefined
+  );
+}
+
+export async function handleConfirmation({
+  current,
+  unconfirmed,
 }: {
-  toolMessage: CoreToolMessage;
-  messages: Array<Message>;
-}): Array<Message> {
-  return messages.map((message) => {
-    if (!message.toolInvocations) return message;
+  current: Message;
+  unconfirmed: Message | undefined;
+}): Promise<{ confirmationHandled: boolean; updates: ToolUpdate[] }> {
+  const result = getConfirmationResult(current);
 
-    return {
-      ...message,
-      toolInvocations: message.toolInvocations.map((toolInvocation) => {
-        const toolResult = toolMessage.content.find(
-          (tool) => tool.toolCallId === toolInvocation.toolCallId,
-        );
+  let invocations;
+  let isConfirmed = !!result; // True if result is truthy (both 'confirm' and 'deny' are truthy)
 
-        if (toolResult) {
-          return {
-            ...toolInvocation,
-            state: 'result',
-            result: toolResult.result,
-          };
-        }
+  // No unconfirmed message to handle
+  if (!unconfirmed) return { confirmationHandled: false, updates: [] };
 
-        return toolInvocation;
-      }),
-    };
-  });
-}
+  if (current.role === 'user') {
+    // User sent a manual response to the confirmation prompt
+    isConfirmed = await convertUserResponseToBoolean(current.content);
 
-/**
- * Converts Prisma database messages to UI-compatible message format.
- * Handles different types of content including text, tool calls, and attachments.
- *
- * @param messages - Array of Prisma messages to convert
- * @returns Array of UI-formatted messages with proper content structure
- */
-export function convertToUIMessages(
-  messages: Array<PrismaMessage>,
-): Array<Message> {
-  return messages.reduce((chatMessages: Array<Message>, rawMessage) => {
-    const message = rawMessage;
+    // Set the invocations to the result decided by convertUserResponseToBoolean
+    invocations = unconfirmed.toolInvocations?.map((inv) =>
+      inv.toolName === 'askForConfirmation'
+        ? {
+            ...inv,
+            result: {
+              result: isConfirmed ? 'confirm' : 'deny',
+              message: unconfirmed.content,
+            },
+            state: 'result' as any,
+          }
+        : inv,
+    );
+  } else if (!!result) {
+    // User confirmed the previous message via confirm button
+    invocations = current.toolInvocations;
+  }
 
-    // Handle tool messages separately
-    if (message.role === 'tool') {
-      return addToolMessageToChat({
-        toolMessage: message as unknown as CoreToolMessage,
-        messages: chatMessages,
-      });
-    }
-
-    // Initialize message components
-    let textContent = '';
-    const toolInvocations: Array<ToolInvocation> = [];
-    const attachments: Array<Attachment> = [];
-
-    // Handle nested content structure
-    if (
-      typeof message.content === 'object' &&
-      message.content &&
-      'content' in message.content
-    ) {
-      message.content = message.content.content || [];
-    }
-
-    // Process different content types
-    if (typeof message.content === 'string') {
-      textContent = message.content;
-    } else if (Array.isArray(message.content)) {
-      for (const c of message.content) {
-        if (!c) continue;
-        const content = c as any;
-
-        switch (content.type) {
-          case 'text':
-            textContent += content.text;
-            break;
-          case 'tool-call':
-            toolInvocations.push({
-              state: 'call',
-              toolCallId: content.toolCallId,
-              toolName: content.toolName,
-              args: content.args,
-            });
-            break;
-          case 'image':
-            attachments.push({
-              url: content.image,
-              name: 'image.png',
-              contentType: 'image/png',
-            });
-            break;
-        }
-      }
-    }
-
-    // Construct and add the formatted message
-    chatMessages.push({
-      id: message.id,
-      role: message.role as Message['role'],
-      content: textContent,
-      toolInvocations,
-      experimental_attachments: attachments,
+  if (invocations) {
+    await dbUpdateMessageToolInvocations({
+      messageId: unconfirmed.id,
+      toolInvocations: JSON.parse(JSON.stringify(invocations)),
     });
 
-    return chatMessages;
-  }, []);
+    // Update the unconfirmed message with the new tool invocations
+    unconfirmed.toolInvocations = invocations;
+  }
+
+  // Generate tool updates for the updated tool invocations
+  // isConfirmed is true if some result was truthy, check for 'deny' string here
+  const updates = (unconfirmed.toolInvocations || []).map((inv) => ({
+    type: 'tool-update' as const,
+    toolCallId: inv.toolCallId,
+    result: isConfirmed && result !== 'deny' ? 'confirm' : 'deny',
+  }));
+
+  return { confirmationHandled: isConfirmed, updates };
 }
-
-// Export the sendTelegramNotification function if it's used elsewhere in the project
-export { sendTelegramNotification };
-

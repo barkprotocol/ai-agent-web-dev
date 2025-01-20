@@ -6,7 +6,7 @@ import { PrivyInterface, usePrivy } from '@privy-io/react-auth';
 import useSWR from 'swr';
 import { debugLog } from '@/lib/utils/debug';
 import { getUserData } from '@/server/actions/user';
-import { BarkUser, PrismaUser, PrivyUser } from '@/types/db';
+import { BarkUser, PrismaUser, PrivyUser } from '@/app/types/db';
 
 type BarkUserInterface = Omit<PrivyInterface, 'user' | 'ready'> & {
   isLoading: boolean;

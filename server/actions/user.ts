@@ -5,9 +5,9 @@ import { PrivyClient } from '@privy-io/server-auth';
 import { z } from 'zod';
 
 import prisma from '@/lib/prisma';
-import { ActionResponse, actionClient } from '@/lib/utils/safe-action';
+import { ActionResponse, actionClient } from '@/lib/safe-action';
 import { generateEncryptedKeyPair } from '@/lib/solana/wallet-generator';
-import { PrismaUser } from '@/types/db';
+import { PrismaUser } from '@/app/types/db';
 
 const NEXT_PUBLIC_PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET;

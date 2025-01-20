@@ -17,7 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { APP_VERSION, IS_BETA } from '@/lib/utils/constants';
+import { APP_VERSION, IS_BETA } from '@/lib/constants';
 import { AppSidebarConversations } from './app-sidebar-conversations';
 import { AppSidebarUser } from './app-sidebar-user';
 

@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { capitalize } from '@/lib/utils/format';
+import { capitalize } from '@/lib/format';
 
 // Types
 interface DexScreenerOrder {

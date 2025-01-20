@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 import { useUser } from '@/hooks/use-user';
 import { throttle } from '@/lib/utils';
-import { WalletPortfolio } from '@/types/helius/portfolio';
+import { WalletPortfolio } from '@/app/types/helius/portfolio';
 
 const fetcher = async (key: string, address: string): Promise<WalletPortfolio> => {
   const response = await fetch(`/api/wallet/${address}/portfolio`);

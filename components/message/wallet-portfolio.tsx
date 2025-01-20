@@ -3,9 +3,9 @@
 import { ExternalLink, TrendingUp, Wallet } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatNumber } from '@/lib/utils/format';
+import { formatNumber } from '@/lib/format';
 import { cn } from '@/lib/utils';
-import { WalletPortfolio as Portfolio } from '@/types/helius/portfolio';
+import { WalletPortfolio as Portfolio } from '@/app/types/helius/portfolio';
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ScrollArea } from '../ui/scroll-area';

@@ -3,7 +3,7 @@ import {
   DISCORD_API_BASE_URL, 
   DISCORD_ERROR_MESSAGES 
 } from '@/lib/actions/constants';
-import type { DiscordData } from '@/types/discord';
+import type { DiscordData } from '@/app/types/discord';
 
 const logger = debugLog.createDebugLogger('DiscordAPI');
 
