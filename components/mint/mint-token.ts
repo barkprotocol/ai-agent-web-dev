@@ -1,7 +1,7 @@
 import { SolanaAgentKit } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
-import { deployGamingToken, deployCustomToken, TokenMetadata } from "../utils/deploy-spl-token";
-import { initializeSolanaAgentKit } from "../utils/solana-agent"
+import { deployGamingToken, deployCustomToken, TokenMetadata } from "../../app/utils/deploy-spl-token";
+import { initializeSolanaAgentKit } from "../../app/utils/solana-agent"
 
 async function mintGamingTokens(agent: SolanaAgentKit, amount: number): Promise<string> {
   try {
