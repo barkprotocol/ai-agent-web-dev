@@ -1,25 +1,18 @@
 import { Suspense } from "react"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import type { Message } from "ai"
 
 import { verifyUser } from "@/server/actions/user"
 import { dbGetConversation, dbGetConversationMessages } from "@/server/db/queries"
+import type { DBMessage, Conversation } from "./types"
 
 import ChatInterface from "./chat-interface"
 import { ChatSkeleton } from "./chat-skeleton"
 
-interface ChatPageParams {
-  id: string
-}
-
-/**
- * Generates metadata for the chat page based on conversation details
- */
 export async function generateMetadata({
   params,
 }: {
-  params: ChatPageParams
+  params: { id: string }
 }): Promise<Metadata> {
   const { id } = params
   const conversation = await dbGetConversation({ conversationId: id })
@@ -37,25 +30,21 @@ export async function generateMetadata({
   }
 }
 
-/**
- * Component responsible for fetching and validating chat data
- * Handles authentication, data loading, and access control
- */
-async function ChatData({ params }: { params: ChatPageParams }) {
+async function ChatData({ params }: { params: { id: string } }) {
   const { id } = params
   const conversation = await dbGetConversation({ conversationId: id })
 
   if (!conversation) {
-    notFound()
+    return notFound()
   }
 
   // Verify user authentication and access rights
   const authResponse = await verifyUser()
-  const userId = authResponse?.data?.data?.id
+  const userId = authResponse?.data?.id
 
   // Check if user has access to private conversation
   if (conversation.visibility === "PRIVATE" && (!userId || conversation.userId !== userId)) {
-    notFound()
+    return notFound()
   }
 
   // Load conversation messages
@@ -64,24 +53,13 @@ async function ChatData({ params }: { params: ChatPageParams }) {
   })
 
   if (!messagesFromDB) {
-    notFound()
+    return notFound()
   }
 
-  // Convert messagesFromDB to the correct Message type
-  const initialMessages: Message[] = messagesFromDB.map((msg) => ({
-    id: msg.id,
-    content: msg.content as string,
-    role: msg.role,
-    createdAt: msg.createdAt,
-  }))
-
-  return <ChatInterface id={id} initialMessages={initialMessages} />
+  return <ChatInterface id={id} initialMessages={messagesFromDB} conversation={conversation} />
 }
 
-/**
- * Main chat page component with loading state handling
- */
-export default function ChatPage({ params }: { params: ChatPageParams }) {
+export default function ChatPage({ params }: { params: { id: string } }) {
   return (
     <Suspense fallback={<ChatSkeleton />}>
       <ChatData params={params} />

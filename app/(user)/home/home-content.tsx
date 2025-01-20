@@ -20,14 +20,15 @@ import { useConversations } from "@/hooks/use-conversations"
 import { useUser } from "@/hooks/use-user"
 import { SolanaUtils } from "@/lib/solana"
 import { cn } from "@/lib/utils"
-import { checkEAPTransaction } from "@/components/eap/eap-ransaction-verification"
+import { checkEAPTransaction } from "@/components/eap/eap-transaction-checker"
 import { IntegrationsGrid } from "@/components/integrations-grid"
-import { ConversationInput } from "@/components/conversation-input"
+import { MessageInput } from "./message-input"
 import { getRandomSuggestions } from "@/data/suggestions"
 import { SuggestionCard } from "@/components/suggestion-card"
 
 const EAP_PRICE = 1.0
 const RECEIVE_WALLET_ADDRESS = process.env.NEXT_PUBLIC_EAP_RECEIVE_WALLET_ADDRESS!
+const MAX_VERIFICATION_ATTEMPTS = 20
 
 const EAP_BENEFITS = [
   "Support platform growth",
@@ -53,7 +54,6 @@ export function HomeContent() {
   const { user, isLoading } = useUser()
   const [verifyingTx, setVerifyingTx] = useState<string | null>(null)
   const [verificationAttempts, setVerificationAttempts] = useState(0)
-  const MAX_VERIFICATION_ATTEMPTS = 20
 
   const { conversations, refreshConversations } = useConversations(user?.id)
 
@@ -226,7 +226,7 @@ export function HomeContent() {
 
       <div className="mx-auto w-full max-w-3xl space-y-8">
         <BlurFade delay={0.1}>
-          <ConversationInput value={input} onChange={setInput} onSubmit={handleSend} />
+          <MessageInput value={input} onChange={setInput} onSubmit={handleSend} />
         </BlurFade>
 
         {hasEAP && (
@@ -356,3 +356,4 @@ export function HomeContent() {
     </div>
   )
 }
+

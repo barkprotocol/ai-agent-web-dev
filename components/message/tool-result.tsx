@@ -4,7 +4,7 @@ import { useState, useCallback, memo } from 'react';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { ChevronDown } from 'lucide-react';
 
-import { DefaultToolResultRenderer, getToolConfig } from '@/app/ai/providers';
+import { DefaultToolResultRenderer, getToolConfig } from '@/ai/providers';
 import { cn } from '@/lib/utils';
 
 interface ToolResultProps {

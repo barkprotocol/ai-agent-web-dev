@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import type { Conversation } from "@prisma/client"
+import type { Conversation } from "@/app/types/db"
 import { Loader2, MoreHorizontal, PencilIcon, TrashIcon } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -24,8 +24,8 @@ import { useUser } from "@/hooks/use-user"
 
 interface ConversationMenuItemProps {
   id: string
-  title: string
-  active?: boolean
+  title: string | null
+  active: boolean
   onDelete: (id: string) => Promise<void>
   onRename: (id: string, newTitle: string) => Promise<void>
 }
@@ -33,7 +33,7 @@ interface ConversationMenuItemProps {
 const ConversationMenuItem = ({ id, title, active, onDelete, onRename }: ConversationMenuItemProps) => {
   const router = useRouter()
   const [isRenaming, setIsRenaming] = useState(false)
-  const [newTitle, setNewTitle] = useState(title)
+  const [newTitle, setNewTitle] = useState(title || "Untitled")
   const [isLoading, setIsLoading] = useState(false)
 
   const handleRename = async () => {
@@ -75,7 +75,7 @@ const ConversationMenuItem = ({ id, title, active, onDelete, onRename }: Convers
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={active}>
           <Link href={`/chat/${id}`}>
-            <span>{title}</span>
+            <span>{title || "Untitled"}</span>
           </Link>
         </SidebarMenuButton>
         <DropdownMenu>
@@ -86,11 +86,11 @@ const ConversationMenuItem = ({ id, title, active, onDelete, onRename }: Convers
           </DropdownMenuTrigger>
           <DropdownMenuContent side="right" align="start">
             <DropdownMenuItem onClick={() => setIsRenaming(true)}>
-              <PencilIcon className="h-4 w-4" />
+              <PencilIcon className="h-4 w-4 mr-2" />
               <span>Rename</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleDelete}>
-              <TrashIcon className="h-4 w-4" />
+              <TrashIcon className="h-4 w-4 mr-2" />
               <span>Delete</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -4,7 +4,7 @@ import { type CoreUserMessage, generateText } from 'ai';
 import { SolanaAgentKit } from 'solana-agent-kit';
 import { z } from 'zod';
 
-import { defaultModel } from '@/app/ai/providers';
+import { defaultModel } from '@/ai/providers';
 import { RPC_URL } from '@/lib/constants';
 import prisma from '@/lib/prisma';
 import { ActionEmptyResponse, actionClient } from '@/lib/safe-action';

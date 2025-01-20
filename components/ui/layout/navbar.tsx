@@ -10,8 +10,8 @@ import { Logo } from "@/components/ui/layout/logo"
 
 const navItems = [
   { href: "/", icon: Home, label: "Home" },
-  { href: "/ai-agents", icon: Cpu, label: "AI Agents" },
-  { href: "/products", icon: Cog, label: "Products" },
+  { href: "/pages/agents", icon: Cpu, label: "AI Agents" },
+  { href: "/dashboard", icon: Cog, label: "Dashboard" },
   { href: "/message", icon: MessageCircle, label: "Messages", external: true },
 ]
 

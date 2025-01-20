@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { PublicKey } from "@solana/web3.js"
-import type { ToolConfig } from "@/app/ai/attachment/providers-2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
+import type { ToolConfig } from "@/ai/attachment/providers-2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
 import { fetchTokenBalance, transferTokens } from "@/lib/solana/token"
 import { createDonation, getDonationHistory } from "@/lib/bark/donation"
 import { mintBarkNFT, getBarkNFTMetadata } from "@/lib/bark/nft"

@@ -117,8 +117,8 @@ export function AccountContent() {
 
   const allWalletAddresses = [
     ...(linkedSolanaWallet ? [linkedSolanaWallet.address] : []),
-    ...privyWallets.map((w) => w.publicKey),
-    ...legacyWallets.map((w) => w.publicKey),
+    ...privyWallets.map((w: { publicKey: any; }) => w.publicKey),
+    ...legacyWallets.map((w: { publicKey: any; }) => w.publicKey),
   ];
 
   return (
@@ -374,7 +374,7 @@ export function AccountContent() {
               Privy Embedded Wallets
             </h2>
             {privyWallets.length > 0
-              ? privyWallets.map((wallet) => (
+              ? privyWallets.map((wallet: { id: any; }) => (
                   <WalletCard
                     key={wallet.id}
                     wallet={wallet}

@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { SolanaAgentKit } from "@/app/agents";
+import { SolanaAgentKit } from "@/app/agent";
 import { z } from "zod";
 
 export interface Config {

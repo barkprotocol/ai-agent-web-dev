@@ -37,7 +37,7 @@ export function CTA() {
               variant="secondary"
               className="font-medium px-8 py-3 text-lg hover:bg-white hover:text-black transition-colors"
             >
-              <Link href="/dashboard">
+              <Link href="/home">
                 Access Your Dashboard
               </Link>
             </Button>

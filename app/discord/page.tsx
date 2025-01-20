@@ -1,4 +1,4 @@
-import { DiscordData } from './discord-data';
+import { DiscordData } from '@/components/discord/discord-data';
 
 export function DiscordDataExample() {
   return (

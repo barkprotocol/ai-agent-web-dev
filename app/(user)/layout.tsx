@@ -1,17 +1,17 @@
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers"
 
-import { AppSidebar } from '@/components/dashboard/app-sidebar';
-import { Banner } from '@/components/ui/banner';
-import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
-import { WalletContextProvider } from '@/components/wallet-context-provider';
+import { AppSidebar } from "@/components/dashboard/app-sidebar"
+import { Banner } from "@/components/ui/banner"
+import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
+import { WalletContextProvider } from "@/components/wallet-context-provider"
 
-export default async function UserLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get('sidebar:state')?.value !== 'false';
+interface UserLayoutProps {
+  children: React.ReactNode
+}
+
+export default async function UserLayout({ children }: UserLayoutProps) {
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar:state")?.value !== "false"
 
   return (
     <WalletContextProvider>
@@ -25,13 +25,11 @@ export default async function UserLayout({
                 <Banner>$BARK is now live on Raydium 🎉</Banner>
               </div>
             </header>
-            <main className="flex-1 p-4 md:p-6">
-              {children}
-            </main>
+            <main className="flex-1 p-4 md:p-6">{children}</main>
           </SidebarInset>
         </div>
       </SidebarProvider>
     </WalletContextProvider>
-  );
+  )
 }
 

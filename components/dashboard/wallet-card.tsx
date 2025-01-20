@@ -1,276 +1,221 @@
-'use client';
+"use client"
 
-import { useState, useCallback, useMemo } from 'react';
-import Link from 'next/link';
-import { useFundWallet } from '@privy-io/react-auth/solana';
-import { ArrowUpDown, Banknote, HelpCircle, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import useSWR from 'swr';
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Card, CardContent } from '@/components/ui/card';
-import { CopyableText } from '@/components/ui/copyable-text';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { SolanaUtils } from '@/lib/solana';
-import { cn } from '@/lib/utils';
-import { embeddedWalletSendSOL } from '@/server/actions/wallet';
-import { EmbeddedWallet } from '@/app/types/db';
-import { Button } from '../ui/button';
+import { useEffect, useState, useCallback } from "react"
+import { AnimatePresence, motion } from "framer-motion"
+import { ChevronDown, ExternalLink, TrendingUp, Wallet } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { formatNumber } from "@/lib/format"
+import { cn } from "@/lib/utils"
+import type { WalletPortfolio as Portfolio } from "@/app/types/helius/portfolio"
 
-const PERCENTAGE_OPTIONS = [
-  { label: '25%', value: 0.25 },
-  { label: '50%', value: 0.5 },
-  { label: '100%', value: 1 },
-];
-const TRANSACTION_FEE_RESERVE = 0.005;
-const MIN_AMOUNT = 0.000001;
+interface FloatingWalletProps {
+  data: Portfolio
+  className?: string
+  isLoading?: boolean
+}
 
-export function WalletCard({ wallet }: { wallet: EmbeddedWallet }) {
-  const { fundWallet } = useFundWallet();
-  const [isSendDialogOpen, setIsSendDialogOpen] = useState(false);
-  const [recipientAddress, setRecipientAddress] = useState('');
-  const [amount, setAmount] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [txHash, setTxHash] = useState<string | null>(null);
-  const [sendStatus, setSendStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+export function FloatingWallet({ data, className, isLoading = false }: FloatingWalletProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
 
-  const { data: balance = 0, isLoading: isBalanceLoading } = useSWR(
-    ['solana-balance', wallet.publicKey],
-    () => SolanaUtils.getBalance(wallet.publicKey),
-    { refreshInterval: 30000 },
-  );
-
-  const handleSendSol = useCallback(async () => {
-    try {
-      setSendStatus('processing');
-      setIsLoading(true);
-      setErrorMessage(null);
-
-      const result = await embeddedWalletSendSOL({
-        walletId: wallet.id,
-        recipientAddress,
-        amount: parseFloat(amount),
-      });
-      const data = result?.data;
-      const txHash = data?.data;
-
-      if (data?.success && txHash) {
-        setTxHash(txHash);
-        setSendStatus('success');
-        toast.success('Transaction Successful', {
-          description: 'Your transaction has been confirmed on the blockchain.',
-        });
-      } else {
-        setSendStatus('error');
-        setErrorMessage(result?.data?.error || 'Unknown error');
-        toast.error('Transaction Failed', {
-          description: result?.data?.error || 'An unexpected error occurred while processing your transaction.',
-        });
-      }
-    } catch (error) {
-      setSendStatus('error');
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      setErrorMessage(errorMsg);
-      toast.error('Transaction Failed', {
-        description: errorMsg,
-      });
-    } finally {
-      setIsLoading(false);
+  const preloadImages = useCallback(async () => {
+    if (data.tokens.length > 0) {
+      await Promise.all(
+        data.tokens.map((token) => {
+          if (!token.imageUrl) return Promise.resolve()
+          return new Promise((resolve) => {
+            const img = new Image()
+            img.src = token.imageUrl
+            img.onload = resolve
+            img.onerror = resolve
+          })
+        }),
+      )
     }
-  }, [wallet.id, recipientAddress, amount]);
+    setImagesLoaded(true)
+  }, [data.tokens])
 
-  const handleClose = useCallback(() => {
-    setIsSendDialogOpen(false);
-    setSendStatus('idle');
-    setTxHash(null);
-    setErrorMessage(null);
-    setRecipientAddress('');
-    setAmount('');
-  }, []);
+  useEffect(() => {
+    setMounted(true)
+    preloadImages()
+  }, [preloadImages])
 
-  const isAmountValid = useMemo(() => {
-    const numAmount = parseFloat(amount);
-    return amount !== '' && !isNaN(numAmount) && numAmount >= MIN_AMOUNT && numAmount <= balance - TRANSACTION_FEE_RESERVE;
-  }, [amount, balance]);
+  const handleToggle = useCallback(() => {
+    setIsExpanded((prev) => !prev)
+  }, [])
 
-  const renderBalanceDisplay = useCallback(() => (
-    <div className="flex items-center justify-between rounded-lg border bg-muted/30 px-4 py-2">
-      <span className="text-sm text-muted-foreground">Available Balance:</span>
-      <span className="text-base font-medium">
-        {isBalanceLoading ? (
-          <span className="text-muted-foreground">Loading...</span>
-        ) : (
-          <span>{balance.toFixed(4)} SOL</span>
-        )}
-      </span>
-    </div>
-  ), [balance, isBalanceLoading]);
+  if (!mounted || !imagesLoaded) return null
 
   return (
-    <>
-      <Card className="bg-sidebar">
-        <CardContent className="pt-6">
-          <div className="space-y-4">
-            <div>
-              <Label className="text-xs text-muted-foreground">Public Key</Label>
-              <div className="mt-1 font-mono text-xs">
-                <CopyableText text={wallet.publicKey} showSolscan={true} />
-              </div>
-            </div>
-            <div>
-              <Label className="text-xs text-muted-foreground">Balance</Label>
-              <div className="mt-1 text-lg font-medium">
-                {isBalanceLoading ? (
-                  <span className="text-muted-foreground">Loading...</span>
-                ) : (
-                  <span>{balance.toFixed(4)} SOL</span>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => fundWallet(wallet.publicKey, { cluster: { name: 'mainnet-beta' } })}
-              >
-                <Banknote className="mr-2 h-4 w-4" />
-                <span>Fund</span>
-              </Button>
-              <Button variant="outline" onClick={() => setIsSendDialogOpen(true)}>
-                <ArrowUpDown className="mr-2 h-4 w-4" />
-                <span>Send</span>
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <AlertDialog open={isSendDialogOpen} onOpenChange={(open) => !open && sendStatus !== 'processing' && handleClose()}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Send SOL</AlertDialogTitle>
-          </AlertDialogHeader>
-          <div className="mt-2 space-y-4">
-            {renderBalanceDisplay()}
-            <AlertDialogDescription className="text-sm text-muted-foreground">
-              Send SOL to any Solana wallet address. Make sure to verify the recipient&apos;s address before sending.
-            </AlertDialogDescription>
-          </div>
-          {sendStatus === 'idle' && (
-            <div className="grid gap-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="recipient-address">Recipient Address</Label>
-                <Input
-                  id="recipient-address"
-                  value={recipientAddress}
-                  onChange={(e) => setRecipientAddress(e.target.value)}
-                  placeholder="Enter Solana address"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="amount">Amount (SOL)</Label>
-                <Input
-                  id="amount"
-                  type="text"
-                  inputMode="decimal"
-                  value={amount}
-                  onChange={(e) => {
-                    if (e.target.value === '' || /^\d*\.?\d*$/.test(e.target.value)) {
-                      const numValue = parseFloat(e.target.value);
-                      if (e.target.value === '' || numValue <= balance) {
-                        setAmount(e.target.value);
-                      }
-                    }
-                  }}
-                  placeholder={`Enter amount (max ${(balance - TRANSACTION_FEE_RESERVE).toFixed(4)} SOL)`}
-                />
-                {amount && !isNaN(parseFloat(amount)) && (
-                  <div className="text-sm text-muted-foreground">
-                    You will send {parseFloat(amount).toFixed(4)} SOL
-                    {parseFloat(amount) > balance - TRANSACTION_FEE_RESERVE && (
-                      <div className="mt-1 text-destructive">
-                        Insufficient balance (need to reserve 0.005 SOL for transaction fee)
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {PERCENTAGE_OPTIONS.map(({ label, value }) => {
-                  const calculatedAmount = (balance - TRANSACTION_FEE_RESERVE) * value;
-                  return (
-                    <Button
-                      key={value}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setAmount(calculatedAmount.toFixed(4))}
-                      className={cn(
-                        'min-w-[60px]',
-                        amount === calculatedAmount.toFixed(4) &&
-                          'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
-                      )}
-                      disabled={balance <= TRANSACTION_FEE_RESERVE}
-                    >
-                      {label}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-          {sendStatus === 'success' && txHash && (
-            <div className="truncate py-4">
-              <div className="rounded-lg border bg-muted/30 p-4">
-                <p className="mb-2 text-sm font-medium">Transaction Hash:</p>
-                <CopyableText text={txHash} showSolscan={true} />
-              </div>
-            </div>
-          )}
-          {sendStatus === 'error' && errorMessage && (
-            <div className="py-4">
-              <div className="rounded-lg bg-destructive/10 p-4 text-destructive">
-                {errorMessage}
-              </div>
-            </div>
-          )}
-          <AlertDialogFooter className="flex items-center justify-between gap-4">
-            <Link
-              href="/faq#send-sol"
-              className="flex items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
+    <div className={cn("absolute bottom-full right-4 z-50 mb-3 select-none", className)}>
+      <motion.div
+        layout="preserve-aspect"
+        animate={{
+          width: isExpanded ? 300 : "auto",
+        }}
+        transition={{
+          type: "spring",
+          bounce: 0,
+          duration: 0.25,
+          stiffness: 400,
+          damping: 30,
+        }}
+        className="relative will-change-transform"
+      >
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 340 }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{
+                height: {
+                  type: "spring",
+                  bounce: 0,
+                  duration: 0.25,
+                  stiffness: 400,
+                  damping: 30,
+                },
+                opacity: {
+                  duration: 0.15,
+                },
+              }}
+              className="absolute bottom-full left-0 right-0 mb-2 overflow-hidden rounded-2xl bg-black/[0.02] backdrop-blur-[12px] will-change-transform dark:bg-black/10 dark:backdrop-blur-xl"
             >
-              <HelpCircle className="mr-2 h-4 w-4" />
-              Need help?
-            </Link>
-            <div className="flex gap-2">
-              {sendStatus === 'idle' && (
-                <>
-                  <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
-                  <Button onClick={handleSendSol} disabled={isLoading || !isAmountValid || !recipientAddress}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processing
-                      </>
-                    ) : (
-                      'Send'
-                    )}
-                  </Button>
-                </>
+              <div className="flex h-[340px] flex-col bg-white/60 shadow-sm dark:bg-transparent">
+                <div className="flex flex-col gap-3 p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-[10px] font-medium">
+                      <div className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-primary">
+                        <TrendingUp className="h-3 w-3 shrink-0" />
+                        <span>{data.tokens.length}</span>
+                      </div>
+                      <div className="text-muted-foreground">{formatNumber(data.totalBalance, "currency")}</div>
+                    </div>
+                    <a
+                      href={`https://solscan.io/account/${data.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-1 text-[10px] text-muted-foreground hover:text-primary"
+                    >
+                      <span className="max-w-[120px] truncate">
+                        {data.address.slice(0, 4)}...{data.address.slice(-4)}
+                      </span>
+                      <ExternalLink className="h-3 w-3 shrink-0" />
+                    </a>
+                  </div>
+                </div>
+
+                <ScrollArea className="-mx-3 flex-1 px-3">
+                  <div className="space-y-px">
+                    {data.tokens.map((token, index) => (
+                      <motion.a
+                        key={token.symbol}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          transition: {
+                            type: "spring",
+                            bounce: 0,
+                            duration: 0.2,
+                            delay: Math.min(index * 0.015, 0.3),
+                          },
+                        }}
+                        href={`https://solscan.io/account/${data.address}#portfolio`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group block rounded-xl transition-colors duration-150 ease-out hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
+                      >
+                        <div className="flex items-center justify-between p-2">
+                          <div className="flex min-w-0 items-center gap-2">
+                            <Avatar className="h-8 w-8 shrink-0 rounded-lg bg-background">
+                              <AvatarImage
+                                src={token.imageUrl}
+                                alt={token.name}
+                                className="object-cover transition-transform duration-150 group-hover:scale-105"
+                              />
+                              <AvatarFallback className="rounded-lg text-xs">{token.symbol.slice(0, 2)}</AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <div className="truncate text-sm font-medium text-foreground">{token.name}</div>
+                                <span className="shrink-0 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                                  {token.symbol}
+                                </span>
+                              </div>
+                              <div className="mt-0.5 text-xs text-muted-foreground">
+                                {token.balance.toLocaleString(undefined, {
+                                  maximumFractionDigits: 4,
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex shrink-0 flex-col items-end gap-0.5">
+                            <div className="text-sm font-medium text-foreground">
+                              {formatNumber(token.balance * token.pricePerToken, "currency")}
+                            </div>
+                            {token.pricePerToken > 0 && (
+                              <div className="text-[10px] text-muted-foreground">
+                                @ {token.pricePerToken.toFixed(4)} $
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </motion.a>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.button
+          layout="preserve-aspect"
+          className="flex cursor-pointer items-center gap-1.5 rounded-2xl bg-black/[0.02] px-3 py-2 backdrop-blur-[12px] transition-colors hover:bg-black/[0.04] dark:bg-black/10 dark:backdrop-blur-xl dark:hover:bg-black/20"
+          onClick={handleToggle}
+          aria-expanded={isExpanded}
+          aria-label={isExpanded ? "Close wallet details" : "Open wallet details"}
+        >
+          <Wallet className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <div className={cn("min-w-0", isExpanded && "flex-1")}>
+            <AnimatePresence mode="wait">
+              {isExpanded ? (
+                <motion.span
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ type: "spring", bounce: 0.2 }}
+                  className="block text-sm text-muted-foreground"
+                >
+                  Embedded Wallet
+                </motion.span>
+              ) : (
+                <motion.span
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 4 }}
+                  transition={{ type: "spring", bounce: 0.2 }}
+                  className="block text-sm text-muted-foreground"
+                >
+                  {formatNumber(data.totalBalance, "currency")}
+                </motion.span>
               )}
-              {(sendStatus === 'success' || sendStatus === 'error') && (
-                <Button onClick={handleClose}>Close</Button>
-              )}
-            </div>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
-  );
+            </AnimatePresence>
+          </div>
+          <motion.div
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ type: "spring", bounce: 0.2 }}
+            className="h-4 w-4 shrink-0 text-muted-foreground"
+          >
+            <ChevronDown className="h-3.5 w-3.5" />
+          </motion.div>
+        </motion.button>
+      </motion.div>
+    </div>
+  )
 }
 

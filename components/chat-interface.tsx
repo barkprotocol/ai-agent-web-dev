@@ -25,7 +25,6 @@ import { useWalletPortfolio } from "@/hooks/use-wallet-portfolio"
 import { uploadImage } from "@/lib/utils/upload"
 import { cn } from "@/lib/utils"
 import type { ToolActionResult, ToolUpdate } from "@/app/types/util"
-import { ChatSkeleton } from "./chat-skeleton"
 
 // Types
 interface UploadingImage extends Attachment {
@@ -690,7 +689,6 @@ export default function ChatInterface({
                 addToolResult={addToolResult}
               />
             ))}
-            {isLoading && messages.length === 0 && <ChatSkeleton />}
             {isLoading && messages[messages.length - 1]?.role !== "assistant" && <LoadingMessage />}
             <div ref={messagesEndRef} />
           </div>
@@ -786,3 +784,4 @@ export default function ChatInterface({
     </div>
   )
 }
+

@@ -1,7 +1,9 @@
 # Bark AI Agent Platform
 Beta version
 
-![Bark AI Agent WebUI](/public/assets/bark-ai-agent-web-ui.png)
+![Bark AI Agent WebUI](/github/assets/bark-ai-agent-web-ui.png)
+
+## Overview
 
 The **Bark AI Agent WebApp** is a cutting-edge platform that merges **artificial intelligence** and **blockchain technology** to provide users with intelligent, automated trading strategies and real-time market insights on the **Solana blockchain**.
 

@@ -91,6 +91,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
+    "codemod": "^0.17.0",
     "date-fns": "latest",
     "decimal.js": "^10.4.3",
     "dotenv": "^16.4.7",
