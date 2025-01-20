@@ -29,7 +29,7 @@ export function IntegrationCard({ item, index, onClick }: IntegrationCardProps) 
       <div className="relative h-12 w-12 overflow-hidden rounded-lg">
         <Image
           src={item.icon || "/placeholder.svg"}
-          alt={`${item.label} icon`}
+          alt={`${item.name} icon`}
           layout="fill"
           objectFit="cover"
           className="transition-transform duration-300 group-hover:scale-110"
@@ -37,7 +37,7 @@ export function IntegrationCard({ item, index, onClick }: IntegrationCardProps) 
       </div>
       <div className="flex-1 space-y-1">
         <h3 className="text-sm font-semibold text-foreground transition-colors duration-200 group-hover:text-primary">
-          {item.label}
+          {item.name}
         </h3>
         {item.description && <p className="text-xs text-muted-foreground line-clamp-2">{item.description}</p>}
       </div>

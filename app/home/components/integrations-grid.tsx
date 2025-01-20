@@ -1,23 +1,22 @@
+"use client"
+
 import React from "react"
 import { INTEGRATIONS } from "../data/integrations"
 import { IntegrationCard } from "./integration-card"
+import { useRouter } from "next/navigation"
 
 export function IntegrationsGrid() {
+  const router = useRouter()
+
   const handleIntegrationClick = (label: string) => {
-    // TODO: Implement integration click handler
-    console.log(`Clicked ${label}`)
-    // Here you would typically trigger some action, like opening a modal or navigating to a new page
+    // Navigate to a specific integration page
+    router.push(`/integrations/${label.toLowerCase().replace(/\s+/g, "-")}`)
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {INTEGRATIONS.map((item, index) => (
-        <IntegrationCard
-          key={item.label}
-          item={item}
-          index={index}
-          onClick={() => handleIntegrationClick(item.label)}
-        />
+        <IntegrationCard key={item.name} item={item} index={index} onClick={() => handleIntegrationClick(item.name)} />
       ))}
     </div>
   )

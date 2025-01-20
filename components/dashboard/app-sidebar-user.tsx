@@ -1,10 +1,10 @@
-'use client';
+"use client"
 
-import { useMemo, useCallback } from 'react';
-import Link from 'next/link';
-import { RiTwitterXFill } from '@remixicon/react';
-import { BookOpen, ChevronsUpDown, HelpCircle, Settings, LogOut } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useMemo, useCallback } from "react"
+import Link from "next/link"
+import { RiTwitterXFill } from "@remixicon/react"
+import { BookOpen, ChevronsUpDown, HelpCircle, Settings, LogOut } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,43 +12,37 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useUser } from '@/hooks/use-user';
+} from "@/components/ui/dropdown-menu"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { useUser } from "@/hooks/use-user"
 
 export const AppSidebarUser = () => {
-  const { isLoading, user, logout } = useUser();
-  const isMobile = useIsMobile();
+  const { isLoading, user, logout } = useUser()
+  const isMobile = useIsMobile()
 
   const { label, subLabel, twitterUsername, twitterProfileImage } = useMemo(() => {
-    const privyUser = user?.privyUser;
+    const privyUser = user?.privyUser
     return {
-      label: privyUser?.wallet
-        ? privyUser.wallet.address.substring(0, 5)
-        : privyUser?.email?.address,
+      label: privyUser?.wallet ? privyUser.wallet.address.substring(0, 5) : privyUser?.email?.address,
       subLabel: privyUser?.id?.substring(10),
       twitterUsername: privyUser?.twitter?.username,
       twitterProfileImage: privyUser?.twitter?.profilePictureUrl,
-    };
-  }, [user]);
+    }
+  }, [user])
 
   const handleLogout = useCallback(() => {
-    logout();
-  }, [logout]);
+    logout()
+  }, [logout])
 
   const handleOpenTwitter = useCallback(() => {
-    window.open('https://x.com/bark_sh', '_blank', 'noopener,noreferrer');
-  }, []);
+    window.open("https://x.com/bark_sh", "_blank", "noopener,noreferrer")
+  }, [])
 
   const handleOpenDocs = useCallback(() => {
-    window.open('https://docs.barkprotocol.net', '_blank', 'noopener,noreferrer');
-  }, []);
+    window.open("https://docs.barkprotocol.net", "_blank", "noopener,noreferrer")
+  }, [])
 
   const renderUserButton = () => {
     if (isLoading || !user?.privyUser) {
@@ -64,7 +58,7 @@ export const AppSidebarUser = () => {
           </div>
           <Skeleton className="ml-auto size-4" />
         </SidebarMenuButton>
-      );
+      )
     }
 
     return (
@@ -73,34 +67,26 @@ export const AppSidebarUser = () => {
         className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
       >
         <Avatar className="h-8 w-8 rounded-lg">
-          <AvatarImage src={twitterProfileImage || undefined} alt={label || 'User avatar'} />
-          <AvatarFallback className="rounded-lg">
-            {label?.substring(0, 2)}
-          </AvatarFallback>
+          <AvatarImage src={twitterProfileImage || undefined} alt={label || "User avatar"} />
+          <AvatarFallback className="rounded-lg">{label?.substring(0, 2)}</AvatarFallback>
         </Avatar>
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate font-semibold">
-            {twitterUsername ? `@${twitterUsername}` : label}
-          </span>
-          <span className="truncate text-xs text-muted-foreground">
-            {subLabel}
-          </span>
+          <span className="truncate font-semibold">{twitterUsername ? `@${twitterUsername}` : label}</span>
+          <span className="truncate text-xs text-muted-foreground">{subLabel}</span>
         </div>
         <ChevronsUpDown className="ml-auto size-4" aria-hidden="true" />
       </SidebarMenuButton>
-    );
-  };
+    )
+  }
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            {renderUserButton()}
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>{renderUserButton()}</DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? 'bottom' : 'right'}
+            side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
           >
@@ -138,6 +124,6 @@ export const AppSidebarUser = () => {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  );
-};
+  )
+}
 
