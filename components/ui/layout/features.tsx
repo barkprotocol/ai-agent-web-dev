@@ -1,62 +1,60 @@
-'use client';
+"use client"
 
-import { useMemo } from 'react';
-import Image from 'next/image';
-import { cn } from '@/lib/utils';
-import { TrendingUp, BarChart2, Wallet, PieChart, GitBranch, Users } from 'lucide-react';
+import { useMemo } from "react"
+import Image from "next/image"
+import { cn } from "@/lib/utils"
 
 interface Feature {
-  title: string;
-  description: string;
-  image: string;
-  alt: string;
-  icon: React.ReactNode;
+  title: string
+  description: string
+  image: string
+  alt: string
 }
 
 const features: Feature[] = [
   {
     title: "AI-Powered Trading",
     description: "Leverage advanced AI algorithms for smart, automated trading strategies.",
+    image: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/ai_trading.webp",
     alt: "AI-powered trading visualization",
-    icon: <TrendingUp className="w-6 h-6 text-[#d0c8b9]" />
   },
   {
     title: "Real-Time Market Analysis",
     description: "Get instant insights with our real-time market analysis tools.",
+    image: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/market_analysis.webp",
     alt: "Real-time market analysis dashboard",
-    icon: <BarChart2 className="w-6 h-6 text-[#d0c8b9]" />
   },
   {
     title: "Secure Wallet Integration",
     description: "Seamlessly integrate and manage multiple wallets with top-tier security.",
+    image: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/wallet_integration.webp",
     alt: "Secure wallet integration interface",
-    icon: <Wallet className="w-6 h-6 text-[#d0c8b9]" />
   },
   {
     title: "DeFi Yield Optimization",
     description: "Maximize your returns with AI-driven yield farming strategies.",
+    image: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/yield_optimization.webp",
     alt: "DeFi yield optimization chart",
-    icon: <PieChart className="w-6 h-6 text-[#d0c8b9]" />
   },
   {
     title: "Cross-Chain Compatibility",
     description: "Operate seamlessly across multiple blockchain networks.",
+    image: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/cross_chain.webp",
     alt: "Cross-chain compatibility illustration",
-    icon: <GitBranch className="w-6 h-6 text-[#d0c8b9]" />
   },
   {
     title: "Community Governance",
     description: "Participate in decentralized decision-making for platform evolution.",
+    image: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/community_governance.webp",
     alt: "Community governance voting interface",
-    icon: <Users className="w-6 h-6 text-[#d0c8b9]" />
-  }
-];
+  },
+]
 
 export function Features() {
-  const memoizedFeatures = useMemo(() => features, []);
+  const memoizedFeatures = useMemo(() => features, [])
 
   return (
-    <section className="bg-gray-100 py-16 sm:py-24" aria-labelledby="features-heading">
+    <section className="py-16 sm:py-24" aria-labelledby="features-heading">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 id="features-heading" className="text-3xl font-extrabold text-foreground sm:text-4xl">
@@ -68,36 +66,33 @@ export function Features() {
         </div>
         <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {memoizedFeatures.map((feature, idx) => (
-            <li key={idx} className={cn(
-              "group relative overflow-hidden rounded-lg border p-6 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl",
-              "hover:-translate-y-2 hover:border-primary/50",
-              "bg-white dark:bg-black"
-            )}>
+            <li
+              key={idx}
+              className={cn(
+                "group relative overflow-hidden rounded-lg border p-6 shadow-lg transition-all duration-300 ease-in-out",
+                "hover:-translate-y-1 hover:shadow-xl",
+                "bg-white dark:bg-black",
+              )}
+            >
               <div className="relative h-48 w-full mb-6 overflow-hidden rounded-md">
                 <Image
-                  src={feature.image || "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/barkicontransparent.webp"}
+                  src={feature.image || "/placeholder.svg"}
                   alt={feature.alt}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <div className="bg-white/90 dark:bg-black/90 p-4 rounded-full text-primary transition-transform duration-300 ease-in-out group-hover:scale-125">
-                    {feature.icon}
-                  </div>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <h3 className="text-lg font-semibold text-card-foreground mb-2 flex items-center">
-                {feature.icon}
-                <span className="ml-2">{feature.title}</span>
-              </h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
             </li>
           ))}
         </ul>
       </div>
     </section>
-  );
+  )
 }
 
-export default Features;
+export default Features
+

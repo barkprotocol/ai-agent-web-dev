@@ -1,86 +1,39 @@
-'use client';
+"use client"
 
-import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import type React from "react"
+import { motion } from "framer-motion"
 
 interface AnimatedShinyTextProps {
-  text: string;
-  className?: string;
-  animationDuration?: number;
-  gradientColors?: {
-    from: string;
-    via: string;
-    to: string;
-  };
-  textGradient?: {
-    from: string;
-    to: string;
-  };
-  disableAnimation?: boolean;
+  text: string
+  className?: string
+  duration?: number
 }
 
-export const AnimatedShinyText: React.FC<AnimatedShinyTextProps> = React.memo(({
-  text,
-  className,
-  animationDuration = 2,
-  gradientColors = {
-    from: 'white/0',
-    via: 'white/50',
-    to: 'white/0',
-  },
-  textGradient = {
-    from: 'white',
-    to: 'gray-200',
-  },
-  disableAnimation = false,
-}) => {
-  const shineVariants = useMemo(() => ({
-    initial: { x: '-100%' },
-    animate: { x: '100%' },
-  }), []);
-
-  const shineTransition = useMemo(() => ({
-    repeat: Infinity,
-    repeatType: 'loop' as const,
-    duration: animationDuration,
-    ease: 'linear',
-  }), [animationDuration]);
-
+export const AnimatedShinyText: React.FC<AnimatedShinyTextProps> = ({ text, className = "", duration = 3 }) => {
   return (
-    <motion.div
-      className={cn('relative overflow-hidden', className)}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      aria-label={text}
-    >
-      {!disableAnimation && (
-        <motion.div
-          className={cn(
-            'absolute inset-0 bg-gradient-to-r',
-            `from-${gradientColors.from}`,
-            `via-${gradientColors.via}`,
-            `to-${gradientColors.to}`
-          )}
-          variants={shineVariants}
-          initial="initial"
-          animate="animate"
-          transition={shineTransition}
-        />
-      )}
-      <span 
-        className={cn(
-          'relative z-10 bg-gradient-to-r text-transparent bg-clip-text',
-          `from-${textGradient.from}`,
-          `to-${textGradient.to}`
-        )}
-      >
+    <div className={`relative overflow-hidden ${className}`}>
+      <span className="relative z-10" aria-label={text}>
         {text}
       </span>
-    </motion.div>
-  );
-});
-
-AnimatedShinyText.displayName = 'AnimatedShinyText';
+      <motion.div
+        className="absolute inset-0 z-0"
+        style={{
+          background:
+            "linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%)",
+          backgroundSize: "200% 100%",
+        }}
+        animate={{
+          backgroundPosition: ["100% 0%", "-100% 0%"],
+        }}
+        transition={{
+          repeat: Number.POSITIVE_INFINITY,
+          repeatType: "reverse",
+          duration: duration,
+          ease: "easeInOut",
+        }}
+        aria-hidden="true"
+      />
+    </div>
+  )
+}
 

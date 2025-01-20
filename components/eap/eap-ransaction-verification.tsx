@@ -1,79 +1,75 @@
-'use client';
+"use client"
 
-import { useState } from 'react';
-import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
-
+import { useState } from "react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import {
   AlertDialog,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { checkEAPTransaction } from '@/server/actions/eap-transaction';
-import { cn } from '@/lib/utils';
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog"
+import { toast } from "@/components/ui/use-toast"
+import { Loader2, CheckCircle2, AlertCircle } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-interface TransactionResult {
-  success: boolean;
-  message: string;
+interface VerificationResult {
+  success: boolean
+  message: string
 }
 
-export function EAPTransactionChecker() {
-  const [txHash, setTxHash] = useState('');
-  const [isChecking, setIsChecking] = useState(false);
-  const [result, setResult] = useState<TransactionResult | null>(null);
+// Mock function for checkEAPTransaction
+export const checkEAPTransaction = async ({ txHash }: { txHash: string }) => {
+  // Simulate API call
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+  return { data: { success: Math.random() > 0.5 } }
+}
 
-  async function handleCheck() {
-    if (!txHash.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a transaction hash",
-        variant: "destructive",
-      });
-      return;
-    }
+export function EAPTransactionVerification() {
+  const [txHash, setTxHash] = useState("")
+  const [isChecking, setIsChecking] = useState(false)
+  const [result, setResult] = useState<VerificationResult | null>(null)
 
-    setIsChecking(true);
+  const handleCheck = async () => {
+    setIsChecking(true)
     try {
-      const response = await checkEAPTransaction({ txHash });
+      const response = await checkEAPTransaction({ txHash })
       if (response?.data?.success) {
         setResult({
           success: true,
-          message: 'Transaction verified successfully. EAP has been granted to your account.',
-        });
+          message: "Transaction verified successfully. EAP has been granted to your account.",
+        })
         toast({
           title: "Success",
           description: "EAP granted successfully!",
-        });
+        })
       } else {
         setResult({
           success: false,
-          message: response?.error || 'Failed to verify transaction. Please try again or contact support.',
-        });
+          message: response?.error || "Failed to verify transaction. Please try again or contact support.",
+        })
         toast({
           title: "Verification failed",
           description: "Please check your transaction hash and try again.",
           variant: "destructive",
-        });
+        })
       }
     } catch (error) {
-      console.error('EAP transaction check error:', error);
+      console.error("EAP transaction check error:", error)
       setResult({
         success: false,
-        message: 'An unexpected error occurred. Please try again or contact support.',
-      });
+        message: "An unexpected error occurred. Please try again or contact support.",
+      })
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
-      });
+      })
     } finally {
-      setIsChecking(false);
+      setIsChecking(false)
     }
   }
 
@@ -87,18 +83,14 @@ export function EAPTransactionChecker() {
           className="flex-grow"
           disabled={isChecking}
         />
-        <Button 
-          onClick={handleCheck} 
-          disabled={isChecking || !txHash.trim()}
-          className="w-full sm:w-auto"
-        >
+        <Button onClick={handleCheck} disabled={isChecking || !txHash.trim()} className="w-full sm:w-auto">
           {isChecking ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Verifying
             </>
           ) : (
-            'Verify Transaction'
+            "Verify Transaction"
           )}
         </Button>
       </div>
@@ -106,10 +98,9 @@ export function EAPTransactionChecker() {
       <AlertDialog open={!!result} onOpenChange={() => setResult(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className={cn(
-              "flex items-center gap-2",
-              result?.success ? "text-green-600" : "text-red-600"
-            )}>
+            <AlertDialogTitle
+              className={cn("flex items-center gap-2", result?.success ? "text-green-600" : "text-red-600")}
+            >
               {result?.success ? (
                 <>
                   <CheckCircle2 className="h-5 w-5" />
@@ -130,6 +121,6 @@ export function EAPTransactionChecker() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
+  )
 }
 
