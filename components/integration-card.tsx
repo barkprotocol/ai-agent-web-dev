@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Integration } from '@/data/integrations';
+import { Integration } from '@/app/data/integrations';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';

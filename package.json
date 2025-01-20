@@ -5,11 +5,14 @@
   "author": "BARK Protocol",
   "private": true,
   "scripts": {
-    "vercel-build": "pnpm npx prisma generate && next build",
     "dev": "NODE_NO_WARNINGS=1 next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "postinstall": "prisma generate",
     "db:reset": "pnpm npx prisma generate && pnpm npx prisma migrate reset && pnpm npx prisma db push",
     "generate": "npx prisma generate",
     "migrate": "prisma migrate deploy",
@@ -17,6 +20,7 @@
     "dev:up": "docker compose up -d",
     "format": "prettier --write \"**/*.{ts,tsx,md,json,js,jsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,json,js,jsx}\"",
+    "vercel-build": "prisma generate && next build",
     "mint:nft": "npx ts-node /app/mint/mint-nfts.ts"
   },
   "dependencies": {

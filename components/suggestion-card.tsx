@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
 
-import type { Suggestion } from '@/data/suggestions';
+import type { Suggestion } from '@/app/data/suggestions';
 
 interface SuggestionCardProps extends Suggestion {
   delay?: number;

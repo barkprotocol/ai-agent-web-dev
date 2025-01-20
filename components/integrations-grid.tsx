@@ -1,4 +1,4 @@
-import { INTEGRATIONS } from '@/data/integrations';
+import { INTEGRATIONS } from '@/app/data/integrations';
 import { IntegrationCard } from '@/components/integration-card';
 import { toast } from 'sonner';
 
