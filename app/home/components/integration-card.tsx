@@ -1,92 +1,51 @@
-import Image from 'next/image';
-
-import { motion } from 'framer-motion';
-
-import type { Integration } from '../data/integrations';
+import type React from "react"
+import Image from "next/image"
+import { motion } from "framer-motion"
+import type { Integration } from "../data/integrations"
 
 interface IntegrationCardProps {
-  item: Integration;
-  index: number;
-  onClick?: () => void;
+  item: Integration
+  index: number
+  onClick: () => void
 }
 
-interface IntegrationCardStyles extends React.CSSProperties {
-  '--integration-primary': string;
-  '--integration-secondary': string;
-}
-
-export function IntegrationCard({
-  item,
-  index,
-  onClick,
-}: IntegrationCardProps) {
+export function IntegrationCard({ item, index, onClick }: IntegrationCardProps) {
   return (
     <motion.button
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      whileHover={{
-        scale: 1.01,
-        transition: { duration: 0.2 },
-      }}
-      whileTap={{
-        scale: 0.99,
-        transition: { duration: 0.1 },
-      }}
+      whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+      whileTap={{ scale: 0.95 }}
       onClick={onClick}
-      className="group relative flex w-full items-center gap-3 overflow-hidden rounded-xl bg-muted 
-        p-4 transition-all duration-200"
+      className="group flex items-center gap-4 rounded-xl bg-card p-4 text-left shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary"
       style={
         {
-          '--integration-primary': item.theme.primary,
-          '--integration-secondary': item.theme.secondary,
-        } as IntegrationCardStyles
+          "--integration-primary": item.theme.primary,
+          "--integration-secondary": item.theme.secondary,
+        } as React.CSSProperties
       }
     >
-      <motion.div
-        initial={false}
-        whileHover={{
-          scale: 1.05,
-          transition: { type: 'spring', stiffness: 300, damping: 20 },
-        }}
-        className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg"
-        style={{
-          background: `linear-gradient(135deg, ${item.theme.primary}15, ${item.theme.secondary}10)`,
-        }}
-      >
+      <div className="relative h-12 w-12 overflow-hidden rounded-lg">
         <Image
-          src={item.icon}
-          alt={item.label}
-          width={24}
-          height={24}
-          className="z-10 transition-transform duration-300 group-hover:scale-105"
+          src={item.icon || "/placeholder.svg"}
+          alt={`${item.label} icon`}
+          layout="fill"
+          objectFit="cover"
+          className="transition-transform duration-300 group-hover:scale-110"
         />
-      </motion.div>
-
-      <div className="z-10 flex-1 space-y-0.5 text-left">
-        <motion.div
-          className="text-sm font-medium transition-colors duration-300"
-          initial={false}
-        >
-          {item.label}
-        </motion.div>
-        {item.description && (
-          <motion.div
-            className="line-clamp-1 text-xs text-muted-foreground/70"
-            initial={false}
-          >
-            {item.description}
-          </motion.div>
-        )}
       </div>
-
-      {/* Theme color overlay on hover */}
+      <div className="flex-1 space-y-1">
+        <h3 className="text-sm font-semibold text-foreground transition-colors duration-200 group-hover:text-primary">
+          {item.label}
+        </h3>
+        {item.description && <p className="text-xs text-muted-foreground line-clamp-2">{item.description}</p>}
+      </div>
       <div
-        className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background: `linear-gradient(135deg, ${item.theme.primary}10, ${item.theme.secondary}05)`,
-        }}
+        className="h-8 w-1 rounded-full transition-all duration-300 group-hover:h-full"
+        style={{ backgroundColor: item.theme.primary }}
       />
     </motion.button>
-  );
+  )
 }
+

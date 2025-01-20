@@ -118,7 +118,7 @@ import {
   get_assets_by_authority,
   get_assets_by_creator,
   search_assets,
-} from "../tools";
+} from "@/app/tools";
 import {
   Config,
   TokenCheck,

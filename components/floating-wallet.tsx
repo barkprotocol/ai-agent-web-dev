@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ExternalLink, TrendingUp, Wallet } from 'lucide-react';
@@ -31,7 +31,7 @@ export function FloatingWallet({
     // Preload all token images
     if (data.tokens.length > 0) {
       Promise.all(
-        data.tokens.map((token) => {
+        data.tokens.map((token: { imageUrl: string; }) => {
           if (!token.imageUrl) return Promise.resolve();
           return new Promise((resolve) => {
             const img = new Image();
@@ -117,7 +117,7 @@ export function FloatingWallet({
 
                 <ScrollArea className="-mx-3 flex-1 px-3">
                   <div className="space-y-px">
-                    {data.tokens.map((token, index) => (
+                    {data.tokens.map((token: { imageUrl: string | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; symbol: string | number | bigint | boolean | any[] | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; balance: number; pricePerToken: number; }, index: Key | null | undefined) => (
                       <motion.a
                         key={index}
                         initial={{ opacity: 0, y: 8 }}

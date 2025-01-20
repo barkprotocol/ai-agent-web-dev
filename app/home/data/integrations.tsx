@@ -68,10 +68,19 @@ export interface IntegrationTheme {
     {
       icon: "integrations/bark.svg",
       label: "BARK",
-      description: "AI-powered DeFi platform",
+      description: "AI-powered DeFi assistant",
       theme: {
         primary: "#D0C8B9", // BARK primary color
         secondary: "#181432", // BARK secondary color
+      },
+    },
+    {
+      icon: "integrations/metaplex.svg",
+      label: "Metaplex",
+      description: "Create and manage NFTs on Solana",
+      theme: {
+        primary: "#FF00FF", // Magenta
+        secondary: "#00FFFF", // Cyan
       },
     },
   ]

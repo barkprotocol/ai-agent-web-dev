@@ -1,25 +1,15 @@
-'use client';
+"use client"
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { Conversation } from '@prisma/client';
-import { Loader2, MoreHorizontal, PencilIcon, TrashIcon } from 'lucide-react';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import type { Conversation } from "@prisma/client"
+import { Loader2, MoreHorizontal, PencilIcon, TrashIcon } from "lucide-react"
+import { toast } from "sonner"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 import {
   SidebarMenuAction,
   SidebarMenuButton,
@@ -28,63 +18,57 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-} from '@/components/ui/sidebar';
-import { useConversations } from '@/hooks/use-conversations';
-import { useUser } from '@/hooks/use-user';
+} from "@/components/ui/sidebar"
+import { useConversations } from "@/hooks/use-conversations"
+import { useUser } from "@/hooks/use-user"
 
 interface ConversationMenuItemProps {
-  id: string;
-  title: string;
-  active?: boolean;
-  onDelete: (id: string) => Promise<void>;
-  onRename: (id: string, newTitle: string) => Promise<void>;
+  id: string
+  title: string
+  active?: boolean
+  onDelete: (id: string) => Promise<void>
+  onRename: (id: string, newTitle: string) => Promise<void>
 }
 
-const ConversationMenuItem = ({
-  id,
-  title,
-  active,
-  onDelete,
-  onRename,
-}: ConversationMenuItemProps) => {
-  const router = useRouter();
-  const [isRenaming, setIsRenaming] = useState(false);
-  const [newTitle, setNewTitle] = useState(title);
-  const [isLoading, setIsLoading] = useState(false);
+const ConversationMenuItem = ({ id, title, active, onDelete, onRename }: ConversationMenuItemProps) => {
+  const router = useRouter()
+  const [isRenaming, setIsRenaming] = useState(false)
+  const [newTitle, setNewTitle] = useState(title)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleRename = async () => {
     if (!newTitle.trim() || newTitle === title) {
-      setIsRenaming(false);
-      return;
+      setIsRenaming(false)
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const loadingToast = toast.loading('Renaming conversation...');
-      await onRename(id, newTitle);
-      toast.dismiss(loadingToast);
-      toast.success('Conversation renamed');
-      setIsRenaming(false);
+      const loadingToast = toast.loading("Renaming conversation...")
+      await onRename(id, newTitle)
+      toast.dismiss(loadingToast)
+      toast.success("Conversation renamed")
+      setIsRenaming(false)
     } catch (error) {
-      toast.error('Failed to rename conversation');
+      toast.error("Failed to rename conversation")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleDelete = async () => {
     try {
-      const loadingToast = toast.loading('Deleting conversation...');
-      await onDelete(id);
-      toast.dismiss(loadingToast);
-      toast.success('Conversation deleted');
-      router.replace('/home');
-      router.refresh();
+      const loadingToast = toast.loading("Deleting conversation...")
+      await onDelete(id)
+      toast.dismiss(loadingToast)
+      toast.success("Conversation deleted")
+      router.replace("/home")
+      router.refresh()
     } catch (error) {
-      console.error('Error deleting conversation:', error);
-      toast.error('Failed to delete conversation');
+      console.error("Error deleting conversation:", error)
+      toast.error("Failed to delete conversation")
     }
-  };
+  }
 
   return (
     <>
@@ -126,20 +110,11 @@ const ConversationMenuItem = ({
               disabled={isLoading}
             />
             <div className="flex justify-end space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => setIsRenaming(false)}
-                disabled={isLoading}
-              >
+              <Button variant="outline" onClick={() => setIsRenaming(false)} disabled={isLoading}>
                 Cancel
               </Button>
-              <Button
-                onClick={handleRename}
-                disabled={isLoading || !newTitle.trim() || newTitle === title}
-              >
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
+              <Button onClick={handleRename} disabled={isLoading || !newTitle.trim() || newTitle === title}>
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Rename
               </Button>
             </div>
@@ -147,12 +122,12 @@ const ConversationMenuItem = ({
         </DialogContent>
       </Dialog>
     </>
-  );
-};
+  )
+}
 
 export const AppSidebarConversations = () => {
-  const pathname = usePathname();
-  const { isLoading: isUserLoading, user } = useUser();
+  const pathname = usePathname()
+  const { isLoading: isUserLoading, user } = useUser()
   const {
     conversations,
     isLoading: isConversationsLoading,
@@ -161,14 +136,12 @@ export const AppSidebarConversations = () => {
     renameConversation,
     setActiveId,
     refreshConversations,
-  } = useConversations(user?.id);
+  } = useConversations(user?.id)
 
   useEffect(() => {
-    const chatId = pathname.startsWith('/chat/')
-      ? pathname.split('/')[2]
-      : null;
-    setActiveId(chatId);
-  }, [pathname, setActiveId, conversations, refreshConversations]);
+    const chatId = pathname.startsWith("/chat/") ? pathname.split("/")[2] : null
+    setActiveId(chatId)
+  }, [pathname, setActiveId, conversations, refreshConversations])
 
   if (isUserLoading) {
     return (
@@ -178,7 +151,7 @@ export const AppSidebarConversations = () => {
           <Loader2 className="mt-4 h-4 w-4 animate-spin" />
         </div>
       </SidebarGroup>
-    );
+    )
   }
 
   return (
@@ -207,6 +180,6 @@ export const AppSidebarConversations = () => {
         )}
       </SidebarGroupContent>
     </SidebarGroup>
-  );
-};
+  )
+}
 
