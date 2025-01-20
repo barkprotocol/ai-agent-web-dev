@@ -23,6 +23,7 @@
     "@ai-sdk/anthropic": "^1.1.0",
     "@ai-sdk/openai": "^1.1.0",
     "@bonfida/spl-name-service": "latest",
+    "@mem0/vercel-ai-provider": "^0.0.10",
     "@dialectlabs/blinks": "^0.20.1",
     "@dialectlabs/sdk": "^1.9.4",
     "@hookform/resolvers": "latest",
