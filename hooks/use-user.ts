@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { PrivyInterface, usePrivy } from '@privy-io/react-auth';
 import useSWR from 'swr';
 import { debugLog } from '@/lib/utils/debug';
-import { getUserData } from '@/server/actions/user';
+import { getUserData } from '@/app/actions/user-actions';
 import { BarkUser, PrismaUser, PrivyUser } from '@/app/types/db';
 
 type BarkUserInterface = Omit<PrivyInterface, 'user' | 'ready'> & {

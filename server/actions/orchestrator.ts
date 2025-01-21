@@ -1,8 +1,8 @@
-import { CoreMessage, LanguageModelUsage, Message, generateObject } from 'ai';
-import _ from 'lodash';
-import { z } from 'zod';
+import { CoreMessage, type LanguageModelUsage, type Message, generateObject } from "ai"
+import _ from "lodash"
+import { z } from "zod"
 
-import { orchestrationPrompt, orchestratorModel } from '@/lib/ai/providers';
+import { orchestrationPrompt, orchestratorModel } from "@/ai/providers"
 
 export async function getToolsFromOrchestrator(
   messages: Message[] | undefined,
@@ -11,33 +11,24 @@ export async function getToolsFromOrchestrator(
   const { object: toolsRequired, usage } = await generateObject({
     model: orchestratorModel,
     system: orchestrationPrompt,
-    output: 'array',
-    schema: z
-      .string()
-      .describe(
-        'The tool name, describing the tool needed to handle the user request.',
-      ),
+    output: "array",
+    schema: z.string().describe("The tool name, describing the tool needed to handle the user request."),
     experimental_telemetry: {
       isEnabled: true,
-      functionId: 'generate-object',
+      functionId: "generate-object",
     },
     messages,
-  });
+  })
 
   if (toolsRequired.length === 0) {
-    return { usage, toolsRequired: undefined };
+    return { usage, toolsRequired: undefined }
   } else {
-    const allTools = new Set([
-      'searchToken',
-      'askForConfirmation',
-      ...toolsRequired,
-    ]);
-    const filteredTools = [...allTools].filter(
-      (tool) => tool !== 'askForConfirmation' || !excludeConfirmationTool,
-    );
+    const allTools = new Set(["searchToken", "askForConfirmation", ...toolsRequired])
+    const filteredTools = [...allTools].filter((tool) => tool !== "askForConfirmation" || !excludeConfirmationTool)
     return {
       usage,
       toolsRequired: filteredTools,
-    };
+    }
   }
 }
+

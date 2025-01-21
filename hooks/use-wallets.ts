@@ -2,7 +2,7 @@
 
 import useSWR from 'swr';
 
-import { syncEmbeddedWallets } from '@/server/actions/user';
+import { syncEmbeddedWallets } from '@/app/actions/user-actions';
 
 export function useEmbeddedWallets() {
   return useSWR('embeddedWallets', async () => {

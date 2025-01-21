@@ -1,73 +1,68 @@
-'use client';
+import { motion, useMotionValue, AnimatePresence } from "framer-motion"
+import { useEffect, useRef } from "react"
+import { cn } from "@/lib/utils"
+import { animate } from "framer-motion"
 
-import { useEffect, useRef, useMemo } from 'react';
-import { animate, useInView, useMotionValue, MotionValue } from 'framer-motion';
-import { cn } from '@/lib/utils';
-
-interface NumberTickerProps {
-  value: number;
-  direction?: 'up' | 'down';
-  className?: string;
-  delay?: number;
-  decimalPlaces?: number;
-  duration?: number;
+interface AnimatedNumberProps {
+  value: number
+  direction: "up" | "down"
+  duration?: number
+  delay?: number
+  decimalPlaces?: number
+  formatter?: (value: number) => string
+  className?: string
 }
 
-export function NumberTicker({
+const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   value,
-  direction = 'up',
+  direction,
+  duration = 0.8,
   delay = 0,
-  className,
   decimalPlaces = 0,
-  duration = 2,
-}: NumberTickerProps) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(direction === 'down' ? value : 0);
-  const isInView = useInView(ref, { once: true, margin: '0px' });
-
-  const formatter = useMemo(() => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
-    });
-  }, [decimalPlaces]);
+  formatter = (value) => value.toLocaleString(),
+  className,
+}) => {
+  const ref = useRef<HTMLSpanElement>(null)
+  const motionValue = useMotionValue(0)
+  const isInView = true
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView) return
 
     const animateValue = (value: MotionValue<number>) => {
-      const controls = animate(value, direction === 'down' ? 0 : value, {
+      const controls = animate(value, direction === "down" ? 0 : value, {
         duration,
-        ease: 'easeOut',
+        ease: "easeOut",
         onUpdate: (latest) => {
           if (ref.current) {
-            ref.current.textContent = formatter.format(Number(latest.toFixed(decimalPlaces)));
+            ref.current.textContent = formatter.format(Number(latest.toFixed(decimalPlaces)))
           }
         },
-      });
+      })
 
-      return controls.stop;
-    };
+      return controls.stop
+    }
 
-    const timeoutId = setTimeout(() => animateValue(motionValue), delay * 1000);
+    const timeoutId = setTimeout(() => animateValue(motionValue), delay * 1000)
 
     return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [motionValue, isInView, delay, value, direction, duration, decimalPlaces, formatter]);
+      clearTimeout(timeoutId)
+    }
+  }, [motionValue, isInView, delay, value, direction, duration, decimalPlaces])
 
   return (
     <span
-      className={cn(
-        'inline-block tabular-nums tracking-wider text-foreground',
-        className
-      )}
+      className={cn("inline-block tabular-nums tracking-wider text-foreground", className)}
       ref={ref}
       aria-live="polite"
       aria-atomic="true"
+      aria-label={`Animated number counting ${direction} to ${value}`}
+      role="status"
     >
-      {formatter.format(direction === 'down' ? value : 0)}
+      {formatter.format(direction === "down" ? value : 0)}
     </span>
-  );
+  )
 }
+
+export default AnimatedNumber
 

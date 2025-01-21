@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { INTEGRATIONS } from "../data/integrations"
+import { INTEGRATIONS } from "@/app/(user)/home/data/integrations"
 import { IntegrationCard } from "./integration-card"
 import { useRouter } from "next/navigation"
 

@@ -1,67 +1,66 @@
-'use client';
+"use client"
 
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
+import {
+  type JSXElementConstructor,
+  type Key,
+  type ReactElement,
+  type ReactNode,
+  type ReactPortal,
+  useEffect,
+  useState,
+} from "react"
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, ExternalLink, TrendingUp, Wallet } from 'lucide-react';
+import { AnimatePresence, motion } from "framer-motion"
+import { ChevronDown, ExternalLink, TrendingUp, Wallet } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { formatNumber } from '@/lib/format';
-import { cn } from '@/lib/utils';
-import { WalletPortfolio as Portfolio } from '@/types/helius/portfolio';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { formatNumber } from "@/lib/format"
+import { cn } from "@/lib/utils"
+import type { WalletPortfolio as Portfolio } from "@/app/types/helius/portfolio"
 
 interface FloatingWalletProps {
-  data: Portfolio;
-  className?: string;
-  isLoading?: boolean;
+  data: Portfolio
+  className?: string
+  isLoading?: boolean
 }
 
-export function FloatingWallet({
-  data,
-  className,
-  isLoading = false,
-}: FloatingWalletProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+export function FloatingWallet({ data, className, isLoading = false }: FloatingWalletProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true)
     // Preload all token images
     if (data.tokens.length > 0) {
       Promise.all(
-        data.tokens.map((token: { imageUrl: string; }) => {
-          if (!token.imageUrl) return Promise.resolve();
+        data.tokens.map((token: { imageUrl: string }) => {
+          if (!token.imageUrl) return Promise.resolve()
           return new Promise((resolve) => {
-            const img = new Image();
-            img.src = token.imageUrl;
-            img.onload = resolve;
-            img.onerror = resolve;
-          });
+            const img = new Image()
+            img.src = token.imageUrl
+            img.onload = resolve
+            img.onerror = resolve
+          })
         }),
-      ).then(() => setImagesLoaded(true));
+      ).then(() => setImagesLoaded(true))
     } else {
-      setImagesLoaded(true);
+      setImagesLoaded(true)
     }
-  }, [data.tokens]);
+  }, [data.tokens])
 
-  if (!mounted || !imagesLoaded) return null;
+  if (!data || !mounted || !imagesLoaded) return null
 
   return (
-    <div
-      className={cn(
-        'absolute bottom-full right-4 z-50 mb-3 select-none',
-        className,
-      )}
-    >
+    <div className={cn("absolute bottom-full right-4 z-50 mb-3 select-none", className)}>
       <motion.div
         layout="preserve-aspect"
         animate={{
-          width: isExpanded ? 300 : 'auto',
+          width: isExpanded ? 300 : "auto",
         }}
         transition={{
-          type: 'spring',
+          type: "spring",
           bounce: 0,
           duration: 0.25,
           stiffness: 400,
@@ -77,7 +76,7 @@ export function FloatingWallet({
               exit={{ opacity: 0, height: 0 }}
               transition={{
                 height: {
-                  type: 'spring',
+                  type: "spring",
                   bounce: 0,
                   duration: 0.25,
                   stiffness: 400,
@@ -97,18 +96,18 @@ export function FloatingWallet({
                         <TrendingUp className="h-3 w-3 shrink-0" />
                         <span>{data.tokens.length}</span>
                       </div>
-                      <div className="text-muted-foreground">
-                        {formatNumber(data.totalBalance, 'currency')}
-                      </div>
+                      <div className="text-muted-foreground">{formatNumber(data.totalBalance, "currency")}</div>
                     </div>
                     <a
-                      href={`https://solscan.io/account/${data.address}`}
+                      href={`https://solscan.io/account/${data.address || ""}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group flex items-center gap-1 text-[10px] text-muted-foreground hover:text-primary"
                     >
                       <span className="max-w-[120px] truncate">
-                        {data.address.slice(0, 4)}...{data.address.slice(-4)}
+                        {data.address
+                          ? `${data.address.slice(0, 4)}...${data.address.slice(-4)}`
+                          : "Address Unavailable"}
                       </span>
                       <ExternalLink className="h-3 w-3 shrink-0" />
                     </a>
@@ -117,7 +116,7 @@ export function FloatingWallet({
 
                 <ScrollArea className="-mx-3 flex-1 px-3">
                   <div className="space-y-px">
-                    {data.tokens.map((token: { imageUrl: string | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; symbol: string | number | bigint | boolean | any[] | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; balance: number; pricePerToken: number; }, index: Key | null | undefined) => (
+                    {data.tokens.map((token, index) => (
                       <motion.a
                         key={index}
                         initial={{ opacity: 0, y: 8 }}
@@ -125,13 +124,13 @@ export function FloatingWallet({
                           opacity: 1,
                           y: 0,
                           transition: {
-                            type: 'spring',
+                            type: "spring",
                             bounce: 0,
                             duration: 0.2,
                             delay: Math.min(index * 0.015, 0.3),
                           },
                         }}
-                        href={`https://solscan.io/account/${data.address}#portfolio`}
+                        href={`https://solscan.io/account/${data.address || ""}#portfolio`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group block rounded-xl transition-colors duration-150 ease-out hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
@@ -144,15 +143,11 @@ export function FloatingWallet({
                                 alt={token.name}
                                 className="object-cover transition-transform duration-150 group-hover:scale-105"
                               />
-                              <AvatarFallback className="rounded-lg text-xs">
-                                {token.symbol.slice(0, 2)}
-                              </AvatarFallback>
+                              <AvatarFallback className="rounded-lg text-xs">{token.symbol.slice(0, 2)}</AvatarFallback>
                             </Avatar>
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">
-                                <div className="truncate text-sm font-medium text-foreground">
-                                  {token.name}
-                                </div>
+                                <div className="truncate text-sm font-medium text-foreground">{token.name}</div>
                                 <span className="shrink-0 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
                                   {token.symbol}
                                 </span>
@@ -166,10 +161,7 @@ export function FloatingWallet({
                           </div>
                           <div className="flex shrink-0 flex-col items-end gap-0.5">
                             <div className="text-sm font-medium text-foreground">
-                              {formatNumber(
-                                token.balance * token.pricePerToken,
-                                'currency',
-                              )}
+                              {formatNumber(token.balance * token.pricePerToken, "currency")}
                             </div>
                             {token.pricePerToken > 0 && (
                               <div className="text-[10px] text-muted-foreground">
@@ -193,14 +185,14 @@ export function FloatingWallet({
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <Wallet className="h-4 w-4 shrink-0 text-muted-foreground" />
-          <div className={cn('min-w-0', isExpanded && 'flex-1')}>
+          <div className={cn("min-w-0", isExpanded && "flex-1")}>
             <AnimatePresence mode="wait">
               {isExpanded ? (
                 <motion.span
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  transition={{ type: 'spring', bounce: 0.2 }}
+                  transition={{ type: "spring", bounce: 0.2 }}
                   className="block text-sm text-muted-foreground"
                 >
                   Embedded Wallet
@@ -210,17 +202,17 @@ export function FloatingWallet({
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 4 }}
-                  transition={{ type: 'spring', bounce: 0.2 }}
+                  transition={{ type: "spring", bounce: 0.2 }}
                   className="block text-sm text-muted-foreground"
                 >
-                  {formatNumber(data.totalBalance, 'currency')}
+                  {formatNumber(data.totalBalance, "currency")}
                 </motion.span>
               )}
             </AnimatePresence>
           </div>
           <motion.div
             animate={{ rotate: isExpanded ? 180 : 0 }}
-            transition={{ type: 'spring', bounce: 0.2 }}
+            transition={{ type: "spring", bounce: 0.2 }}
             className="h-4 w-4 shrink-0 text-muted-foreground"
           >
             <ChevronDown className="h-3.5 w-3.5" />
@@ -228,5 +220,6 @@ export function FloatingWallet({
         </motion.div>
       </motion.div>
     </div>
-  );
+  )
 }
+

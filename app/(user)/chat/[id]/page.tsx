@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { verifyUser } from "@/server/actions/user"
+import { verifyUser } from "@/app/actions/user-actions"
 import { dbGetConversation, dbGetConversationMessages } from "@/server/db/queries"
 import type { DBMessage, Conversation } from "./types"
 

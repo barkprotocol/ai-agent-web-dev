@@ -1,7 +1,7 @@
 import { Action } from "../../types/action";
 import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
-import { request_faucet_funds } from "../../tools/solana";
+import { request_faucet_funds } from "../../ai/solana";
 
 const requestFundsAction: Action = {
   name: "REQUEST_FUNDS",

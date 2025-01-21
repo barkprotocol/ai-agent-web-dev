@@ -1,71 +1,59 @@
-import { processAction } from '@/server/actions/action';
-import { dbGetActions } from '@/server/db/queries';
+import { processAction } from '@/app/server/actions/action';
+import { dbGetActions } from '@/app/server/db/queries';
 
 export const maxDuration = 300;
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'; // static by default, unless reading the request
 
 export async function GET(request: Request) {
-  try {
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      console.error('[cron/action] Unauthorized access attempt');
-      return new Response('Unauthorized', { status: 401 });
+  const authHeader = request.headers.get('authorization');
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response('Unauthorized', {
+      status: 401,
+    });
+  }
+
+  // Quarter-hour cron job
+  // Get all Actions that are not completed or paused
+  const actions = await dbGetActions({
+    triggered: true,
+    completed: false,
+    paused: false,
+  });
+
+  console.log(`[cron/action] Fetched ${actions.length} actions`);
+
+  // This job runs every 15 minutes, but we only need to process actions that are ready to be processed, based on their frequency
+  // Filter the actions to only include those that are ready to be processed based on their lastExecutedAt and frequency
+  const now = new Date();
+  const actionsToProcess = actions.filter((action) => {
+    // Filter out actions without a frequency
+    if (!action.frequency) {
+      return false;
     }
 
-    const actions = await dbGetActions({
-      triggered: true,
-      completed: false,
-      paused: false,
-    });
+    // If the action has never been executed, it should be processed now
+    // This means that the first time this job sees an action, it will process it
+    if (!action.lastExecutedAt) {
+      return true;
+    }
 
-    console.log(`[cron/action] Fetched ${actions.length} actions`);
-
-    const now = new Date();
-    const actionsToProcess = actions.filter((action) => {
-      if (!action.frequency) {
-        console.log(`[cron/action] Skipping action ${action.id} due to missing frequency`);
-        return false;
-      }
-
-      if (!action.lastExecutedAt) {
-        console.log(`[cron/action] Processing action ${action.id} for the first time`);
-        return true;
-      }
-
-      const nextExecutionAt = new Date(
-        action.lastExecutedAt.getTime() + action.frequency * 1000
-      );
-
-      const shouldProcess = now >= nextExecutionAt;
-      if (shouldProcess) {
-        console.log(`[cron/action] Processing action ${action.id}`);
-      } else {
-        console.log(`[cron/action] Skipping action ${action.id}, next execution at ${nextExecutionAt}`);
-      }
-
-      return shouldProcess;
-    });
-
-    console.log(`[cron/action] Processing ${actionsToProcess.length} actions`);
-
-    const results = await Promise.allSettled(
-      actionsToProcess.map((action) => processAction(action))
+    // Next execution time is the last execution time plus the frequency (seconds) * 1000
+    const nextExecutionAt = new Date(
+      action.lastExecutedAt.getTime() + action.frequency * 1000,
     );
 
-    const successCount = results.filter((result) => result.status === 'fulfilled').length;
-    const failureCount = results.filter((result) => result.status === 'rejected').length;
+    return now >= nextExecutionAt;
+  });
 
-    console.log(`[cron/action] Processed ${successCount} actions successfully, ${failureCount} failed`);
+  await Promise.all(
+    actionsToProcess.map((action) =>
+      processAction(action).catch((error) => {
+        console.error(`Error processing action ${action.id}:`, error);
+      }),
+    ),
+  );
 
-    return Response.json({ 
-      success: true, 
-      processed: actionsToProcess.length,
-      successful: successCount,
-      failed: failureCount
-    });
-  } catch (error) {
-    console.error('[cron/action] Unexpected error:', error);
-    return new Response('Internal Server Error', { status: 500 });
-  }
+  console.log(`[cron/action] Processed ${actionsToProcess.length} actions`);
+
+  return Response.json({ success: true });
 }
-

@@ -14,7 +14,7 @@ import { decryptPrivateKey } from '@/lib/solana/wallet-generator';
 import { SOL_MINT } from '@/app/types/helius/portfolio';
 import { publicKeySchema } from '@/types/util';
 
-import { getPrivyClient, verifyUser } from './user';
+import { getPrivyClient, verifyUser } from '../../app/actions/user-actions';
 
 export async function generateTitleFromUserMessage({
   message,

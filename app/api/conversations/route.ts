@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { verifyUser } from '@/server/actions/user';
+import { verifyUser } from '@/app/actions/user-actions';
 import { dbGetConversations } from '@/server/db/queries';
 
 export async function GET(req: NextRequest) {

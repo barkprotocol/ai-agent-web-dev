@@ -1,7 +1,7 @@
 import { Action } from "../../types/action";
 import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
-import { getTPS } from "../../tools/solana";
+import { getTPS } from "../../ai/solana";
 
 const getTPSAction: Action = {
   name: "GET_TPS",

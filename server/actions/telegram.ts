@@ -6,7 +6,7 @@ import {
   dbUpdateUserTelegramChat,
 } from '@/server/db/queries';
 
-import { verifyUser } from './user';
+import { verifyUser } from '../../app/actions/user-actions';
 
 // Error constants
 export const MISSING_USERNAME_ERROR = 'No saved Telegram username found';

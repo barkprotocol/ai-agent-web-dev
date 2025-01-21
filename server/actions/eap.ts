@@ -7,7 +7,7 @@ import prisma from '@/lib/prisma';
 import { ActionResponse, actionClient } from '@/lib/safe-action';
 import { TransferWithMemoParams, createConnection } from '@/lib/solana';
 
-import { verifyUser } from './user';
+import { verifyUser } from '../../app/actions/user-actions';
 
 const RECEIVE_WALLET_ADDRESS =
   process.env.NEXT_PUBLIC_EAP_RECEIVE_WALLET_ADDRESS!;

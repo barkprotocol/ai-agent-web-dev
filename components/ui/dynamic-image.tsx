@@ -1,37 +1,24 @@
-'use client';
+import cn from "classnames"
+import type React from "react"
+import { useState, useEffect } from "react"
 
-import { useState, useEffect } from 'react';
-import Image, { ImageProps } from "next/image";
-import { useTheme } from 'next-themes';
-import { cn } from '@/lib/utils';
-
-interface DynamicImageProps extends Omit<ImageProps, 'src' | 'alt'> {
-  lightSrc: string;
-  darkSrc: string;
-  alt: string;
+interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  src?: string
+  alt: string
+  className?: string
 }
 
-export function DynamicImage({
-  lightSrc,
-  darkSrc,
-  alt,
-  className,
-  width,
-  height,
-  ...props
-}: DynamicImageProps) {
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+const Image: React.FC<ImageProps> = ({ src, alt, className, ...props }) => {
+  const [mounted, setMounted] = useState(false)
+  const [width = 100, height = 100] = [props.width, props.height]
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   if (!mounted) {
-    return null; // Prevent flash of incorrect theme
+    return <div aria-hidden="true" style={{ width, height }} />
   }
-
-  const src = resolvedTheme === 'dark' ? darkSrc : lightSrc;
 
   return (
     <Image
@@ -40,8 +27,14 @@ export function DynamicImage({
       width={width}
       height={height}
       className={cn(className)}
+      onError={(e) => {
+        const target = e.target as HTMLImageElement
+        target.src = "/placeholder.svg"
+      }}
       {...props}
     />
-  );
+  )
 }
+
+export default Image
 

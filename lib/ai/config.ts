@@ -1,39 +1,39 @@
-import { ReactNode } from 'react';
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { createOpenAI } from '@ai-sdk/openai';
-import { z } from 'zod';
+import type { ReactNode } from "react"
+import { createAnthropic } from "@ai-sdk/anthropic"
+import { createOpenAI } from "@ai-sdk/openai"
+import type { z } from "zod"
 
 // Import tool configurations
-import { actionTools } from './tools/generic/action';
-import { jinaTools } from './tools/generic/jina';
-import { telegramTools } from './tools/generic/telegram';
-import { utilTools } from './tools/generic/util';
-import { chartTools } from './tools/solana/chart';
-import { definedTools } from './tools/solana/defined-fi';
-import { dexscreenerTools } from './tools/solana/dexscreener';
-import { jupiterTools } from './tools/solana/jupiter';
-import { magicEdenTools } from './tools/solana/magic-eden';
-import { pumpfunTools } from './tools/solana/pumpfun';
-import { solanaTools } from './tools/solana/solana';
+import { actionTools } from "@/ai/generic/action"
+import { jinaTools } from "@/ai/generic/jina"
+import { telegramTools } from "@/ai/generic/telegram"
+import { utilTools } from "@/ai/generic/util"
+import { chartTools } from "@/ai/solana/chart"
+import { definedTools } from "@/ai/solana/defined-fi"
+import { dexscreenerTools } from "@/ai/solana/dexscreener"
+import { jupiterTools } from "@/ai/solana/jupiter"
+import { magicEdenTools } from "@/ai/solana/magic-eden"
+import { pumpfunTools } from "@/ai/solana/pumpfun"
+import { solanaTools } from "@/ai/solana/solana"
 
 // Check if using Anthropic
-const usingAntropic = !!process.env.ANTHROPIC_API_KEY;
+const usingAnthropicAPI = !!process.env.ANTHROPIC_API_KEY
 
 // Initialize Anthropic
-const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const claude35Sonnet = anthropic('claude-3-5-sonnet-20241022');
+const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const claude35Sonnet = anthropic("claude-3-5-sonnet-20241022")
 
 // Initialize OpenAI
 const openai = createOpenAI({
-  baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
+  baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
   apiKey: process.env.OPENAI_API_KEY,
-  compatibility: 'strict',
-});
-const openAiModel = openai(process.env.OPENAI_MODEL_NAME || 'gpt-4o');
+  compatibility: "strict",
+})
+const openAiModel = openai(process.env.OPENAI_MODEL_NAME || "gpt-4o")
 
 // Default system prompt
 export const defaultSystemPrompt = `
-Your name is Neur (Agent).
+Your name is BARK (Agent).
 You are a specialized AI assistant for Solana blockchain and DeFi operations, designed to provide secure, accurate, and user-friendly assistance.
 
 Critical Rules:
@@ -86,37 +86,31 @@ Response Formatting:
 - Use emojis sparingly and only when appropriate for the context
 
 Common knowledge:
-- { user: toly, description: Co-Founder of Solana Labs, twitter: @aeyakovenko, wallet: toly.sol }
-`;
+- { user: BARK, description: Revolutionizing charitable giving on the Solana blockchain, x: @bark_protocol, wallet: barkprotocol.sol }
+`
 
 // Set default model
-export const defaultModel = usingAntropic ? claude35Sonnet : openAiModel;
+export const defaultModel = usingAnthropicAPI ? claude35Sonnet : openAiModel
 
 // Tool configuration interface
 export interface ToolConfig {
-  displayName?: string;
-  icon?: ReactNode;
-  isCollapsible?: boolean;
-  isExpandedByDefault?: boolean;
-  description: string;
-  parameters: z.ZodType<any>;
-  execute: <T>(
-    params: z.infer<T extends z.ZodType ? T : never>,
-  ) => Promise<any>;
-  render?: (result: unknown) => React.ReactNode | null;
-  agentKit?: any;
-  userId?: any;
-  requiresConfirmation?: boolean;
+  displayName?: string
+  icon?: ReactNode
+  isCollapsible?: boolean
+  isExpandedByDefault?: boolean
+  description: string
+  parameters: z.ZodType<any>
+  execute: <T extends z.ZodType>(params: z.infer<T>) => Promise<any>
+  render?: (result: unknown) => React.ReactNode | null
+  agentKit?: unknown
+  userId?: unknown
+  requiresConfirmation?: boolean
 }
 
 // Default tool result renderer
 export function DefaultToolResultRenderer({ result }: { result: unknown }) {
-  if (result && typeof result === 'object' && 'error' in result) {
-    return (
-      <div className="mt-2 pl-3.5 text-sm text-destructive">
-        {String((result as { error: unknown }).error)}
-      </div>
-    );
+  if (result && typeof result === "object" && "error" in result) {
+    return <div className="mt-2 pl-3.5 text-sm text-destructive">{String((result as { error: unknown }).error)}</div>
   }
 
   return (
@@ -125,7 +119,7 @@ export function DefaultToolResultRenderer({ result }: { result: unknown }) {
         {JSON.stringify(result, null, 2).trim()}
       </pre>
     </div>
-  );
+  )
 }
 
 // Combine all tools
@@ -141,10 +135,10 @@ export const defaultTools: Record<string, ToolConfig> = {
   ...utilTools,
   ...chartTools,
   ...telegramTools,
-};
+}
 
 // Function to get tool configuration
 export function getToolConfig(toolName: string): ToolConfig | undefined {
-  return defaultTools[toolName];
+  return defaultTools[toolName]
 }
 

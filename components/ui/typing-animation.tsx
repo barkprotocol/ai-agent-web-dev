@@ -1,46 +1,53 @@
-'use client';
+"use client"
 
-import { useEffect, useState } from 'react';
-
-import { cn } from '@/lib/utils';
+import { useEffect, useState, useCallback } from "react"
+import { cn } from "@/lib/utils"
 
 interface TypingAnimationProps {
-  text: string;
-  duration?: number;
-  className?: string;
+  text: string
+  duration?: number
+  className?: string
+  onComplete?: () => void
 }
 
-export default function TypingAnimation({
-  text,
-  duration = 200,
-  className,
-}: TypingAnimationProps) {
-  const [displayedText, setDisplayedText] = useState<string>('');
-  const [i, setI] = useState<number>(0);
+export default function TypingAnimation({ text, duration = 200, className, onComplete }: TypingAnimationProps) {
+  const [displayedText, setDisplayedText] = useState<string>("")
+  const [isComplete, setIsComplete] = useState<boolean>(false)
 
-  useEffect(() => {
+  const animate = useCallback(() => {
+    let i = 0
+    setIsComplete(false)
+
     const typingEffect = setInterval(() => {
       if (i < text.length) {
-        setDisplayedText(text.substring(0, i + 1));
-        setI(i + 1);
+        setDisplayedText(text.substring(0, i + 1))
+        i++
       } else {
-        clearInterval(typingEffect);
+        clearInterval(typingEffect)
+        setIsComplete(true)
+        onComplete?.()
       }
-    }, duration);
+    }, duration)
 
     return () => {
-      clearInterval(typingEffect);
-    };
-  }, [duration, i]);
+      clearInterval(typingEffect)
+    }
+  }, [text, duration, onComplete])
+
+  useEffect(() => {
+    return animate()
+  }, [animate])
 
   return (
     <h1
       className={cn(
-        'font-display text-center text-4xl font-bold leading-[5rem] tracking-[-0.02em] drop-shadow-sm',
+        "font-display text-center text-4xl font-bold leading-[5rem] tracking-[-0.02em] drop-shadow-sm",
         className,
       )}
+      aria-label={text}
     >
-      {displayedText ? displayedText : text}
+      {isComplete ? text : displayedText}
     </h1>
-  );
+  )
 }
+

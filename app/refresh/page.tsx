@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import PageLoading from '@/components/page-loading';
-import RefreshContent from './refresh-content';
+import RefreshContent from '@/app/(misc)/refresh/refresh-content';
 
 function ErrorFallback({ error }: { error: Error }) {
   return (

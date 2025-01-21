@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Card } from '@/components/ui/card';
-import { verifyUser } from '@/server/actions/user';
+import { verifyUser } from '@/app/actions/user-actions';
 import { dbCreateAction } from '@/server/db/queries';
 
 // Types

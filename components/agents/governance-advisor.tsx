@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { initializeSolanaAgentKit } from '@/utils/solana-agent'
+import { initializeSolanaAgentKit } from '@/app/utils/solana-agent'
 
 export function GovernanceAdvisor() {
   const [proposal, setProposal] = useState('')
