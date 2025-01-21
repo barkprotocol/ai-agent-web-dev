@@ -1,7 +1,7 @@
 # Bark AI Agent Platform
 Beta version
 
-![Bark AI Agent WebUI](/github/assets/bark-ai-agent-web-ui.png)
+![Bark AI Agent WebUI](/github/assets/ai-agent-webui.png)
 
 ## Overview
 
