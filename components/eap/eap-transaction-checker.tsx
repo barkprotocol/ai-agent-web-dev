@@ -98,3 +98,5 @@ export function EAPTransactionChecker() {
   )
 }
 
+export { checkEAPTransaction }
+

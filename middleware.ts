@@ -1,9 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs"
 
 // Public pages that don't require authentication
 const PUBLIC_PAGES = [
-  "/home", // Home page (Login)
+  "/", // Home page (Login)
   "/refresh", // Token refresh page
 ]
 
@@ -33,7 +32,6 @@ export const config = {
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
   const cookieAuthToken = req.cookies.get("privy-token")
   const cookieSession = req.cookies.get("privy-session")
   const { pathname } = req.nextUrl
@@ -58,16 +56,11 @@ export async function middleware(req: NextRequest) {
   }
 
   // User authentication status check
-  const definitelyAuthenticated = Boolean(cookieAuthToken) // User is definitely authenticated (has access token)
-  const maybeAuthenticated = Boolean(cookieSession) // User might be authenticated (has session)
-
-  // Check Supabase session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const isAuthenticated = Boolean(cookieAuthToken) // User is authenticated (has access token)
+  const hasSession = Boolean(cookieSession) // User has a session
 
   // Handle token refresh cases
-  if (!definitelyAuthenticated && maybeAuthenticated) {
+  if (!isAuthenticated && hasSession) {
     const redirectUrl = new URL("/refresh", req.url)
     // Ensure redirect_uri is the current page path
     redirectUrl.searchParams.set("redirect_uri", pathname)
@@ -75,7 +68,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Handle unauthenticated cases
-  if (!definitelyAuthenticated && !maybeAuthenticated && !session) {
+  if (!isAuthenticated && !hasSession) {
     const loginUrl = new URL("/", req.url)
     // Ensure redirect_uri is the current page path
     loginUrl.searchParams.set("redirect_uri", pathname)

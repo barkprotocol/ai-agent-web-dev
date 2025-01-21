@@ -8,13 +8,14 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
 interface MessageInputProps {
+  value: string
+  onChange: (value: string) => void
   onSubmit: (message: string) => Promise<void>
 }
 
 const MAX_CHARS = 3000
 
-export function MessageInput({ onSubmit }: MessageInputProps) {
-  const [value, setValue] = useState("")
+export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const debouncedAdjustHeight = useCallback(
@@ -37,7 +38,6 @@ export function MessageInput({ onSubmit }: MessageInputProps) {
     if (!value.trim()) return
     try {
       await onSubmit(value)
-      setValue("")
     } catch (error) {
       console.error("Error submitting message:", error)
       toast.error("Failed to send message. Please try again.")
@@ -47,7 +47,7 @@ export function MessageInput({ onSubmit }: MessageInputProps) {
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value
     if (newValue.length <= MAX_CHARS) {
-      setValue(newValue)
+      onChange(newValue)
     } else {
       toast.error("Maximum character limit reached")
     }
