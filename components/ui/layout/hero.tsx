@@ -92,7 +92,7 @@ export default function Hero() {
                 className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-12"
               >
                 <Button asChild size="lg" className="launch-button w-full sm:w-auto">
-                  <Link href="/home">Launch BARK AI Agent</Link>
+                  <Link href="./app/(user)/home">Launch BARK AI Agent</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="whitepaper-button w-full text-black sm:w-auto">
                   <Link href="https://docs.barkprotocol.com/ai" target="_blank" rel="noopener noreferrer">

@@ -22,7 +22,7 @@ import { SolanaUtils } from "@/lib/solana"
 import { cn } from "@/lib/utils"
 import { checkEAPTransaction } from "@/components/eap/eap-transaction-checker"
 import { IntegrationsGrid } from "@/components/integrations-grid"
-import { MessageInput } from "./message-input"
+import MessageInput from "./message-input"
 import { getRandomSuggestions } from "@/app/(user)/home/data/suggestions"
 import { SuggestionCard } from "@/components/suggestion-card"
 
