@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,6 +13,7 @@ body {
     --font-inter: "Inter", sans-serif;
     --font-poppins: "Poppins", sans-serif;
     --font-syne: "Syne", sans-serif;
+    --font-oswald: "Oswald", sans-serif;
 
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -93,6 +96,15 @@ body {
     .blob {
       animation: none; /* Disable blob animation on small devices */
     }
+
+    :root {
+      --sidebar-width: 100%;
+      --sidebar-width-collapsed: 0px;
+    }
+
+    body {
+      font-size: 14px;
+    }
   }
 
   * {
@@ -101,6 +113,15 @@ body {
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-oswald), sans-serif;
   }
 
   /* Custom Scrollbar Styles */
@@ -157,5 +178,36 @@ body {
 
 .dark .scrollbar-thumb {
   background-color: hsl(var(--sidebar-primary));
+}
+
+/* Mobile-friendly adjustments */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+
+  .grid {
+    @apply grid-cols-1;
+  }
+
+  .hidden-mobile {
+    @apply hidden;
+  }
+
+  .flex-col-mobile {
+    @apply flex-col;
+  }
+
+  .text-center-mobile {
+    @apply text-center;
+  }
+
+  .w-full-mobile {
+    @apply w-full;
+  }
+
+  .mt-4-mobile {
+    @apply mt-4;
+  }
 }
 

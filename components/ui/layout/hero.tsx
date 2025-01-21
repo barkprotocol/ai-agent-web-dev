@@ -68,12 +68,12 @@ export default function Hero() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="inline-block bg-gradient-to-r from-sand-600 to-sand-500 text-white text-xs sm:text-sm px-4 py-2 rounded-full uppercase font-bold tracking-wide mb-8 shadow-lg"
+                className="inline-block bg-gradient-to-r from-gray-900 to-gray-950 text-gray-100 text-xs sm:text-sm px-4 py-2 rounded-full uppercase font-semibold tracking-wide mb-8 shadow-lg"
               >
-                BARK Protocol: Unleashing DeFi Potential
+                BARK Protocol: AI Agent Platform
               </motion.div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6">
-                <span className="title-text">Intelligent Copilot</span> <span className="title-text">for Solana</span>
+                <span className="title-text">Your Intelligent Copilot</span> <span className="title-text">for Solana</span>
               </h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -111,9 +111,9 @@ export default function Hero() {
                   href="https://solscan.io/token/2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sand-300 text-xs mb-5 hover:text-sand-200 transition-colors duration-300 break-all font-mono"
+                  className="text-gray-300 text-xs mb-5 hover:text-gray-200 transition-colors duration-300 break-all font-mono"
                 >
-                  Contract: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg
+                  CA: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg
                 </Link>
                 <div className="flex flex-wrap items-center justify-center gap-8">
                   {exchangeLinks.map((item, index) => (
