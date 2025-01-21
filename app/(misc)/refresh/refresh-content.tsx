@@ -16,7 +16,7 @@ export default function RefreshContent() {
         // Try to refresh access token
         const token = await getAccessToken()
         // Get original target path, default to home if not provided
-        const redirectUri = searchParams.get("redirect_uri") || "/"
+        const redirectUri = searchParams.get("redirect_uri") || "/home"
 
         if (token) {
           // User is authenticated, redirect to original target path
