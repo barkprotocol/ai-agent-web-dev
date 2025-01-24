@@ -1,9 +1,4 @@
-import { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {},
-  },
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -24,7 +19,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config: { module: { rules: { test: RegExp; type: string; }[]; }; stats: string; ignoreWarnings: RegExp[]; resolve: { fallback: { fs: boolean; module: boolean; }; }; }, { isServer }: any) => {
     // Add rule for handling JSON files
     config.module.rules.push({
       test: /\.json$/,
@@ -49,16 +44,17 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  // Optionally, suppress TypeScript or other errors if needed
   typescript: {
-    ignoreBuildErrors: true //process.env.NODE_ENV !== 'production',
+    ignoreBuildErrors: true, // Allows TypeScript errors to not block the build
   },
   eslint: {
-    ignoreDuringBuilds: true //process.env.NODE_ENV !== 'production',
+    ignoreDuringBuilds: true, // Ignores eslint errors during the build
   },
   env: {
-    DISCORD_API_URL: process.env.DISCORD_API_URL,
-    TELEGRAM_API_URL: process.env.TELEGRAM_API_URL,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    DISCORD_API_URL: process.env.DISCORD_API_URL, // Your Discord API or Bot URL
+    TELEGRAM_API_URL: process.env.TELEGRAM_API_URL, // Your Telegram API URL
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY, // API key for ChatGPT
   },
 };
 

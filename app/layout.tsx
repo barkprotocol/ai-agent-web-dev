@@ -1,15 +1,18 @@
-/**
- * Copyright (c) 2024 Bark Protocol
- * All rights reserved.
- */
-
 import type { Metadata } from 'next';
-import { Inter, Poppins, Syne } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
+
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
+import AuthProviders from '@/components/provider-auth';
+import { ThemeProvider } from '@/components/provider-theme';
+import { Toaster } from '@/components/ui/sonner';
+import { cn } from '@/lib/utils';
 import { WalletContextProvider } from '@/components/wallet-context-provider';
 
 import './styles/globals.css';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
@@ -29,6 +32,7 @@ const syne = Syne({
   display: 'swap',
 });
 
+// Metadata for the page
 export const metadata: Metadata = {
   title: 'BARK | AI Agent',
   description: 'AI-powered copilot for Solana blockchain interactions',
@@ -42,17 +46,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable} ${syne.variable}`}>
       <body className={`${poppins.className} bg-gray-100 dark:bg-black text-gray-900 dark:text-white transition-colors duration-300`}>
-        <WalletContextProvider children={undefined}>
-          <div className="flex flex-col min-h-screen">
-            {/* Main content */}
-            <main className="flex-grow">{children}</main>
+        {/* Wrap the entire layout with the WalletContextProvider */}
+        <WalletContextProvider>{children}</WalletContextProvider>
 
-            {/* Footer */}
-            <footer className="bg-black text-white py-4 text-center text-sm">
-              <p>© 2025 BARK Protocol. All rights reserved.</p>
-            </footer>
-          </div>
-        </WalletContextProvider>
+        {/* Footer */}
+        <footer className="bg-black text-white py-4 text-center text-sm">
+          <p>© 2025 BARK Protocol. All rights reserved.</p>
+        </footer>
       </body>
     </html>
   );

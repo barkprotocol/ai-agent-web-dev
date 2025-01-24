@@ -73,7 +73,8 @@ export default function Hero() {
                 BARK Protocol: AI Agent Platform
               </motion.div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6">
-                <span className="title-text">Your Intelligent Copilot</span> <span className="title-text">for Solana</span>
+                <span className="title-text">Your Intelligent Copilot</span>{" "}
+                <span className="title-text">for Solana</span>
               </h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -125,7 +126,7 @@ export default function Hero() {
                       aria-label={`Trade BARK on ${item.alt.split(" ")[0]}`}
                     >
                       <Image
-                        src={item.src || "https://ucarecdn.com/34411977-b14d-4daa-b825-16f02711cb20/solscan.png"}
+                        src={item.src || "/placeholder.svg"}
                         alt={item.alt}
                         width={40}
                         height={40}
