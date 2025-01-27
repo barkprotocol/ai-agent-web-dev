@@ -3,7 +3,14 @@ export const SITE_URL = "https://barkprotocol.net"
 export const TWITTER_HANDLE = "@bark_protocol"
 export const GITHUB_HANDLE = "barkprotocol"
 
-export const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com"
+import config from '../package.json';
+
+export const APP_VERSION = config.version;
+export const IS_BETA = true;
+
+export const RPC_URL =
+  process.env.NEXT_PUBLIC_HELIUS_RPC_URL ||
+  'https://api.mainnet-beta.solana.com';
 
 export const BARK_TOKEN_ADDRESS = "2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
 
