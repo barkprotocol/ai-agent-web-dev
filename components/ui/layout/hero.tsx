@@ -81,7 +81,7 @@ export function Hero() {
                     size="lg"
                     className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/30 transition-all shadow-glow-sm"
                   >
-                    <Link href="https://docs.barkprotocol.net" target="_blank" rel="noopener noreferrer">
+                    <Link href="/pages/documents" target="_blank" rel="noopener noreferrer">
                       Whitepaper
                     </Link>
                   </Button>
