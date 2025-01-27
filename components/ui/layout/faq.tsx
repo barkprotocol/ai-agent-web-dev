@@ -49,7 +49,7 @@ export function FAQ() {
           {faqs.map((faq, index) => (
             <div key={index} className="mb-4">
               <button
-                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-card hover:bg-muted transition-colors duration-200"
+                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-card hover:bg-gray-100 transition-colors duration-200"
                 onClick={() => toggleQuestion(index)}
                 aria-expanded={activeIndex === index}
               >
@@ -79,5 +79,7 @@ export function FAQ() {
     </section>
   )
 }
+
+
 
 
