@@ -1,5 +1,5 @@
 export const SITE_NAME = "BARK AI Agent"
-export const SITE_URL = "https://barkprotocol.net"
+export const SITE_URL = "https://ai.barkprotocol.net"
 export const TWITTER_HANDLE = "@bark_protocol"
 export const GITHUB_HANDLE = "barkprotocol"
 
