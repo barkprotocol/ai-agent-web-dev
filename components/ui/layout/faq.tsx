@@ -49,7 +49,7 @@ export function FAQ() {
           {faqs.map((faq, index) => (
             <div key={index} className="mb-4">
               <button
-                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-card hover:bg-gray-100 transition-colors duration-200"
+                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-card hover:bg-muted transition-colors duration-200"
                 onClick={() => toggleQuestion(index)}
                 aria-expanded={activeIndex === index}
               >
@@ -67,7 +67,6 @@ export function FAQ() {
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
                   >
                     <p className="p-4 text-muted-foreground">{faq.answer}</p>
                   </motion.div>
@@ -80,4 +79,5 @@ export function FAQ() {
     </section>
   )
 }
+
 
