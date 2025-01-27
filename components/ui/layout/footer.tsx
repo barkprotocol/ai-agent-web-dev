@@ -1,18 +1,26 @@
 import Link from "next/link"
 import { Logo } from "@/components/ui/logo"
-import { Twitter, Github, DiscIcon as Discord, BookOpen } from "lucide-react"
+import { Github, BookOpen } from "lucide-react"
+import { XIcon } from "@/components/ui/icons/x-icon"
+import { TelegramIcon } from "@/components/ui/icons/telegram-icon"
+import { InstagramIcon } from "@/components/ui/icons/instagram-icon"
+import { DiscordIcon } from "@/components/ui/icons/discord-icon"
 
 const footerLinks = [
   { title: "Product", items: ["AI Agents", "Dashboard", "Pricing", "Security"] },
-  { title: "Company", items: ["About", "Blog", "Careers", "Press"] },
-  { title: "Resources", items: ["Documentation", "Help Center", "API", "Status"] },
-  { title: "Legal", items: ["Privacy Policy", "Terms of Service", "Cookie Policy"] },
+  { title: "About BARK", items: ["About", "Blog", "Careers", "Brand Guide", "Governance"] },
+  {
+    title: "Resources",
+    items: ["Documentation", "Help Center", "Privacy Policy", "Terms of Service", "Cookie Policy"],
+  },
 ]
 
 const socialLinks = [
-  { name: "Twitter", href: "https://twitter.com/bark_protocol", icon: Twitter },
+  { name: "X", href: "https://x.com/bark_protocol", icon: XIcon },
   { name: "GitHub", href: "https://github.com/barkprotocol", icon: Github },
-  { name: "Discord", href: "https://discord.gg/barkprotocol", icon: Discord },
+  { name: "Discord", href: "https://discord.gg/barkprotocol", icon: DiscordIcon },
+  { name: "Telegram", href: "https://t.me/barkprotocol", icon: TelegramIcon },
+  { name: "Instagram", href: "https://www.instagram.com/barkprotocol", icon: InstagramIcon },
   { name: "Documentation", href: "https://docs.barkprotocol.com", icon: BookOpen },
 ]
 
@@ -22,7 +30,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2">
-            <Logo isScrolled={false} />
+            <Logo isScrolled={true} />
             <p className="mt-4 text-sm text-muted-foreground">
               Empowering your financial journey with BARK Protocol, the groundbreaking fusion of Solana blockchain and
               AI technologies.

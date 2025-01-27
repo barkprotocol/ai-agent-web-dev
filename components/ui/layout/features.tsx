@@ -73,7 +73,7 @@ export function Features() {
               )}
             >
               <div className="mb-4">
-                <feature.icon className="h-10 w-10 text-[#DBCFC7]" aria-hidden="true" />
+                <feature.icon className="h-10 w-10 text-primary" aria-hidden="true" />
               </div>
               <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
               <p className="text-sm text-muted-foreground">{feature.description}</p>

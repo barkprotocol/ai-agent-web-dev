@@ -43,7 +43,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               className={`text-sm font-medium transition-colors ${
-                isScrolled ? "text-[#DBCFC7] hover:text-primary" : "text-white hover:text-white/80"
+                isScrolled ? "text-foreground hover:text-primary" : "text-white hover:text-white/80"
               }`}
             >
               {item.label}
@@ -65,7 +65,7 @@ export function Header() {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className={`h-5 w-5 ${isScrolled ? "text-[#DBCFC7]" : "text-white"}`} />
+                <Menu className={`h-5 w-5 ${isScrolled ? "text-foreground" : "text-white"}`} />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
@@ -75,9 +75,7 @@ export function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`text-sm font-medium transition-colors ${
-                      isScrolled ? "text-[#DBCFC7] hover:text-primary" : "text-white hover:text-white/80"
-                    }`}
+                    className="text-foreground hover:text-primary transition-colors"
                   >
                     {item.label}
                   </Link>
