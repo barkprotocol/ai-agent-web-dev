@@ -1,5 +1,6 @@
 "use client"
 
+/** @jsxImportSource @emotion/react */
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
