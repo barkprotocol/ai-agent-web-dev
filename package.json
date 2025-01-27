@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate", 
+    "update": "npx prisma migrate dev --name update_schema"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

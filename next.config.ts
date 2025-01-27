@@ -3,8 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['ucarecdn.com'],
+    domains: ["ucarecdn.com"],
   },
+  // Add any Vercel-specific configurations here
 }
 
 module.exports = nextConfig
