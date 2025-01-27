@@ -20,14 +20,14 @@ const sections: Section[] = [
     description:
       "Leverage advanced AI algorithms for smart, automated trading strategies tailored to your preferences and risk tolerance.",
     icon: Bot,
-    imageUrl: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/ai_trading.webp",
+    imageUrl: "https://ucarecdn.com/9a2cc40e-f557-4512-82e4-5dbe3e5e07d3/BARKAI.svg",
   },
   {
     title: "Real-Time Market Analysis",
     description:
       "Access instant insights with our real-time market analysis tools, helping you make informed decisions in the fast-paced crypto market.",
     icon: BarChart,
-    imageUrl: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/market_analysis.webp",
+    imageUrl: "https://ucarecdn.com/9a2cc40e-f557-4512-82e4-5dbe3e5e07d3/BARKAI.svg",
   },
   {
     title: "Lightning-Fast Transactions",
@@ -41,21 +41,21 @@ const sections: Section[] = [
     description:
       "Benefit from state-of-the-art security measures, including multi-factor authentication and cold storage options for your assets.",
     icon: Shield,
-    imageUrl: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/enhanced_security.webp",
+    imageUrl: "https://ucarecdn.com/9a2cc40e-f557-4512-82e4-5dbe3e5e07d3/BARKAI.svg",
   },
   {
     title: "DeFi Integration",
     description:
       "Seamlessly interact with various DeFi protocols to maximize your yield and explore new financial opportunities.",
     icon: Coins,
-    imageUrl: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/defi_integration.webp",
+    imageUrl: "https://ucarecdn.com/9a2cc40e-f557-4512-82e4-5dbe3e5e07d3/BARKAI.svg",
   },
   {
     title: "Community Insights",
     description:
       "Gain valuable insights from our community of traders and analysts, and participate in collaborative decision-making.",
     icon: Users,
-    imageUrl: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/community_insights.webp",
+    imageUrl: "https://ucarecdn.com/9a2cc40e-f557-4512-82e4-5dbe3e5e07d3/BARKAI.svg",
   },
 ]
 

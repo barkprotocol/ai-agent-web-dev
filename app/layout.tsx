@@ -8,8 +8,8 @@ import AuthProviders from "@/components/provider-auth"
 import { Header } from "@/components/ui/layout/header"
 import { Footer } from "@/components/ui/layout/footer"
 import { cn } from "@/lib/utils"
-import "@/styles/globals.css"
-import "@/styles/wallet-adapter.css"
+import "@/app/styles/globals.css"
+import "@/app/styles/wallet-adapter.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 

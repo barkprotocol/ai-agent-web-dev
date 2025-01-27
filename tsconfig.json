@@ -2,26 +2,40 @@
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "target": "ES6",
+    "target": "ES2022", // ES2020 provides better async/await and optional chaining support
+    "module": "esnext", 
+    "moduleResolution": "node", // Better compatibility with Node.js
     "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "strict": true, // Enable strict type checking
+    "noEmit": true, // Prevent emitting compiled JS files
+    "esModuleInterop": true, // Smooth interop between CommonJS and ES modules
+    "resolveJsonModule": true, // Allows importing JSON files as modules
+    "isolatedModules": true, // Ensures each file is treated as an isolated module
+    "jsx": "preserve", // Needed for Next.js (keeps JSX for further transformation)
+    "incremental": true, // Improves performance by enabling incremental builds
+    "baseUrl": "./", // Simplifies path resolution
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": ["./*"] // Aliases `@` to the project root for cleaner imports
+    },
+    "forceConsistentCasingInFileNames": true, // Enforces consistent casing in imports
+    "useDefineForClassFields": true, // Ensures consistent class field semantics
+    "strictNullChecks": true, // Helps avoid null/undefined errors
+    "strictFunctionTypes": true, // Provides stricter function type compatibility
+    "noImplicitReturns": true, // Ensures all code paths return a value
+    "noFallthroughCasesInSwitch": true, // Prevents unintentional fallthroughs in switch statements
+    "allowSyntheticDefaultImports": true // Allows default imports even when they're missing in a library
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts", 
+    "**/*.ts", 
+    "**/*.tsx", 
+    ".next/types/**/*.ts" // Includes Next.js types
+  ],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"], // Excludes test files
+  "ts-node": {
+    "transpileOnly": true, // Useful for faster TS execution during development
+    "compilerOptions": {
+      "module": "commonjs" // Compatibility for Node.js runtime
+    }
+  }
 }

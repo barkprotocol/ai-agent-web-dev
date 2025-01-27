@@ -41,7 +41,7 @@ export default function AuthProviders({ children }: AuthProvidersProps) {
       config={{
         appearance: {
           theme: resolvedTheme === "dark" ? "dark" : "light",
-          logo: resolvedTheme === "dark" ? "/letter_w.svg" : "/letter.svg",
+          logo: resolvedTheme === "dark" ? "https://ucarecdn.com/bbc74eca-8e0d-4147-8a66-6589a55ae8d0/bark.webp" : "https://ucarecdn.com/bbc74eca-8e0d-4147-8a66-6589a55ae8d0/bark.webp",
         },
         externalWallets: {
           solana: {
