@@ -1,20 +1,5 @@
 import { NextResponse } from "next/server"
-import prisma from "@/lib/prisma"
-import { supabase } from "@/lib/supabase"
-import {
-  Connection,
-  PublicKey,
-  LAMPORTS_PER_SOL,
-  SystemProgram,
-  VersionedTransaction,
-  type TransactionInstruction,
-  type MessageV0,
-  Transaction,
-  type Message,
-  type VersionedMessage,
-  type MessageCompiledInstruction,
-  type CompiledInstruction,
-} from "@solana/web3.js"
+import { Connection, PublicKey, LAMPORTS_PER_SOL, SystemProgram, Transaction } from "@solana/web3.js"
 
 const REQUIRED_AMOUNT = 1 * LAMPORTS_PER_SOL // 1 SOL in lamports
 
@@ -24,50 +9,14 @@ async function verifyTransaction(txHash: string): Promise<boolean> {
   try {
     const tx = await connection.getTransaction(txHash, { maxSupportedTransactionVersion: 0 })
     if (tx && tx.meta) {
-      let transferInstruction: TransactionInstruction | MessageCompiledInstruction | CompiledInstruction | undefined
-      let accountKeys: PublicKey[]
-
-      if (tx.transaction instanceof Transaction) {
-        // Legacy transaction
-        const message: Message = tx.transaction.compileMessage()
-        transferInstruction = message.instructions.find(
-          (ix) => message.accountKeys[ix.programIdIndex].equals(SystemProgram.programId) && ix.data.length === 8,
-        )
-        accountKeys = message.accountKeys
-      } else if (tx.transaction instanceof VersionedTransaction) {
-        // Versioned transaction
-        const message: VersionedMessage = tx.transaction.message
-        if (message.version === 0) {
-          const v0Message = message as MessageV0
-          transferInstruction = v0Message.compiledInstructions.find(
-            (ix) =>
-              v0Message.staticAccountKeys[ix.programIdIndex].equals(SystemProgram.programId) && ix.data.length === 8,
-          )
-          accountKeys = v0Message.staticAccountKeys
-        } else {
-          throw new Error("Unsupported message version")
-        }
-      } else {
-        throw new Error("Unsupported transaction type")
-      }
+      const transferInstruction = tx.transaction.message.instructions.find(
+        (ix) =>
+          SystemProgram.programId.equals(tx.transaction.message.accountKeys[ix.programIdIndex]) && ix.data.length === 8,
+      )
 
       if (transferInstruction) {
         const amount = tx.meta.postBalances[1] - tx.meta.preBalances[1]
-        let recipientAddress: PublicKey
-
-        if ("accounts" in transferInstruction && Array.isArray(transferInstruction.accounts)) {
-          // TransactionInstruction
-          recipientAddress = accountKeys[transferInstruction.accounts[1]]
-        } else if ("accountKeyIndexes" in transferInstruction && Array.isArray(transferInstruction.accountKeyIndexes)) {
-          // MessageCompiledInstruction
-          recipientAddress = accountKeys[transferInstruction.accountKeyIndexes[1]]
-        } else if ("accounts" in transferInstruction && typeof transferInstruction.accounts === "number") {
-          // CompiledInstruction
-          recipientAddress = accountKeys[transferInstruction.accounts]
-        } else {
-          throw new Error("Unexpected instruction type")
-        }
-
+        const recipientAddress = tx.transaction.message.accountKeys[transferInstruction.accounts[1]]
         const expectedRecipient = new PublicKey(process.env.RECIPIENT_ADDRESS || "")
 
         return amount >= REQUIRED_AMOUNT && recipientAddress.equals(expectedRecipient)
@@ -87,21 +36,16 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Email is required" }, { status: 400 })
   }
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: { eapTransactions: true },
-    })
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 })
-    }
-
-    return NextResponse.json({ user })
-  } catch (error) {
-    console.error("Error in GET /api/users:", error)
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+  // In a real application, you would fetch user data from your database here
+  // For now, we'll return a mock response
+  const mockUser = {
+    email,
+    name: "Mock User",
+    eapAccess: false,
+    eapTransactions: [],
   }
+
+  return NextResponse.json({ user: mockUser })
 }
 
 export async function POST(request: Request) {
@@ -119,48 +63,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid transaction" }, { status: 400 })
     }
 
-    // Create or update user and EAP transaction
-    const user = await prisma.user.upsert({
-      where: { email },
-      update: {
-        name,
-        eapAccess: true,
-        eapTransactions: {
-          create: {
-            amount: REQUIRED_AMOUNT / LAMPORTS_PER_SOL,
-            txHash,
-            status: "completed",
-          },
-        },
-      },
-      create: {
-        email,
-        name,
-        eapAccess: true,
-        eapTransactions: {
-          create: {
-            amount: REQUIRED_AMOUNT / LAMPORTS_PER_SOL,
-            txHash,
-            status: "completed",
-          },
-        },
-      },
-      include: { eapTransactions: true },
-    })
-
-    // Insert data into Supabase
-    const { data, error } = await supabase.from("users_table").upsert({
+    // In a real application, you would create or update the user in your database here
+    // For now, we'll return a mock response
+    const mockUser = {
       email,
       name,
-      eap_access: true,
-      last_transaction_hash: txHash,
-    })
-
-    if (error) {
-      console.error("Error inserting data into Supabase:", error)
+      eapAccess: true,
+      eapTransactions: [
+        {
+          amount: REQUIRED_AMOUNT / LAMPORTS_PER_SOL,
+          txHash,
+          status: "completed",
+        },
+      ],
     }
 
-    return NextResponse.json(user)
+    return NextResponse.json(mockUser)
   } catch (error) {
     console.error("Error in POST /api/users:", error)
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })

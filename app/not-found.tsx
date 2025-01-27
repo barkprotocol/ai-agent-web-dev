@@ -1,7 +1,5 @@
-import Link from "next/link"
 import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
-import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
   title: "404 - Page Not Found | BARK AI Agent",
@@ -26,7 +24,7 @@ export default function FourOhFour() {
             className="bg-primary hover:bg-primary/90 text-primary-foreground"
             aria-label="Return to Home Page"
           >
-            <Link href="/">Return Home</Link>
+            Return Home
           </Button>
           <Button
             variant="outline"
@@ -34,7 +32,7 @@ export default function FourOhFour() {
             className="bg-background hover:bg-accent hover:text-accent-foreground"
             aria-label="Explore the Dashboard"
           >
-            <Link href="/dashboard">Explore Dashboard</Link>
+            Explore Dashboard
           </Button>
         </div>
       </div>

@@ -6,7 +6,7 @@ export interface User {
   accountType?: string
   memberSince?: string
   bio?: string
-  walletAddress?: string
+  walletAddress?: string // New field for wallet address
 }
 
 export interface UserDisplayProps {

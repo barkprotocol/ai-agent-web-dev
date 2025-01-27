@@ -49,32 +49,36 @@ export function Hero() {
               className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"
               aria-hidden="true"
             />
-            <div className="relative z-10 container mx-auto text-center text-white">
+            <div className="relative z-10 container mx-auto text-center text-primary-foreground">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                <h1 className="font-oswald text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white">
+                <h1 className="font-oswald text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary-foreground via-primary-foreground/90 to-primary-foreground/80 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
                   Your Intelligent Copilot for Solana
                 </h1>
-                <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto text-white">
+                <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto text-primary-foreground/90">
                   Elevate your DeFi experience with BARK AI Agent. Harness the power of artificial intelligence to
                   optimize your Solana investments and navigate decentralized finance with ease.
                 </p>
-                <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
-                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                    <Link href="/dashboard">Launch AI Agent Dashboard</Link>
+                <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mb-12">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-glow transition-all"
+                  >
+                    <Link href="/dashboard">Launch Dashboard</Link>
                   </Button>
                   <Button
                     asChild
                     variant="outline"
                     size="lg"
-                    className="border-white text-white hover:bg-white/10 hover:text-white"
+                    className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/30 transition-all shadow-glow-sm"
                   >
-                    <Link href="https://docs.barkprotocol.com" target="_blank" rel="noopener noreferrer">
+                    <Link href="https://docs.barkprotocol.net" target="_blank" rel="noopener noreferrer">
                       Explore Whitepaper
                     </Link>
                   </Button>
                 </div>
                 <div className="mt-12">
-                  <p className="text-sm mb-4 text-[#DBCFC7]">Trade BARK on leading exchanges</p>
+                  <p className="text-sm mb-4 text-primary-foreground/80">Trade BARK on leading exchanges</p>
                   <div className="flex flex-wrap items-center justify-center gap-8">
                     {exchangeLinks.map((item) => (
                       <Link
@@ -100,7 +104,7 @@ export function Hero() {
                     href="https://solscan.io/token/2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#DBCFC7] text-sm hover:text-white transition-colors"
+                    className="text-primary-foreground/80 text-sm hover:text-primary-foreground transition-colors"
                   >
                     CA: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg
                   </Link>

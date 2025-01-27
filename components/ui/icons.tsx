@@ -1,8 +1,14 @@
-import { Loader2, LogIn } from "lucide-react"
+import { Loader2, LogIn, Github } from "lucide-react"
+import { XIcon } from "./icons/x-icon"
+import { TelegramIcon } from "./icons/telegram-icon"
+import { MediumIcon } from "./icons/medium-icon"
 
 export const Icons = {
   spinner: Loader2,
   login: LogIn,
-  // Add other icons here as needed
+  github: Github,
+  x: XIcon,
+  telegram: TelegramIcon,
+  medium: MediumIcon,
 }
 

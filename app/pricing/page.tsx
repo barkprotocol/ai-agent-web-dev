@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { PricingCards } from "@/components/ui/pricing-cards"
+import { PricingCards } from "@/components/pricing-cards"
 
 export const metadata: Metadata = {
   title: "Pricing | BARK AI Agent",

@@ -1,8 +1,6 @@
 import type { Metadata } from "next"
 import { Geist, Azeret_Mono as Geist_Mono, Inter } from "next/font/google"
 import localFont from "next/font/local"
-import { Analytics } from "@vercel/analytics/react"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/provider-theme"
 import { WalletContextProvider } from "@/components/wallet-context-provider"
@@ -11,6 +9,7 @@ import { Header } from "@/components/ui/layout/header"
 import { Footer } from "@/components/ui/layout/footer"
 import { cn } from "@/lib/utils"
 import "@/styles/globals.css"
+import "@/styles/wallet-adapter.css"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
@@ -52,11 +51,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </AuthProviders>
           </WalletContextProvider>
         </ThemeProvider>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   )
 }
 
 
+
+import './globals.css'

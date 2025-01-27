@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server"
-import prisma from "@/lib/prisma"
+
+// Mock database
+const users: { [key: string]: any } = {}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -9,29 +11,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 })
   }
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        wallets: true,
-        conversations: true,
-        Rule: true,
-        Action: true,
-        tokenStats: true,
-        TelegramChat: true,
-        SavedPrompts: true,
-      },
-    })
+  const user = users[userId]
 
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 })
-    }
-
-    return NextResponse.json(user)
-  } catch (error) {
-    console.error("Error in GET /api/user:", error)
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 })
   }
+
+  return NextResponse.json(user)
 }
 
 export async function POST(request: Request) {
@@ -42,13 +28,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Privy ID is required" }, { status: 400 })
     }
 
-    const user = await prisma.user.create({
-      data: {
-        privyId,
-      },
-    })
+    const newUser = {
+      id: privyId,
+      privyId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      earlyAccess: false,
+      degenMode: false,
+    }
 
-    return NextResponse.json(user)
+    users[privyId] = newUser
+
+    return NextResponse.json(newUser)
   } catch (error) {
     console.error("Error in POST /api/user:", error)
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
@@ -63,12 +54,17 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 })
     }
 
-    const user = await prisma.user.update({
-      where: { id },
-      data: updateData,
-    })
+    if (!users[id]) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 })
+    }
 
-    return NextResponse.json(user)
+    users[id] = {
+      ...users[id],
+      ...updateData,
+      updatedAt: new Date().toISOString(),
+    }
+
+    return NextResponse.json(users[id])
   } catch (error) {
     console.error("Error in PUT /api/user:", error)
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
@@ -83,15 +79,12 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 })
   }
 
-  try {
-    await prisma.user.delete({
-      where: { id: userId },
-    })
-
-    return NextResponse.json({ message: "User deleted successfully" })
-  } catch (error) {
-    console.error("Error in DELETE /api/user:", error)
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+  if (!users[userId]) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 })
   }
+
+  delete users[userId]
+
+  return NextResponse.json({ message: "User deleted successfully" })
 }
 

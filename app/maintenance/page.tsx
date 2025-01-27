@@ -13,7 +13,7 @@ export default function MaintenanceIndex() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
       <div className={cn("pointer-events-none select-none", "animate-pulse")}>
         <Image
-          src="https://ucarecdn.com/bbc74eca-8e0d-4147-8a66-6589a55ae8d0/bark.webp"
+          src="https://ucarecdn.com/e8f198aa-1473-4f5f-9157-c2be535208dc/BARKAI.png"
           alt="BARK AI Logo"
           width={80}
           height={80}

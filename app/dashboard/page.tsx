@@ -6,6 +6,7 @@ import { usePrivy } from "@privy-io/react-auth"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { DashboardShell } from "@/components/dashboard/shell"
 import { DashboardContent } from "@/components/dashboard/content"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 export default function DashboardPage() {
   const { authenticated, ready } = usePrivy()
@@ -16,6 +17,10 @@ export default function DashboardPage() {
       router.push("/login")
     }
   }, [ready, authenticated, router])
+
+  if (!ready) {
+    return <LoadingSpinner fullScreen />
+  }
 
   if (!authenticated) {
     return null

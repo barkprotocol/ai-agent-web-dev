@@ -1,0 +1,128 @@
+/* Light theme variables */
+:root {
+  --wallet-adapter-button-bg: hsl(var(--primary));
+  --wallet-adapter-button-color: hsl(var(--primary-foreground));
+  --wallet-adapter-button-hover-bg: hsl(var(--primary) / 0.9);
+  --wallet-adapter-modal-bg: hsl(var(--background));
+  --wallet-adapter-modal-color: hsl(var(--foreground));
+  --wallet-adapter-modal-border: hsl(var(--border));
+  --wallet-adapter-modal-close-bg: hsl(var(--secondary));
+  --wallet-adapter-modal-close-color: hsl(var(--secondary-foreground));
+  --wallet-adapter-list-item-bg: hsl(var(--background));
+  --wallet-adapter-list-item-hover-bg: hsl(var(--accent));
+  --wallet-adapter-list-item-hover-color: hsl(var(--accent-foreground));
+}
+
+/* Dark theme variables */
+.dark {
+  --wallet-adapter-button-bg: hsl(var(--primary));
+  --wallet-adapter-button-color: hsl(var(--primary-foreground));
+  --wallet-adapter-button-hover-bg: hsl(var(--primary) / 0.8);
+  --wallet-adapter-modal-bg: hsl(var(--background));
+  --wallet-adapter-modal-color: hsl(var(--foreground));
+  --wallet-adapter-modal-border: hsl(var(--border));
+  --wallet-adapter-modal-close-bg: hsl(var(--secondary));
+  --wallet-adapter-modal-close-color: hsl(var(--secondary-foreground));
+  --wallet-adapter-list-item-bg: hsl(var(--background));
+  --wallet-adapter-list-item-hover-bg: hsl(var(--accent));
+  --wallet-adapter-list-item-hover-color: hsl(var(--accent-foreground));
+}
+
+.wallet-adapter-button {
+  background-color: var(--wallet-adapter-button-bg) !important;
+  color: var(--wallet-adapter-button-color) !important;
+  font-family: var(--font-geist), sans-serif !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--radius) !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.wallet-adapter-button:not(:disabled):hover {
+  background-color: var(--wallet-adapter-button-hover-bg) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.wallet-adapter-button-trigger {
+  background-color: transparent !important;
+  color: var(--wallet-adapter-modal-color) !important;
+  border: 1px solid var(--wallet-adapter-modal-border) !important;
+}
+
+.wallet-adapter-button-trigger:not(:disabled):hover {
+  background-color: var(--wallet-adapter-list-item-hover-bg) !important;
+  color: var(--wallet-adapter-list-item-hover-color) !important;
+}
+
+.wallet-adapter-modal-wrapper {
+  background-color: var(--wallet-adapter-modal-bg) !important;
+  color: var(--wallet-adapter-modal-color) !important;
+  border: 1px solid var(--wallet-adapter-modal-border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+}
+
+.wallet-adapter-modal-button-close {
+  background-color: var(--wallet-adapter-modal-close-bg) !important;
+  color: var(--wallet-adapter-modal-close-color) !important;
+}
+
+.wallet-adapter-modal-title {
+  color: var(--wallet-adapter-modal-color) !important;
+  font-family: var(--font-geist), sans-serif !important;
+}
+
+.wallet-adapter-modal-content {
+  color: var(--wallet-adapter-modal-color) !important;
+}
+
+.wallet-adapter-modal-list {
+  margin: 0 !important;
+}
+
+.wallet-adapter-modal-list li {
+  background-color: var(--wallet-adapter-list-item-bg) !important;
+  border: 1px solid var(--wallet-adapter-modal-border) !important;
+  border-radius: var(--radius) !important;
+  transition: all 0.3s ease !important;
+}
+
+.wallet-adapter-modal-list li:hover {
+  background-color: var(--wallet-adapter-list-item-hover-bg) !important;
+  color: var(--wallet-adapter-list-item-hover-color) !important;
+}
+
+.wallet-adapter-modal-list-more {
+  color: var(--wallet-adapter-button-bg) !important;
+  font-family: var(--font-geist), sans-serif !important;
+}
+
+.wallet-adapter-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.wallet-adapter-dropdown {
+  color: var(--wallet-adapter-modal-color) !important;
+}
+
+.wallet-adapter-dropdown-list {
+  background: var(--wallet-adapter-modal-bg) !important;
+  border: 1px solid var(--wallet-adapter-modal-border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.wallet-adapter-dropdown-list-item {
+  color: var(--wallet-adapter-modal-color) !important;
+  font-family: var(--font-geist), sans-serif !important;
+  transition: all 0.3s ease !important;
+}
+
+.wallet-adapter-dropdown-list-item:hover {
+  background-color: var(--wallet-adapter-list-item-hover-bg) !important;
+  color: var(--wallet-adapter-list-item-hover-color) !important;
+}
+

@@ -35,7 +35,7 @@ export function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        isScrolled ? "bg-background/80 backdrop-blur-sm" : "bg-transparent"
+        isScrolled ? "bg-background/80 dark:bg-background/80 backdrop-blur-sm" : "bg-transparent"
       }`}
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -46,31 +46,33 @@ export function Header() {
               key={item.href}
               href={item.href}
               className={`text-sm font-medium transition-colors ${
-                isScrolled ? "text-[#DBCFC7] hover:text-primary" : "text-white hover:text-white/80"
-              } ${pathname === item.href ? "text-primary" : ""}`}
+                isScrolled
+                  ? "text-foreground dark:text-white hover:text-primary dark:hover:text-primary"
+                  : "text-primary-foreground dark:text-white hover:text-primary-foreground/80 dark:hover:text-white/80"
+              } ${pathname === item.href ? "text-primary dark:text-primary" : ""}`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="flex items-center space-x-4">
-          <div className="hidden md:block">
-            {authenticated ? (
-              <Button onClick={logout} variant="outline" className="mr-2">
-                Logout
-              </Button>
-            ) : (
-              <Button onClick={login} variant="outline" className="mr-2">
-                Login
-              </Button>
-            )}
+        <div className="flex items-center space-x-3">
+          <div className="hidden md:flex items-center space-x-3">
             <WalletButton />
+            <Button
+              onClick={authenticated ? logout : login}
+              variant="outline"
+              className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/30 dark:border-white/20 dark:text-white dark:hover:bg-white/10 dark:hover:border-white/30 transition-all shadow-glow-sm"
+            >
+              {authenticated ? "Logout" : "Login"}
+            </Button>
           </div>
           <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className={`h-5 w-5 ${isScrolled ? "text-[#DBCFC7]" : "text-white"}`} />
+                <Menu
+                  className={`h-5 w-5 ${isScrolled ? "text-foreground dark:text-white" : "text-primary-foreground dark:text-white"}`}
+                />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
@@ -81,13 +83,20 @@ export function Header() {
                     key={item.href}
                     href={item.href}
                     className={`text-sm font-medium transition-colors ${
-                      isScrolled ? "text-[#DBCFC7] hover:text-primary" : "text-white hover:text-white/80"
-                    } ${pathname === item.href ? "text-primary" : ""}`}
+                      isScrolled
+                        ? "text-foreground dark:text-white hover:text-primary dark:hover:text-primary"
+                        : "text-primary-foreground dark:text-white hover:text-primary-foreground/80 dark:hover:text-white/80"
+                    } ${pathname === item.href ? "text-primary dark:text-primary" : ""}`}
                   >
                     {item.label}
                   </Link>
                 ))}
-                <WalletButton />
+                <div className="flex flex-col space-y-3">
+                  <WalletButton />
+                  <Button onClick={authenticated ? logout : login} variant="outline">
+                    {authenticated ? "Logout" : "Login"}
+                  </Button>
+                </div>
               </nav>
             </SheetContent>
           </Sheet>
