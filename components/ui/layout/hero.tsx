@@ -5,6 +5,11 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import { css } from "@emotion/react"
+
+const titleStyle = css`
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.1);
+`
 
 const exchangeLinks = [
   {
@@ -51,7 +56,10 @@ export function Hero() {
             />
             <div className="relative z-10 container mx-auto text-center text-primary-foreground">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                <h1 className="font-oswald text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary-foreground via-primary-foreground/90 to-primary-foreground/80 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                <h1
+                  css={titleStyle}
+                  className="font-oswald text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-primary-foreground"
+                >
                   Your Intelligent Copilot for Solana
                 </h1>
                 <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto text-primary-foreground/90">
@@ -72,7 +80,7 @@ export function Hero() {
                     size="lg"
                     className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/30 transition-all shadow-glow-sm"
                   >
-                    <Link href="/pages/documents" target="_blank" rel="noopener noreferrer">
+                    <Link href="https://docs.barkprotocol.net" target="_blank" rel="noopener noreferrer">
                       Whitepaper
                     </Link>
                   </Button>
