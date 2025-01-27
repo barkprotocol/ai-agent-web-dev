@@ -7,6 +7,8 @@ All notable changes to the BARK AI Agent Website project will be documented in t
 ### Added
 - Initial release of the BARK AI Agent Website
 - Responsive design implementation using Tailwind CSS
+- Dashboard page template
+- Login form with Privy
 - Dark mode support with next-themes
 - Integration with Solana wallet for blockchain interactions
 - Hero section showcasing main features
@@ -15,7 +17,7 @@ All notable changes to the BARK AI Agent Website project will be documented in t
 - Call-to-Action (CTA) section for user engagement
 - Frequently Asked Questions (FAQ) section
 - Footer with social media links and site navigation
-- Pricing page with toggle for monthly/annual plans
+- Pricing page sample with toggle for monthly/annual plans
 - EAP (Early Access Program) transaction checker component
 - Custom icons for social media platforms (X, Discord, Telegram, Instagram)
 - Error boundary component for graceful error handling
