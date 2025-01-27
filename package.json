@@ -5,11 +5,11 @@
   "author": "BARK Protocol",
   "license": "MIT",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build && prisma migrate deploy && prisma generate",
-    "start": "next start",
-    "lint": "next lint"
+    "scripts": {
+      "dev": "next dev",
+      "build": "npx prisma migrate deploy && npx prisma generate && next build",
+      "start": "next start",
+      "lint": "next lint"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.1.4",
