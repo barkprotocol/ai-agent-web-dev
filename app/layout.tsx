@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist, Azeret_Mono as Geist_Mono, Inter } from "next/font/google"
+import { Inter } from "next/font/google"
 import localFont from "next/font/local"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/provider-theme"
@@ -11,8 +11,6 @@ import { cn } from "@/lib/utils"
 import "@/styles/globals.css"
 import "@/styles/wallet-adapter.css"
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 // Load Oswald locally as a fallback
@@ -30,15 +28,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          geist.variable,
-          geistMono.variable,
-          inter.variable,
-          oswaldLocal.variable,
-          "min-h-screen bg-background font-sans antialiased",
-        )}
-      >
+      <body className={cn(inter.variable, oswaldLocal.variable, "min-h-screen bg-background font-sans antialiased")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <WalletContextProvider>
             <AuthProviders>
@@ -56,6 +46,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   )
 }
 
-
-
-import './globals.css'
