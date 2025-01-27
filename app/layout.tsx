@@ -12,8 +12,8 @@ import "@/app/styles/globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
-// Load Oswald locally as a fallback
-const oswaldLocal = localFont({
+// Load Oswald locally
+const oswald = localFont({
   src: "../public/fonts/Oswald-Regular.ttf",
   variable: "--font-oswald",
 })
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.variable, oswaldLocal.variable, "min-h-screen bg-background font-sans antialiased")}>
+      <body className={cn(inter.variable, oswald.variable, "min-h-screen bg-background font-sans antialiased")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <WalletContextProvider>
             <AuthProviders>
@@ -44,4 +44,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   )
 }
-
