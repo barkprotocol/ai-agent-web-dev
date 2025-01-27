@@ -1,16 +1,16 @@
-import type { ReactNode } from "react"
-
-export type Email = string
-
 export interface User {
   id: string
   name: string | null
-  email: Email
-  // Add other user properties as needed
+  email: string | null
+  avatarUrl?: string
+  accountType?: string
+  memberSince?: string
+  bio?: string
+  walletAddress?: string
 }
 
 export interface UserDisplayProps {
-  user: User
-  renderEmail?: (email: Email) => ReactNode
+  user: User | null
+  renderEmail?: (email: string | null) => React.ReactNode
 }
 

@@ -1,16 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     domains: ["ucarecdn.com"],
   },
   typescript: {
-    // Ignore TypeScript errors during build
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Ignore ESLint errors during build
     ignoreDuringBuilds: true,
   },
   env: {
@@ -20,4 +17,3 @@ const nextConfig = {
 }
 
 export default nextConfig
-

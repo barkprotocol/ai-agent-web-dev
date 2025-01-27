@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { WalletButton } from "@/components/ui/wallet-button"
 import { Logo } from "@/components/ui/logo"
@@ -12,14 +13,16 @@ import { usePrivy } from "@privy-io/react-auth"
 
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/agents", label: "AI Agents" },
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/agents", label: "AI Agents" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/#faq", label: "FAQ" },
 ]
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const { login, logout, authenticated, user } = usePrivy()
+  const pathname = usePathname()
+  const { login, authenticated, logout } = usePrivy()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,8 +46,8 @@ export function Header() {
               key={item.href}
               href={item.href}
               className={`text-sm font-medium transition-colors ${
-                isScrolled ? "text-foreground hover:text-primary" : "text-white hover:text-white/80"
-              }`}
+                isScrolled ? "text-[#DBCFC7] hover:text-primary" : "text-white hover:text-white/80"
+              } ${pathname === item.href ? "text-primary" : ""}`}
             >
               {item.label}
             </Link>
@@ -52,20 +55,22 @@ export function Header() {
         </nav>
         <div className="flex items-center space-x-4">
           <div className="hidden md:block">
+            {authenticated ? (
+              <Button onClick={logout} variant="outline" className="mr-2">
+                Logout
+              </Button>
+            ) : (
+              <Button onClick={login} variant="outline" className="mr-2">
+                Login
+              </Button>
+            )}
             <WalletButton />
           </div>
           <ThemeToggle />
-          {authenticated ? (
-            <Button onClick={logout} variant="outline">
-              Logout
-            </Button>
-          ) : (
-            <Button onClick={login}>Login</Button>
-          )}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className={`h-5 w-5 ${isScrolled ? "text-foreground" : "text-white"}`} />
+                <Menu className={`h-5 w-5 ${isScrolled ? "text-[#DBCFC7]" : "text-white"}`} />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
@@ -75,7 +80,9 @@ export function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-foreground hover:text-primary transition-colors"
+                    className={`text-sm font-medium transition-colors ${
+                      isScrolled ? "text-[#DBCFC7] hover:text-primary" : "text-white hover:text-white/80"
+                    } ${pathname === item.href ? "text-primary" : ""}`}
                   >
                     {item.label}
                   </Link>

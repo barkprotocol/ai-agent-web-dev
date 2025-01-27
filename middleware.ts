@@ -1,18 +1,30 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { PrivyClient } from "@privy-io/server-auth"
 
-export function middleware(request: NextRequest) {
-  // Add your middleware logic here
-  // For example, you can check for authentication, add headers, etc.
+const privyClient = new PrivyClient(process.env.PRIVY_APP_ID!, process.env.PRIVY_APP_SECRET!)
 
-  // This is a simple example that adds a custom header
-  const response = NextResponse.next()
-  response.headers.set("x-bark-custom-header", "hello from BARK Protocol")
-  return response
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+  const token = request.cookies.get("privy-token")?.value
+
+  if (pathname.startsWith("/dashboard")) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", request.url))
+    }
+
+    try {
+      await privyClient.verifyAuthToken(token)
+    } catch (error) {
+      console.error("Failed to verify Privy token:", error)
+      return NextResponse.redirect(new URL("/login", request.url))
+    }
+  }
+
+  return NextResponse.next()
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/api/:path*",
+  matcher: ["/dashboard/:path*"],
 }
 

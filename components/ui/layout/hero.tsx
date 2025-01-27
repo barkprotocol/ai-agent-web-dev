@@ -5,9 +5,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Oswald } from "next/font/google"
-
-const oswald = Oswald({ subsets: ["latin"] })
 
 const exchangeLinks = [
   {
@@ -37,86 +34,81 @@ export function Hero() {
   return (
     <AnimatePresence>
       {mounted && (
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="relative w-full min-h-screen flex items-center justify-center bg-black overflow-hidden py-12 px-4"
-        >
-          <Image
-            src="https://ucarecdn.com/f6029e68-9768-49db-80a9-64e41e70acff/waveblack.png"
-            alt="Abstract wave background"
-            fill
-            sizes="100vw"
-            quality={90}
-            priority
-            className="object-cover object-center"
-          />
-          <div
-            className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"
-            aria-hidden="true"
-          />
-          <div className="relative z-10 container mx-auto text-center text-white">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <h1
-                className={`${oswald.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white`}
-              >
-                Your Intelligent Copilot for Solana
-              </h1>
-              <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto text-white">
-                Elevate your DeFi experience with BARK AI Agent. Harness the power of artificial intelligence to
-                optimize your Solana investments and navigate decentralized finance with ease.
-              </p>
-              <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
-                <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                  <Link href="/app">Launch BARK AI Agent</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-white text-white hover:bg-white/10 hover:text-white"
-                >
-                  <Link href="https://docs.barkprotocol.com" target="_blank" rel="noopener noreferrer">
-                    Explore Whitepaper
-                  </Link>
-                </Button>
-              </div>
-              <div className="mt-12">
-                <p className="text-sm mb-4 text-[#DBCFC7]">Trade BARK on leading exchanges</p>
-                <div className="flex flex-wrap items-center justify-center gap-8">
-                  {exchangeLinks.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-opacity hover:opacity-80"
-                    >
-                      <Image
-                        src={item.src || "/placeholder.svg"}
-                        alt={item.alt}
-                        width={100}
-                        height={40}
-                        className="h-8 w-auto object-contain"
-                      />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <section className="relative w-full min-h-screen flex items-center justify-center bg-black overflow-hidden py-12 px-4">
+            <Image
+              src="https://ucarecdn.com/f6029e68-9768-49db-80a9-64e41e70acff/waveblack.png"
+              alt="Abstract wave background"
+              fill
+              sizes="100vw"
+              quality={90}
+              priority
+              className="object-cover object-center"
+            />
+            <div
+              className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"
+              aria-hidden="true"
+            />
+            <div className="relative z-10 container mx-auto text-center text-white">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+                <h1 className="font-oswald text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white">
+                  Your Intelligent Copilot for Solana
+                </h1>
+                <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto text-white">
+                  Elevate your DeFi experience with BARK AI Agent. Harness the power of artificial intelligence to
+                  optimize your Solana investments and navigate decentralized finance with ease.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
+                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                    <Link href="/dashboard">Launch AI Agent Dashboard</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-white text-white hover:bg-white/10 hover:text-white"
+                  >
+                    <Link href="https://docs.barkprotocol.com" target="_blank" rel="noopener noreferrer">
+                      Explore Whitepaper
                     </Link>
-                  ))}
+                  </Button>
                 </div>
-              </div>
-              <div className="mt-6">
-                <Link
-                  href="https://solscan.io/token/2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#DBCFC7] text-sm hover:text-white transition-colors"
-                >
-                  CA: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </motion.section>
+                <div className="mt-12">
+                  <p className="text-sm mb-4 text-[#DBCFC7]">Trade BARK on leading exchanges</p>
+                  <div className="flex flex-wrap items-center justify-center gap-8">
+                    {exchangeLinks.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-opacity hover:opacity-80"
+                      >
+                        <Image
+                          src={item.src || "/placeholder.svg"}
+                          alt={item.alt}
+                          width={100}
+                          height={40}
+                          className="h-8 w-auto object-contain"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <Link
+                    href="https://solscan.io/token/2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#DBCFC7] text-sm hover:text-white transition-colors"
+                  >
+                    CA: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        </motion.div>
       )}
     </AnimatePresence>
   )
