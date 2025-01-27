@@ -9,7 +9,6 @@ import { Header } from "@/components/ui/layout/header"
 import { Footer } from "@/components/ui/layout/footer"
 import { cn } from "@/lib/utils"
 import "@/app/styles/globals.css"
-import "@/app/styles/wallet-adapter.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 

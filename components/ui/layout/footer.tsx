@@ -12,7 +12,7 @@ const footerLinks = [
 ]
 
 const socialLinks = [
-  { name: "X", href: "https://x.com/barkprotocol", icon: Icons.x },
+  { name: "X", href: "https://x.com/bark_protocol", icon: Icons.x },
   { name: "Telegram", href: "https://t.me/barkprotocol", icon: Icons.telegram },
   { name: "GitHub", href: "https://github.com/barkprotocol", icon: Icons.github },
   { name: "Medium", href: "https://medium.com/@barkprotocol", icon: Icons.medium },
@@ -59,7 +59,7 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 pt-8 border-t border-border">
+        <div className="mt-10 pt-8 border-t border-border">
           <p className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} BARK Protocol. All rights reserved.
           </p>

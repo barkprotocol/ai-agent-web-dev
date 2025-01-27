@@ -34,7 +34,7 @@ const sections: Section[] = [
     description:
       "Execute trades with unprecedented speed using our optimized transaction processing system built on Solana.",
     icon: Zap,
-    imageUrl: "https://ucarecdn.com/b60a22da-6905-4228-8b18-6967e01ce462/fast_transactions.webp",
+    imageUrl: "https://ucarecdn.com/9a2cc40e-f557-4512-82e4-5dbe3e5e07d3/BARKAI.svg",
   },
   {
     title: "Enhanced Security",

@@ -53,7 +53,7 @@ export const WalletButton: FC = () => {
       <Button
         onClick={handleWalletClick}
         variant="outline"
-        className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/30 transition-all shadow-glow-sm"
+        className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all"
         disabled={connecting}
         aria-label={connecting ? "Connecting wallet" : connected ? "Disconnect wallet" : "Connect wallet"}
       >

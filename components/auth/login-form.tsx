@@ -27,7 +27,7 @@ export function LoginForm() {
     try {
       await login()
     } catch (error) {
-      console.error(error)
+      console.error("Failed to login:", error)
       setError("Failed to login. Please try again.")
     } finally {
       setIsLoading(false)
@@ -39,13 +39,13 @@ export function LoginForm() {
   }
 
   return (
-    <div className="grid gap-6">
+    <div className="space-y-4">
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="space-y-4">
         <Button className="w-full" disabled={isLoading}>
           {isLoading ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -55,6 +55,12 @@ export function LoginForm() {
           Sign In with Privy
         </Button>
       </form>
+      <p className="text-sm text-center text-muted-foreground">
+        Don't have an account?{" "}
+        <a href="#" className="text-primary hover:underline">
+          Sign up
+        </a>
+      </p>
     </div>
   )
 }

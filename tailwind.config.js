@@ -17,8 +17,8 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "hsl(220, 13%, 18%)",
+          foreground: "hsl(0, 0.00%, 97.60%)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -45,13 +45,22 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      borderColor: {
+        DEFAULT: "hsl(var(--border))",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      darkMode: {
+        primary: {
+          DEFAULT: "hsl(220, 13%, 12%)",
+          foreground: "#f9f8f7",
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 }
 

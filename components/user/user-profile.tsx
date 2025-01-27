@@ -9,7 +9,7 @@ import type { UserDisplayProps } from "@/app/types/user"
 export const UserProfile: React.FC<UserDisplayProps> = ({ user, renderEmail }) => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      // You could add a toast notification here
+      // Add a toast notification here
       console.log("Copied to clipboard")
     })
   }

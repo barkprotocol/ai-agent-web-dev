@@ -1,6 +1,6 @@
 # BARK | AI Agent Website
 
-![Bark AI Agent WebUI/UX](/public/assets/ai-agent-web-ui.png)
+![Bark AI Agent WebUI/UX](/public/assets/images/hero.png)
 
 ## Overview
 
@@ -54,7 +54,7 @@ Install the necessary dependencies using **npm**, **yarn**, or **pnpm**:
 
 ```bash
 # Using npm
-npm install
+pnpm install (current)
 
 # Or using yarn
 yarn install
