@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
-    "target": "ES2022", // ES2020 provides better async/await and optional chaining support
-    "module": "esnext", 
+    "target": "ES2022",
+    "module": "CommonJS",
     "moduleResolution": "node", // Better compatibility with Node.js
     "skipLibCheck": true,
     "strict": true, // Enable strict type checking
@@ -15,7 +19,9 @@
     "incremental": true, // Improves performance by enabling incremental builds
     "baseUrl": "./", // Simplifies path resolution
     "paths": {
-      "@/*": ["./*"] // Aliases `@` to the project root for cleaner imports
+      "@/*": [
+        "./*"
+      ] // Aliases `@` to the project root for cleaner imports
     },
     "forceConsistentCasingInFileNames": true, // Enforces consistent casing in imports
     "useDefineForClassFields": true, // Ensures consistent class field semantics
@@ -24,14 +30,24 @@
     "noImplicitReturns": true, // Ensures all code paths return a value
     "noFallthroughCasesInSwitch": true, // Prevents unintentional fallthroughs in switch statements
     "allowSyntheticDefaultImports": true // Allows default imports even when they're missing in a library
+    ,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts", 
-    "**/*.ts", 
-    "**/*.tsx", 
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
     ".next/types/**/*.ts" // Includes Next.js types
   ],
-  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"], // Excludes test files
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ], // Excludes test files
   "ts-node": {
     "transpileOnly": true, // Useful for faster TS execution during development
     "compilerOptions": {
