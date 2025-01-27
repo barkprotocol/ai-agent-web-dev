@@ -1,33 +1,39 @@
-# Bark AI Agent Platform
-Beta version
+# BARK | AI Agent Website
 
-![Bark AI Agent WebUI](/github/assets/ai-agent-webui.png)
+![Bark AI Agent WebUI/UX](/public/assets/ai-agent-web-ui.png)
 
 ## Overview
 
-The **Bark AI Agent WebApp** is a cutting-edge platform that merges **artificial intelligence** and **blockchain technology** to provide users with intelligent, automated trading strategies and real-time market insights on the **Solana blockchain**.
+BARK AI Agent is an advanced AI-driven platform that empowers users by streamlining charitable incentives and enhancing trading experiences on the Solana blockchain. This repository hosts the source code for the BARK AI Agent website, showcasing its innovative features and enabling seamless user interaction.
 
-## ✨ Features
+## Features
 
-- **AI-powered trading assistant**: Make smarter, automated trading decisions with advanced AI models.
-- **Real-time market analysis**: Stay updated with live market trends and data for the Solana blockchain.
-- **Secure wallet integration**: Seamlessly connect your wallet to manage assets with security and ease.
-- **DeFi yield optimization**: Optimize yield farming strategies for the highest returns across decentralized finance protocols.
-- **Cross-chain compatibility**: Leverage multiple blockchain ecosystems for maximum flexibility.
-- **Community governance**: Participate in decision-making processes via decentralized governance mechanisms.
-- **Early Access Program (EAP)**: Access exclusive features and tools before they are available to the public.
+- **Responsive Design**: Optimized for seamless use across devices of all screen sizes.  
+- **Interactive UI Components**: Built with React and Next.js for an intuitive and engaging user experience.  
+- **Solana Wallet Integration**: Enables secure and efficient blockchain interactions.  
+- **Dark Mode Support**: Offers a sleek, user-friendly experience in both light and dark themes.  
+- **AI-Powered Trading Insights**: Provides intelligent analysis and recommendations for enhanced decision-making.  
+- **EAP Transaction Checker**: Ensures secure and verified transaction handling.  
+- **Dashboard Pricing Module**: Displays real-time pricing and data for informed trading strategies.  
 
-## 🛠 Technologies Used
+--- 
 
-- **Next.js 15** (App Router) for optimized routing and server-side rendering.
-- **React** for building dynamic user interfaces.
-- **TypeScript** for type safety and improved developer experience.
-- **Tailwind CSS** for highly customizable and responsive design.
-- **Prisma** for database interactions with easy-to-use ORM.
-- **Solana Web3.js** for connecting with the Solana blockchain and interacting with smart contracts.
-- **Helius SDK** for robust and scalable API interactions with the Solana network.
-- **Framer Motion** for smooth animations and transitions.
-- **ShadCN UI Components** for a set of highly customizable UI elements.
+## Technologies Used
+
+- Next.js 15 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS
+- Framer Motion for animations
+- Solana Web3.js for blockchain interactions
+- Lucide React for icons
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v20 or later)
+- nnpm or yarn
 
 ## 📦 Installation
 
@@ -38,8 +44,8 @@ To get started with the **Bark AI Agent Dashboard**, follow the steps below:
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/bark-ai-agent.git
-cd bark-ai-agent
+git clone https://github.com/bark-protocol/ai-agent-web-ui.git
+cd ai-agent-web-ui
 ```
 
 ### 2. Install Dependencies
@@ -67,13 +73,22 @@ SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 HELIUS_API_KEY=your-helius-api-key
 
 # Database Configuration
+SUPABASE_JWT_SECRET=
+SUPABASE_SERVICE_ROLE_KEY=
 DATABASE_URL=your-database-connection-string
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 # AI Configuration (if applicable)
 OPEN_AI_API_KEY=your-ai-api-key
+ANTHROPIC_API_KEY=
 
 # Other required environment variables
 NEXT_PUBLIC_PRIVY_APP_ID=your-privy-app-id
+PRIVY_APP_SECRET=
+
+# EAP Payments
+NEXT_PUBLIC_EAP_RECEIVE_WALLET_ADDRESS=
 ```
 
 ### 4. Run the Development Server

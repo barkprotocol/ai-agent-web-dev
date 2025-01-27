@@ -1,28 +1,44 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import type { Metadata } from "next"
+import { Button } from "@/components/ui/button"
 
-export default function NotFound() {
+export const metadata: Metadata = {
+  title: "404 - Page Not Found | BARK AI Agent",
+  description: "The page you're looking for doesn't exist or has been moved.",
+}
+
+export default function FourOhFour() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-950">
-      <div className="text-center px-4">
-        <h1 className="text-6xl font-bold text-gray-900 dark:text-white mb-4">404</h1>
-        <h2 className="text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Page Not Found</h2>
-        <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-          Oops! The page you&apos;re looking for doesn&apos;t exist or has been moved.
-        </p>
-        <div className="space-y-4 sm:space-y-0 sm:space-x-4">
-          <Link href="/">
-            <Button size="lg" className="bg-[#d0c8b9] hover:bg-[#c5bdae] text-gray-900" aria-label="Return to Home Page">
-              Return Home
-            </Button>
-          </Link>
-          <Link href="/home">
-            <Button variant="outline" size="lg" className="bg-white dark:bg-gray-800 bg-opacity-20 hover:bg-opacity-30" aria-label="Explore the Dashboard">
-              Explore Dashboard
-            </Button>
-          </Link>
+    <div
+      className={cn(
+        "flex items-center justify-center min-h-screen",
+        "bg-background text-foreground",
+        "transition-colors duration-300",
+      )}
+    >
+      <div className="text-center">
+        <h1 className="text-5xl font-bold mb-4">404</h1>
+        <p className="text-lg mb-8">Page Not Found</p>
+        <div className="space-y-4">
+          <Button
+            size="lg"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            aria-label="Return to Home Page"
+          >
+            <Link href="/">Return Home</Link>
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="bg-background hover:bg-accent hover:text-accent-foreground"
+            aria-label="Explore the Dashboard"
+          >
+            <Link href="/dashboard">Explore Dashboard</Link>
+          </Button>
         </div>
       </div>
     </div>
-  );
+  )
 }
+

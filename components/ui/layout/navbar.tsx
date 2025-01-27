@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { WalletButton } from "@/components/ui/wallet-button"
 import { motion, AnimatePresence } from "framer-motion"
-import { Home, Cpu, Cog, MessageCircle } from "lucide-react"
+import { Home, Cpu, Cog, MessageCircle, Menu, X } from "lucide-react"
 import { Logo } from "@/components/ui/layout/logo"
 
 const navItems = [
@@ -18,8 +18,8 @@ const navItems = [
 export default function Navbar({ isScrolled }: { isScrolled: boolean }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
-  const closeMenu = () => setIsMenuOpen(false)
+  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), [])
+  const closeMenu = useCallback(() => setIsMenuOpen(false), [])
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -32,7 +32,25 @@ export default function Navbar({ isScrolled }: { isScrolled: boolean }) {
     return () => {
       document.removeEventListener("keydown", handleEscape)
     }
-  }, [])
+  }, [closeMenu])
+
+  const memoizedNavItems = useMemo(
+    () =>
+      navItems.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          className="text-[#DBCFC7]/80 hover:text-[#DBCFC7] flex items-center space-x-2 transition-colors duration-200"
+          onClick={closeMenu}
+          target={item.external ? "_blank" : undefined}
+          rel={item.external ? "noopener noreferrer" : undefined}
+        >
+          <item.icon size={20} aria-hidden="true" />
+          <span>{item.label}</span>
+        </Link>
+      )),
+    [closeMenu],
+  )
 
   return (
     <header
@@ -41,21 +59,7 @@ export default function Navbar({ isScrolled }: { isScrolled: boolean }) {
       <div className="container mx-auto flex justify-between items-center">
         <Logo />
 
-        <nav className="hidden md:flex flex-grow justify-center space-x-6">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-[#DBCFC7]/80 hover:text-[#DBCFC7] flex items-center space-x-2 transition-colors duration-200"
-              onClick={closeMenu}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noopener noreferrer" : undefined}
-            >
-              <item.icon size={20} aria-hidden="true" />
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </nav>
+        <nav className="hidden md:flex flex-grow justify-center space-x-6">{memoizedNavItems}</nav>
 
         <button
           onClick={toggleMenu}
@@ -63,20 +67,7 @@ export default function Navbar({ isScrolled }: { isScrolled: boolean }) {
           aria-expanded={isMenuOpen}
           className="md:hidden text-[#DBCFC7] focus:outline-none focus:ring-2 focus:ring-[#DBCFC7] rounded-md p-2"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-            aria-hidden="true"
-          >
-            {isMenuOpen ? (
-              <path d="M4.293 4.293a1 1 0 0 1 1.414 0L8 5.586l2.293-2.293a1 1 0 0 1 1.414 1.414L9.414 7l2.293 2.293a1 1 0 1 1-1.414 1.414L8 8.414l-2.293 2.293a1 1 0 1 1-1.414-1.414L6.586 7 4.293 4.707a1 1 0 0 1 0-1.414z" />
-            ) : (
-              <path d="M2 3h12a1 1 0 1 1 0 2H2a1 1 0 1 1 0-2zm0 4h12a1 1 0 1 1 0 2H2a1 1 0 1 1 0-2zm0 4h12a1 1 0 1 1 0 2H2a1 1 0 1 1 0-2z" />
-            )}
-          </svg>
+          {isMenuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
         </button>
 
         <div className="hidden md:flex items-center space-x-4">

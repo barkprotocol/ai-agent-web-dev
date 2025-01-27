@@ -8,6 +8,23 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model SavedPrompt {
+  id              String   @id @default(cuid())
+  userId          String    
+  title           String   @db.VarChar(255)
+  content         String   @db.Text
+  usageFrequency  Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  lastUsedAt      DateTime?
+  isFavorite      Boolean  @default(false)
+
+  user            User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, lastUsedAt], name: "idx_userId_lastUsedAt") 
+  @@map("saved_prompts") 
+}
+
 model User {
   id        String   @id @default(cuid())
   privyId   String   @unique
@@ -23,6 +40,7 @@ model User {
   Action        Action[]
   tokenStats    TokenStat[]
   TelegramChat  TelegramChat[]
+  SavedPrompts SavedPrompt[]
 
   @@map("users")
 }
@@ -52,6 +70,8 @@ model Conversation {
   title      String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  lastReadAt DateTime?  @default(now())
+  lastMessageAt DateTime?
   visibility Visibility @default(PRIVATE)
 
   user     User      @relation(fields: [userId], references: [id])

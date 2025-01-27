@@ -1,18 +1,18 @@
-'use client';
+"use client"
 
-import * as React from 'react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { type ThemeProviderProps } from 'next-themes';
+import * as React from "react"
+import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from "next-themes"
+import type { ThemeProviderProps } from "next-themes"
 
 export interface ExtendedThemeProviderProps extends ThemeProviderProps {
-  defaultTheme?: string;
-  storageKey?: string;
+  defaultTheme?: string
+  storageKey?: string
 }
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'system',
-  storageKey = 'bark-theme',
+  defaultTheme = "system",
+  storageKey = "bark-theme",
   ...props
 }: ExtendedThemeProviderProps) {
   return (
@@ -26,11 +26,16 @@ export function ThemeProvider({
     >
       {children}
     </NextThemesProvider>
-  );
+  )
 }
 
 export function useTheme() {
-  const { theme, setTheme } = React.useContext(NextThemesProvider.Context);
-  return { theme, setTheme };
+  const context = useNextTheme()
+
+  if (context === undefined) {
+    throw new Error("useTheme must be used within a ThemeProvider")
+  }
+
+  return context
 }
 

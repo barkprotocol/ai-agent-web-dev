@@ -1,62 +1,83 @@
-'use client';
+"use client"
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ChevronDown } from "lucide-react"
 
-const faqItems = [
+const faqs = [
   {
     question: "What is BARK AI Agent?",
-    answer: "BARK AI Agent is an advanced trading platform that combines artificial intelligence with blockchain technology to provide users with smart, automated trading strategies and real-time market insights."
+    answer:
+      "BARK AI Agent is an advanced AI-powered platform designed to optimize your trading experience on the Solana blockchain. It combines cutting-edge artificial intelligence with deep blockchain integration to provide smart trading strategies, real-time market analysis, and seamless DeFi interactions.",
   },
   {
-    question: "How does BARK AI Agent work with Solana?",
-    answer: "BARK AI Agent leverages Solana's high-speed, low-cost blockchain to execute trades quickly and efficiently. It also integrates with Solana's DeFi ecosystem for additional financial opportunities."
+    question: "How does BARK AI improve my trading?",
+    answer:
+      "BARK AI leverages machine learning algorithms to analyze market trends, predict potential opportunities, and execute trades with high efficiency. It can help you make data-driven decisions, optimize your portfolio, and potentially increase your returns while managing risks.",
   },
   {
     question: "Is BARK AI Agent secure?",
-    answer: "Yes, BARK AI Agent prioritizes security. We use industry-standard encryption, multi-factor authentication, and offer cold storage options. However, as with all financial platforms, we recommend users follow best practices for personal account security."
+    answer:
+      "Yes, security is our top priority. BARK AI Agent employs state-of-the-art encryption, multi-factor authentication, and cold storage options to protect your assets and data. However, always remember to follow best practices for crypto security and never share your private keys.",
   },
   {
-    question: "Can I customize my trading strategies with BARK AI Agent?",
-    answer: "BARK AI Agent allows you to set your preferences and risk tolerance. The AI then tailors its trading strategies to match your individual needs and goals."
+    question: "Can I use BARK AI with other blockchains?",
+    answer:
+      "While BARK AI is primarily optimized for the Solana blockchain, we are working on expanding our cross-chain compatibility. Stay tuned for updates on support for additional blockchain networks.",
   },
   {
     question: "How do I get started with BARK AI Agent?",
-    answer: "Getting started is easy! Simply sign up on our platform, connect your Solana wallet, set your trading preferences, and let our AI start working for you. We also provide comprehensive tutorials and customer support to help you along the way."
-  }
-];
+    answer:
+      "Getting started is easy! Simply sign up for an account, connect your Solana wallet, and you'll be guided through a quick onboarding process. You can then start exploring our features and customizing your AI agent to suit your trading style and goals.",
+  },
+]
 
 export function FAQ() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
+  const toggleQuestion = (index: number) => {
+    setActiveIndex(activeIndex === index ? null : index)
+  }
+
   return (
-    <section className="py-16 bg-muted" aria-labelledby="faq-heading">
+    <section id="faq" className="py-16 bg-background" aria-labelledby="faq-heading">
       <div className="container mx-auto px-4">
-        <h2 id="faq-heading" className="text-3xl font-bold mb-8 text-center text-foreground">
+        <h2 id="faq-heading" className="text-3xl font-bold mb-8 text-center">
           Frequently Asked Questions
         </h2>
-        <Accordion
-          type="single"
-          collapsible
-          className="w-full max-w-4xl mx-auto space-y-6"
-        >
-          {faqItems.map((item, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger
-                className="bg-card text-card-foreground p-4 rounded-lg shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
+        <div className="max-w-3xl mx-auto">
+          {faqs.map((faq, index) => (
+            <div key={index} className="mb-4">
+              <button
+                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-card hover:bg-muted transition-colors duration-200"
+                onClick={() => toggleQuestion(index)}
+                aria-expanded={activeIndex === index}
               >
-                {item.question}
-              </AccordionTrigger>
-              <AccordionContent className="bg-accent text-accent-foreground p-4 rounded-lg shadow-sm mt-2 transition-all duration-300">
-                {item.answer}
-              </AccordionContent>
-            </AccordionItem>
+                <span className="text-lg font-semibold">{faq.question}</span>
+                <ChevronDown
+                  className={`w-5 h-5 transition-transform duration-200 ${
+                    activeIndex === index ? "transform rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <AnimatePresence>
+                {activeIndex === index && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <p className="p-4 text-muted-foreground">{faq.answer}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ))}
-        </Accordion>
+        </div>
       </div>
     </section>
-  );
+  )
 }
 

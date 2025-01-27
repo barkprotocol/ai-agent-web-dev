@@ -1,10 +1,13 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
-import Link from "next/link"
+import { useState, useEffect } from "react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { Oswald } from "next/font/google"
+
+const oswald = Oswald({ subsets: ["latin"] })
 
 const exchangeLinks = [
   {
@@ -24,16 +27,11 @@ const exchangeLinks = [
   },
 ]
 
-export default function Hero() {
+export function Hero() {
   const [mounted, setMounted] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
 
   useEffect(() => {
     setMounted(true)
-  }, [])
-
-  const handleImageLoad = useCallback(() => {
-    setImageLoaded(true)
   }, [])
 
   return (
@@ -43,99 +41,79 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="relative w-full min-h-screen flex items-center justify-center bg-gray-950 overflow-hidden py-12 px-4"
+          className="relative w-full min-h-screen flex items-center justify-center bg-black overflow-hidden py-12 px-4"
         >
           <Image
             src="https://ucarecdn.com/f6029e68-9768-49db-80a9-64e41e70acff/waveblack.png"
             alt="Abstract wave background"
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            quality={95}
+            sizes="100vw"
+            quality={90}
             priority
-            className={`object-cover object-center transition-opacity duration-700 ${
-              imageLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            onLoad={handleImageLoad}
-            aria-hidden="true"
+            className="object-cover object-center"
           />
           <div
             className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"
             aria-hidden="true"
-          ></div>
+          />
           <div className="relative z-10 container mx-auto text-center text-white">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="inline-block bg-gradient-to-r from-gray-900 to-gray-950 text-gray-100 text-xs sm:text-sm px-4 py-2 rounded-full uppercase font-semibold tracking-wide mb-8 shadow-lg"
+              <h1
+                className={`${oswald.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white`}
               >
-                BARK Protocol: AI Agent Platform
-              </motion.div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6">
-                <span className="title-text">Your Intelligent Copilot</span>{" "}
-                <span className="title-text">for Solana</span>
+                Your Intelligent Copilot for Solana
               </h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-base sm:text-lg md:text-xl mb-10 max-w-3xl mx-auto drop-shadow-lg leading-relaxed"
-              >
+              <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto text-white">
                 Elevate your DeFi experience with BARK AI Agent. Harness the power of artificial intelligence to
-                optimize your Solana investments, execute smart trades, and navigate the complexities of decentralized
-                finance with unprecedented ease and precision.
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-12"
-              >
-                <Button asChild size="lg" className="launch-button w-full sm:w-auto">
-                  <Link href="./app/(user)/home">Launch BARK AI Agent</Link>
+                optimize your Solana investments and navigate decentralized finance with ease.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
+                <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <Link href="/app">Launch BARK AI Agent</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="whitepaper-button w-full text-black sm:w-auto">
-                  <Link href="https://docs.barkprotocol.com/ai" target="_blank" rel="noopener noreferrer">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="border-white text-white hover:bg-white/10 hover:text-white"
+                >
+                  <Link href="https://docs.barkprotocol.com" target="_blank" rel="noopener noreferrer">
                     Explore Whitepaper
                   </Link>
                 </Button>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="flex flex-col items-center"
-              >
-                <p className="text-white/80 text-sm mb-3 font-medium">Trade BARK on leading exchanges</p>
-                <Link
-                  href="https://solscan.io/token/2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-300 text-xs mb-5 hover:text-gray-200 transition-colors duration-300 break-all font-mono"
-                >
-                  CA: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg
-                </Link>
+              </div>
+              <div className="mt-12">
+                <p className="text-sm mb-4 text-[#DBCFC7]">Trade BARK on leading exchanges</p>
                 <div className="flex flex-wrap items-center justify-center gap-8">
-                  {exchangeLinks.map((item, index) => (
+                  {exchangeLinks.map((item) => (
                     <Link
-                      key={index}
+                      key={item.href}
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`Trade BARK on ${item.alt.split(" ")[0]}`}
+                      className="transition-opacity hover:opacity-80"
                     >
                       <Image
                         src={item.src || "/placeholder.svg"}
                         alt={item.alt}
-                        width={40}
+                        width={100}
                         height={40}
-                        className="opacity-80 hover:opacity-100 transition-opacity duration-300 filter drop-shadow-lg"
+                        className="h-8 w-auto object-contain"
                       />
                     </Link>
                   ))}
                 </div>
-              </motion.div>
+              </div>
+              <div className="mt-6">
+                <Link
+                  href="https://solscan.io/token/2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#DBCFC7] text-sm hover:text-white transition-colors"
+                >
+                  CA: 2NTvEssJ2i998V2cMGT4Fy3JhyFnAzHFonDo9dbAkVrg
+                </Link>
+              </div>
             </motion.div>
           </div>
         </motion.section>

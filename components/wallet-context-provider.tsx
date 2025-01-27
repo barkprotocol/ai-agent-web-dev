@@ -1,40 +1,40 @@
-'use client';
+"use client"
 
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
+import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react"
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
   TorusWalletAdapter,
   LedgerWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import { useMemo } from 'react';
-
-// Import wallet adapter styles
-import '@solana/wallet-adapter-react-ui/styles.css';
+} from "@solana/wallet-adapter-wallets"
+import { clusterApiUrl } from "@solana/web3.js"
+import { useMemo } from "react"
 
 interface WalletContextProviderProps {
-  children: React.ReactNode;
+  children: React.ReactNode
+  network?: WalletAdapterNetwork
+  endpoint?: string
 }
 
-export function WalletContextProvider({ children }: WalletContextProviderProps) {
-  // You can change this to 'devnet', 'testnet', or 'mainnet-beta' based on your needs
-  const network = WalletAdapterNetwork.Mainnet;
-
-  // You can also provide a custom RPC endpoint
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+export function WalletContextProvider({
+  children,
+  network = WalletAdapterNetwork.Mainnet,
+  endpoint: customEndpoint,
+}: WalletContextProviderProps) {
+  // Use the provided endpoint or generate one based on the network
+  const endpoint = useMemo(() => customEndpoint || clusterApiUrl(network), [network, customEndpoint])
 
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
+      new SolflareWalletAdapter({ network }),
       new TorusWalletAdapter(),
       new LedgerWalletAdapter(),
     ],
-    []
-  );
+    [network],
+  )
 
   return (
     <ConnectionProvider endpoint={endpoint}>
@@ -42,6 +42,6 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
-  );
+  )
 }
 

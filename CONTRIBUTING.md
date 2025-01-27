@@ -1,4 +1,4 @@
-# Changelogs
+# Platform / Dashboard Changelogs
 
 ## v0.1.0 Beta
 
