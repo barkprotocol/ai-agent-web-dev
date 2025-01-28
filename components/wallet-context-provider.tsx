@@ -15,7 +15,7 @@ import { useMemo } from "react"
 // Import wallet adapter styles
 import "@solana/wallet-adapter-react-ui/styles.css"
 // Import custom wallet adapter styles
-import "@/app/styles/wallet-adapter.css"
+import "@/styles/wallet-adapter.css"
 
 interface WalletContextProviderProps {
   children: React.ReactNode
@@ -49,5 +49,4 @@ export function WalletContextProvider({
     </ConnectionProvider>
   )
 }
-
 
