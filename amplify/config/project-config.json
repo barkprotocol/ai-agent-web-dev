@@ -1,0 +1,19 @@
+{
+    "Version": "2015-01-28",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "amplify:*",
+          "cloudformation:*",
+          "s3:*",
+          "appsync:*",
+          "cognito-identity:*",
+          "cognito-idp:*",
+          "iam:PassRole"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
+  

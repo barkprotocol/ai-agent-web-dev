@@ -1,5 +1,5 @@
 {
-  "name": "bark-ai-agent-website",
+  "name": "bark-ai-agent-web3",
   "description": "BARK AI Agent is an advanced AI-driven platform that empowers users by streamlining charitable incentives and enhancing trading experiences on the Solana blockchain.",
   "version": "0.1.0",
   "author": "BARK Protocol",
@@ -100,6 +100,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.5",
     "vaul": "^1.1.2",
+    "xdg-utils": "^0.0.3",
     "zod": "^3.24.1"
   },
   "devDependencies": {
