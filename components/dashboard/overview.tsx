@@ -1,73 +1,61 @@
-"use client"
+import { Suspense } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { TokenGrid } from "@/components/token/token-grid"
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
-
-const data = [
-  {
-    name: "Jan",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Apr",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Aug",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Sep",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Oct",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Nov",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Dec",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-]
-
-export function Overview() {
+export function Overview({ marketData, userData }: { marketData: any; userData: any }) {
   return (
-    <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
-        <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-        <YAxis
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={(value) => `$${value}`}
-        />
-        <Bar dataKey="total" fill="#adfa1d" radius={[4, 4, 0, 0]} />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <Suspense fallback={<Skeleton className="h-[200px] w-full" />}>
+        <PortfolioCard userData={userData} />
+      </Suspense>
+      <Suspense fallback={<Skeleton className="h-[200px] w-full" />}>
+        <MarketOverviewCard marketData={marketData} />
+      </Suspense>
+      <Suspense fallback={<Skeleton className="h-[200px] w-full" />}>
+        <TrendingTokensCard marketData={marketData} />
+      </Suspense>
+    </div>
+  )
+}
+
+function PortfolioCard({ userData }: { userData: any }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Your Portfolio</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <TokenGrid tokens={userData?.portfolio || []} />
+      </CardContent>
+    </Card>
+  )
+}
+
+function MarketOverviewCard({ marketData }: { marketData: any }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Market Overview</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p>Total Market Cap: ${marketData?.totalMarketCap?.toLocaleString() || "N/A"}</p>
+        <p>24h Volume: ${marketData?.volume24h?.toLocaleString() || "N/A"}</p>
+      </CardContent>
+    </Card>
+  )
+}
+
+function TrendingTokensCard({ marketData }: { marketData: any }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Trending Tokens</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <TokenGrid tokens={marketData?.trendingTokens || []} />
+      </CardContent>
+    </Card>
   )
 }
 

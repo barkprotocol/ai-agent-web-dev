@@ -5,6 +5,8 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Bot, BarChart, Zap, Shield, Coins, Users } from "lucide-react"
+import { ConnectWalletButton } from "@/components/ui/connect-wallet-button"
+import type React from "react" // Added import for React
 
 interface Section {
   title: string
@@ -14,6 +16,13 @@ interface Section {
 }
 
 const sections: Section[] = [
+  {
+    title: "Connect Your Wallet",
+    description:
+      "Start by connecting your Solana wallet to access BARK AI Agent features and participate in the ecosystem.",
+    icon: Coins,
+    imageUrl: "/placeholder.svg?height=400&width=600",
+  },
   {
     title: "AI-Powered Trading",
     description:
@@ -40,13 +49,6 @@ const sections: Section[] = [
     description:
       "Benefit from state-of-the-art security measures, including multi-factor authentication and cold storage options for your assets.",
     icon: Shield,
-    imageUrl: "/placeholder.svg?height=400&width=600",
-  },
-  {
-    title: "DeFi Integration",
-    description:
-      "Seamlessly interact with various DeFi protocols to maximize your yield and explore new financial opportunities.",
-    icon: Coins,
     imageUrl: "/placeholder.svg?height=400&width=600",
   },
   {
@@ -81,29 +83,36 @@ export default function HowItWorks() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-4 order-2 lg:order-1">
             {sections.map((section, index) => (
-              <motion.button
+              <motion.div
                 key={section.title}
                 initial={false}
                 animate={{
                   backgroundColor: activeSection === index ? "hsl(var(--primary))" : "transparent",
                   color: activeSection === index ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
                 }}
-                onClick={() => handleSectionClick(index)}
                 className={cn(
                   "w-full text-left transition-all duration-200 p-4 rounded-lg",
                   "hover:bg-primary/10",
                   "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                  activeSection === index ? "selection:bg-white selection:text-white" : "",
                 )}
-                aria-pressed={activeSection === index}
               >
-                <div className="flex items-center space-x-4">
-                  <section.icon
-                    className={cn("w-6 h-6", activeSection === index ? "text-primary-foreground" : "text-[#DBCFC7]")}
-                    aria-hidden="true"
-                  />
-                  <h3 className="text-lg font-semibold">{section.title}</h3>
-                </div>
-              </motion.button>
+                <button
+                  onClick={() => handleSectionClick(index)}
+                  className="w-full text-left"
+                  aria-pressed={activeSection === index}
+                >
+                  <div className="flex items-center space-x-4">
+                    <section.icon
+                      className={`w-6 h-6 ${activeSection === index ? "text-primary-foreground" : "text-[#DBCFC7]"}`}
+                      aria-hidden="true"
+                    />
+                    <h3 className={`text-lg font-semibold ${activeSection === index ? "text-primary-foreground" : ""}`}>
+                      {section.title}
+                    </h3>
+                  </div>
+                </button>
+              </motion.div>
             ))}
           </div>
           <div className="bg-card p-6 rounded-lg shadow-lg order-1 lg:order-2">
@@ -117,7 +126,7 @@ export default function HowItWorks() {
               >
                 <h3 className="text-xl font-bold mb-4 text-primary">{sections[activeSection].title}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{sections[activeSection].description}</p>
-                <div className="relative w-full aspect-video rounded-lg overflow-hidden">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-4">
                   <Image
                     src={sections[activeSection].imageUrl || "/placeholder.svg"}
                     alt={`Illustration for ${sections[activeSection].title}`}
@@ -136,6 +145,11 @@ export default function HowItWorks() {
                     </div>
                   )}
                 </div>
+                {activeSection === 0 && (
+                  <div className="mt-4">
+                    <ConnectWalletButton />
+                  </div>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -144,5 +158,4 @@ export default function HowItWorks() {
     </section>
   )
 }
-
 

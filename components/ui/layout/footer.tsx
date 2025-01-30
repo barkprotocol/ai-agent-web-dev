@@ -7,15 +7,27 @@ const footerLinks = [
   { title: "About BARK", items: ["About", "Blog", "Careers", "Brand Guide", "Governance"] },
   {
     title: "Resources",
-    items: ["Documentation", "Help Center", "Privacy Policy", "Terms of Service", "Cookie Policy"],
+    items: [
+      { name: "Documentation", href: "#" },
+      { name: "Help Center", href: "#" },
+      { name: "Privacy Policy", href: "/privacy-policy" },
+      { name: "Terms of Service", href: "/terms-of-use" },
+      { name: "Cookie Policy", href: "/cookies-policy" },
+    ],
   },
 ]
 
 const socialLinks = [
-  { name: "X", href: "https://x.com/bark_protocol", icon: Icons.x },
+  { name: "X", href: "https://x.com/barkprotocol", icon: Icons.x },
   { name: "Telegram", href: "https://t.me/barkprotocol", icon: Icons.telegram },
   { name: "GitHub", href: "https://github.com/barkprotocol", icon: Icons.github },
   { name: "Medium", href: "https://medium.com/@barkprotocol", icon: Icons.medium },
+]
+
+const legalLinks = [
+  { name: "Terms of Use", href: "/terms-of-use" },
+  { name: "Privacy Policy", href: "/privacy-policy" },
+  { name: "Cookies Policy", href: "/cookies-policy" },
 ]
 
 export function Footer() {
@@ -49,9 +61,12 @@ export function Footer() {
               <h3 className="font-semibold mb-3">{section.title}</h3>
               <ul className="space-y-2">
                 {section.items.map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      {item}
+                  <li key={typeof item === "string" ? item : item.name}>
+                    <Link
+                      href={typeof item === "string" ? "#" : item.href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {typeof item === "string" ? item : item.name}
                     </Link>
                   </li>
                 ))}
@@ -59,10 +74,23 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-10 pt-8 border-t border-border">
-          <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} BARK Protocol. All rights reserved.
-          </p>
+        <div className="mt-12 pt-8 border-t border-border">
+          <div className="flex flex-col sm:flex-row justify-between items-center">
+            <p className="text-sm text-muted-foreground mb-4 sm:mb-0">
+              © {new Date().getFullYear()} BARK Protocol. All rights reserved.
+            </p>
+            <div className="flex space-x-4">
+              {legalLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </footer>

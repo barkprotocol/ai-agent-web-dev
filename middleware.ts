@@ -1,30 +1,22 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { PrivyClient } from "@privy-io/server-auth"
 
-const privyClient = new PrivyClient(process.env.PRIVY_APP_ID!, process.env.PRIVY_APP_SECRET!)
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("privy-token")
+  const isAuthPage = request.nextUrl.pathname.startsWith("/login") || request.nextUrl.pathname.startsWith("/signup")
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const token = request.cookies.get("privy-token")?.value
+  if (!token && !isAuthPage) {
+    return NextResponse.redirect(new URL("/login", request.url))
+  }
 
-  if (pathname.startsWith("/dashboard")) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url))
-    }
-
-    try {
-      await privyClient.verifyAuthToken(token)
-    } catch (error) {
-      console.error("Failed to verify Privy token:", error)
-      return NextResponse.redirect(new URL("/login", request.url))
-    }
+  if (token && isAuthPage) {
+    return NextResponse.redirect(new URL("/dashboard", request.url))
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/login", "/signup"],
 }
 

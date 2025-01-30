@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
-import Image from "next/image"
-import { LoginForm } from "@/components/auth/login-form"
+import Link from "next/link"
+import { LoginForm } from "@/components/ui/login-form"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
   title: "Login | BARK AI Agent",
@@ -9,24 +11,24 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center">
-      <Image
-        src="https://ucarecdn.com/f6029e68-9768-49db-80a9-64e41e70acff/waveblack.png"
-        alt="BARK AI Agent Login Background"
-        layout="fill"
-        objectFit="cover"
-        priority
-        className="z-0"
-      />
-      <div className="absolute inset-0 bg-black/60 z-10" />
-      <div className="z-20 w-full max-w-md px-4">
-        <div className="bg-background/90 backdrop-blur-sm rounded-lg shadow-lg p-8">
-          <div className="flex flex-col space-y-2 text-center mb-8">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome to BARK AI Agent</h1>
-            <p className="text-sm text-muted-foreground">Sign in to access your AI Agent Dashboard</p>
-          </div>
-          <LoginForm />
+    <div className="container flex h-screen w-screen flex-col items-center justify-center">
+      <Link href="/" className="absolute left-4 top-4 md:left-8 md:top-8">
+        <Button variant="ghost" className="flex items-center gap-2">
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </Button>
+      </Link>
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+          <p className="text-sm text-muted-foreground">Enter your email to sign in to your account</p>
         </div>
+        <LoginForm />
+        <p className="px-8 text-center text-sm text-muted-foreground">
+          <Link href="/signup" className="hover:text-brand underline underline-offset-4">
+            Don&apos;t have an account? Sign Up
+          </Link>
+        </p>
       </div>
     </div>
   )

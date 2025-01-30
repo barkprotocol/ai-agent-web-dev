@@ -1,72 +1,73 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-
-const recentActivity = [
-  {
-    id: "1",
-    type: "Buy",
-    asset: "SOL",
-    amount: "10",
-    price: "$22.50",
-    date: "2023-08-01",
-  },
-  {
-    id: "2",
-    type: "Sell",
-    asset: "BARK",
-    amount: "500",
-    price: "$0.15",
-    date: "2023-08-02",
-  },
-  {
-    id: "3",
-    type: "Buy",
-    asset: "RAY",
-    amount: "100",
-    price: "$0.75",
-    date: "2023-08-03",
-  },
-  {
-    id: "4",
-    type: "Sell",
-    asset: "SOL",
-    amount: "5",
-    price: "$24.00",
-    date: "2023-08-04",
-  },
-  {
-    id: "5",
-    type: "Buy",
-    asset: "BARK",
-    amount: "1000",
-    price: "$0.14",
-    date: "2023-08-05",
-  },
-]
+use
+client
+import { useRef, useCallback } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useRecentActivity } from "@/hooks/useRecentActivity"
+import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function RecentActivity() {
+  const { activities, isLoading, error, hasMore, loadMore } = useRecentActivity()
+  const observer = useRef<IntersectionObserver | null>(null)
+
+  const lastActivityElementRef = useCallback(
+    (node: HTMLLIElement | null) => {
+      if (isLoading) return
+      if (observer.current) observer.current.disconnect()
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMore()
+        }
+      })
+      if (node) observer.current.observe(node)
+    },
+    [isLoading, hasMore, loadMore],
+  )
+
+  if (error) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-destructive">Error: {error}</p>
+          <Button onClick={loadMore} className="mt-4">
+            Retry
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Type</TableHead>
-          <TableHead>Asset</TableHead>
-          <TableHead>Amount</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>Date</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {recentActivity.map((activity) => (
-          <TableRow key={activity.id}>
-            <TableCell className="font-medium">{activity.type}</TableCell>
-            <TableCell>{activity.asset}</TableCell>
-            <TableCell>{activity.amount}</TableCell>
-            <TableCell>{activity.price}</TableCell>
-            <TableCell>{activity.date}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <Card>
+      <CardHeader>
+        <CardTitle>Recent Activity</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul className="space-y-4">
+          {activities.map((activity, index) => (
+            <li
+              key={activity.id}
+              ref={index === activities.length - 1 ? lastActivityElementRef : null}
+              className="flex justify-between items-center"
+            >
+              <div>
+                <p className="font-medium">{activity.type}</p>
+                <p className="text-sm text-gray-500">{activity.description}</p>
+              </div>
+              <span className="text-xs text-gray-400">{activity.time}</span>
+            </li>
+          ))}
+          {isLoading && (
+            <li>
+              <Skeleton className="h-12 w-full" />
+            </li>
+          )}
+        </ul>
+      </CardContent>
+    </Card>
   )
 }
 

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "The page you're looking for doesn't exist or has been moved.",
 }
 
-export default function FourOhFour() {
+export default function NotFound() {
   return (
     <div
       className={cn(
@@ -19,9 +19,15 @@ export default function FourOhFour() {
     >
       <div className="text-center">
         <h1 className="text-5xl font-bold mb-4">404</h1>
-        <p className="text-lg mb-8">Page Not Found</p>
+        <h2 className="text-2xl font-semibold mb-2">Page Not Found</h2>
+        <p className="text-lg mb-8">We're sorry, but the page you're looking for doesn't exist or has been moved.</p>
         <div className="space-y-4">
-          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button
+            asChild
+            size="lg"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            aria-label="Return to Home Page"
+          >
             <Link href="/">Return Home</Link>
           </Button>
           <Button
@@ -29,6 +35,7 @@ export default function FourOhFour() {
             variant="outline"
             size="lg"
             className="bg-background hover:bg-accent hover:text-accent-foreground"
+            aria-label="Explore the Dashboard"
           >
             <Link href="/dashboard">Explore Dashboard</Link>
           </Button>

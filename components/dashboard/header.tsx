@@ -1,18 +1,22 @@
-interface DashboardHeaderProps {
-  heading: string
-  text?: string
-  children?: React.ReactNode
-}
+import { WalletButton } from "@/components/ui/wallet-button"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { Button } from "@/components/ui/button"
+import { signOut } from "@/lib/auth"
 
-export function DashboardHeader({ heading, text, children }: DashboardHeaderProps) {
+export function DashboardHeader() {
   return (
-    <div className="flex items-center justify-between px-2">
-      <div className="grid gap-1">
-        <h1 className="text-3xl font-bold tracking-wide text-foreground">{heading}</h1>
-        {text && <p className="text-lg text-muted-foreground">{text}</p>}
+    <header className="sticky top-0 z-40 border-b bg-background">
+      <div className="container flex h-16 items-center justify-between py-4">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <div className="flex items-center space-x-4">
+          <WalletButton />
+          <ThemeToggle />
+          <Button variant="outline" onClick={() => signOut()}>
+            Logout
+          </Button>
+        </div>
       </div>
-      {children}
-    </div>
+    </header>
   )
 }
 

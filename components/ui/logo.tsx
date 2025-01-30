@@ -2,10 +2,8 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Inter } from "next/font/google"
+import { cn } from "@/lib/utils"
 import { useTheme } from "next-themes"
-
-const inter = Inter({ subsets: ["latin"] })
 
 interface LogoProps {
   isScrolled: boolean
@@ -14,16 +12,12 @@ interface LogoProps {
 export function Logo({ isScrolled }: LogoProps) {
   const { resolvedTheme } = useTheme()
 
-  const subTextColor = isScrolled
-    ? "text-muted-foreground"
-    : resolvedTheme === "dark"
-      ? "text-white/80"
-      : "text-muted-foreground"
+  const subTextColor = isScrolled ? "text-gray-400" : resolvedTheme === "dark" ? "text-gray-100" : "text-gray-500"
 
   return (
     <Link
       href="/"
-      className="flex items-center space-x-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md"
+      className="flex items-center space-x-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-600 rounded-md"
       aria-label="BARK AI Agent Homepage"
     >
       <div className="relative w-10 h-10">
@@ -37,9 +31,9 @@ export function Logo({ isScrolled }: LogoProps) {
           quality={90}
         />
       </div>
-      <div className="flex flex-col justify-center">
-        <span className={`${inter.className} font-bold text-xl leading-none text-[#DBCFC7]`}>BARK</span>
-        <span className={`${inter.className} font-bold text-xs mt-0.5 ${subTextColor}`}>AI Agent</span>
+      <div className="flex flex-col items-center justify-center">
+        <span className={cn("font-bold text-xl leading-none text-gray-200")}>BARK</span>
+        <span className={cn(`font-bold text-[0.65rem] mt-0.5 ${subTextColor} tracking-widest`)}>AI AGENT</span>
       </div>
     </Link>
   )

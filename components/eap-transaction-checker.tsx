@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { checkEAPTransaction } from "@/server/actions/eap"
+import { usePrivy } from "@privy-io/react-auth"
 
 export function EAPTransactionChecker() {
   const [txHash, setTxHash] = useState("")
@@ -22,27 +23,36 @@ export function EAPTransactionChecker() {
     success: boolean
     message: string
   } | null>(null)
+  const { user } = usePrivy()
 
   async function handleCheck() {
+    if (!user) {
+      setResult({
+        success: false,
+        message: "Please log in to check your EAP transaction.",
+      })
+      return
+    }
+
     setIsChecking(true)
     try {
       const response = await checkEAPTransaction({ txHash })
-      if (response?.data?.success) {
+      if (response?.success) {
         setResult({
           success: true,
-          message: `Transaction verified successfully. EAP should be granted to your account.`,
+          message: response.data.message || "Transaction verified successfully. EAP should be granted to your account.",
         })
       } else {
-        console.log("response", response)
         setResult({
           success: false,
-          message: "Failed to verify transaction. Contact support if you think this is an error.",
+          message: response?.data?.message || "Failed to verify transaction. Please try again.",
         })
       }
     } catch (error) {
+      console.error("Error checking transaction:", error)
       setResult({
         success: false,
-        message: "Failed to verify transaction. Contact support if you think this is an error.",
+        message: "An error occurred while verifying the transaction. Please try again later.",
       })
     } finally {
       setIsChecking(false)
@@ -53,7 +63,7 @@ export function EAPTransactionChecker() {
     <div className="space-y-4">
       <div className="flex gap-2 px-6">
         <Input placeholder="Paste transaction hash" value={txHash} onChange={(e) => setTxHash(e.target.value)} />
-        <Button onClick={handleCheck} disabled={isChecking || !txHash}>
+        <Button onClick={handleCheck} disabled={isChecking || !txHash || !user}>
           {isChecking ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

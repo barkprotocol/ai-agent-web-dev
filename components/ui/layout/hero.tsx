@@ -1,16 +1,11 @@
 "use client"
 
-/** @jsxImportSource @emotion/react */
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { css } from "@emotion/react"
-
-const titleStyle = css`
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.1);
-`
+import { cn } from "@/lib/utils"
 
 const exchangeLinks = [
   {
@@ -41,7 +36,7 @@ export function Hero() {
     <AnimatePresence>
       {mounted && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <section className="relative w-full min-h-screen flex items-center justify-center bg-black overflow-hidden py-12 px-4">
+          <section className="relative w-full min-h-screen flex items-center justify-center bg-black overflow-hidden py-16 px-4">
             <Image
               src="https://ucarecdn.com/f6029e68-9768-49db-80a9-64e41e70acff/waveblack.png"
               alt="Abstract wave background"
@@ -56,14 +51,16 @@ export function Hero() {
               aria-hidden="true"
             />
             <div className="relative z-10 container mx-auto text-center text-primary-foreground">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                <h1
-                  css={titleStyle}
-                  className="font-oswald text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-primary-foreground"
-                >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="max-w-4xl mx-auto"
+              >
+                <h1 className="font-oswald text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-primary-foreground leading-tight drop-shadow-lg">
                   Your Intelligent Copilot for Solana
                 </h1>
-                <p className="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto text-primary-foreground/90">
+                <p className="text-lg sm:text-xl mb-8 text-primary-foreground/90 drop-shadow-md">
                   Elevate your DeFi experience with BARK AI Agent. Harness the power of artificial intelligence to
                   optimize your Solana investments and navigate decentralized finance with ease.
                 </p>
@@ -71,18 +68,22 @@ export function Hero() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-glow transition-all"
+                    className="bg-black hover:bg-gray-800 text-white shadow-lg transition-all text-lg px-8 py-4 relative overflow-hidden group"
                   >
-                    <Link href="/dashboard">Launch Dashboard</Link>
+                    <Link href="/dashboard">
+                      <span className="relative z-10">Launch Dashboard</span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                    </Link>
                   </Button>
                   <Button
                     asChild
                     variant="outline"
                     size="lg"
-                    className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/30 transition-all shadow-glow-sm"
+                    className="bg-transparent border-gray-300 text-white hover:bg-gray-800 hover:border-gray-400 transition-all shadow-md text-lg px-8 py-4 relative overflow-hidden group"
                   >
-                    <Link href="/pages/documents" target="_blank" rel="noopener noreferrer">
-                      Whitepaper
+                    <Link href="/whitepaper">
+                      <span className="relative z-10">Whitepaper</span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-teal-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </Link>
                   </Button>
                 </div>
@@ -102,7 +103,7 @@ export function Hero() {
                           alt={item.alt}
                           width={100}
                           height={40}
-                          className="h-8 w-auto object-contain"
+                          className="h-8 w-auto object-contain filter drop-shadow-md"
                         />
                       </Link>
                     ))}

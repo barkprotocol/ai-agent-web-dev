@@ -1,17 +1,17 @@
 "use client"
 
-import React, { type ErrorInfo, type ReactNode } from "react"
+import React, { Component, type ErrorInfo, type ReactNode } from "react"
+import { Button } from "@/components/ui/button"
 
 interface Props {
-  children?: ReactNode
-  fallback?: ReactNode
+  children: ReactNode
 }
 
 interface State {
   hasError: boolean
 }
 
-class ErrorBoundary extends React.Component<Props, State> {
+class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
   }
@@ -26,7 +26,12 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
-      return this.props.fallback || <h1>Sorry.. there was an error</h1>
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+          <h1 className="text-2xl font-bold mb-4">Oops, there was an error!</h1>
+          <Button onClick={() => this.setState({ hasError: false })}>Try again</Button>
+        </div>
+      )
     }
 
     return this.props.children

@@ -4,6 +4,7 @@ import { useMemo } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Bot, BarChart3, Link, HeartHandshake, MessageSquare, Vote } from "lucide-react"
+import type React from "react" // Import React
 
 interface Feature {
   title: string

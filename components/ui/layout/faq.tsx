@@ -40,7 +40,7 @@ export function FAQ() {
   }
 
   return (
-    <section id="faq" className="py-16 bg-background" aria-labelledby="faq-heading">
+    <section id="faq" className="py-16 bg-gray-100" aria-labelledby="faq-heading">
       <div className="container mx-auto px-4">
         <h2 id="faq-heading" className="text-3xl font-bold mb-8 text-center">
           Frequently Asked Questions
@@ -49,7 +49,7 @@ export function FAQ() {
           {faqs.map((faq, index) => (
             <div key={index} className="mb-4">
               <button
-                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-card hover:bg-gray-100 transition-colors duration-200"
+                className="flex justify-between items-center w-full text-left p-4 rounded-lg bg-card hover:bg-muted transition-colors duration-200"
                 onClick={() => toggleQuestion(index)}
                 aria-expanded={activeIndex === index}
               >
@@ -79,7 +79,4 @@ export function FAQ() {
     </section>
   )
 }
-
-
-
 
